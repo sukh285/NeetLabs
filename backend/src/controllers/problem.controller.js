@@ -109,11 +109,13 @@ export const getAllProblems = async (req, res) => {
   try {
     const problems = await db.problem.findMany();
 
-    if (!problems) {
+    if (problems.length === 0) {
       return res.status(404).json({
         error: "No problems found",
       });
     }
+
+    console.log("All problems fetched");
 
     res.status(200).json({
       success: true,
@@ -144,6 +146,8 @@ export const getProblemById = async (req, res) => {
       });
     }
 
+    console.log("Problem was fetched -->", problem);
+
     res.status(200).json({
       success: true,
       message: "Problem found successfully",
@@ -158,9 +162,43 @@ export const getProblemById = async (req, res) => {
 };
 
 export const updateProblemById = async (req, res) => {
-  
+  //check id and find problem by id
+  //once problem is found, perform same steps as createProblem with new data
+  //in the end perform db.update instead of db.save
 };
 
-export const deleteProblemById = async (req, res) => {};
+export const deleteProblemById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const problem = await db.problem.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        error: "Problem not found",
+      });
+    }
+
+    await db.problem.delete({
+      where: { id },
+    });
+
+    console.log("Problem was deleted -->", problem);
+    
+    res.status(200).json({
+      success: true,
+      message: "Problem deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "Error while deleting problem",
+    });
+  }
+};
 
 export const getAllProblemsSolvedByUser = async (req, res) => {};
