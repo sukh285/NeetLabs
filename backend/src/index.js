@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
+import problemRoutes from "./routes/problem.routes.js";
 
 dotenv.config();
 const port = process.env.PORT;
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/problem", problemRoutes);
 
 app.listen(port, () => {
   console.log("Server running on port 8080");

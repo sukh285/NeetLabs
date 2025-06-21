@@ -1,0 +1,7 @@
+{
+  "JAVASCRIPT": "// Read input and print the sum of two numbers\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf-8');\nconst [a, b] = input.trim().split(' ').map(Number);\nconsole.log(a + b);",
+
+  "PYTHON": "# Read input and print the sum of two numbers\nimport sys\n\ninput_line = sys.stdin.read()\na, b = map(int, input_line.strip().split())\nprint(a + b)",
+
+  "JAVA": "// Read input and print the sum of two numbers\nimport java.util.*;\n\npublic class Main {\n  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    int a = sc.nextInt();\n    int b = sc.nextInt();\n    System.out.println(a + b);\n  }\n}"
+}
