@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { z as zod } from "zod";
 import { Code, Eye, EyeOff, Loader, Lock, Mail } from "lucide-react";
+
 import AuthImagePattern from "../components/AuthImagePattern";
+import { useAuthStore } from "../store/useAuthStore";
 
 const SignUpSchema = zod.object({
   email: zod.string().email("Enter valid email"),
@@ -15,10 +17,12 @@ const SignUpSchema = zod.object({
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const {signup, isSigningUp} = useAuthStore()
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSigningUp },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(SignUpSchema),
   });
@@ -26,6 +30,13 @@ const SignUpPage = () => {
   const onSubmit = async (data) => {
     console.log("Signup form submitted -->", data);
     //Api logic here
+    try {
+      await signup(data)
+      console.log("Signup data -->", data);
+    } catch (error) {
+      console.log("Signup failed -->", error);
+      
+    }
   };
 
   return (

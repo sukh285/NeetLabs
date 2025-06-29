@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { z as zod } from "zod";
 import { Code, Eye, EyeOff, Loader, Lock, Mail } from "lucide-react";
+
 import AuthImagePattern from "../components/AuthImagePattern";
+import { useAuthStore } from "../store/useAuthStore";
 
 const LoginSchema = zod.object({
   email: zod.string().email("Enter valid email"),
@@ -14,17 +16,26 @@ const LoginSchema = zod.object({
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const { login, isLoggingIn } = useAuthStore();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoggingIn },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = async (data) => {
-    console.log("Signup form submitted -->", data);
+    console.log("Login form submitted -->", data);
     //Api logic here
+    try {
+      await login(data)
+      // console.log("Login data -->", data);
+    } catch (error) {
+      console.log("Login failed -->", error);
+      
+    }
   };
 
   return (
@@ -44,8 +55,6 @@ const LoginPage = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            
-
             {/* Email */}
             <div className="form-control">
               <label htmlFor="email" className="label">
@@ -117,7 +126,7 @@ const LoginPage = () => {
                 {isLoggingIn ? (
                   <>
                     <Loader className="h-5 w-5 animate-spin" size={18} />
-                    Creating...
+                    Logging in...
                   </>
                 ) : (
                   "Login"

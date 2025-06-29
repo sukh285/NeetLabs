@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
-import { data } from "react-router-dom";
+// import { data } from "react-router-dom";
 
 export const useAuthStore = create((set) => ({
   //4 utility methods for 4 routes in auth that we have put
@@ -29,7 +29,7 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  signup: async () => {
+  signup: async (data) => {
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/register", data);
@@ -47,7 +47,7 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  login: async () => {
+  login: async (data) => {
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
