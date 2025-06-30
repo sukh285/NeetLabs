@@ -7,6 +7,9 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import { useAuthStore } from "./store/useAuthStore";
+import Layout from "./layout/Layout";
+import AdminRoute from "./components/AdminRoute";
+import AddProblem from "./pages/AddProblem";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -29,10 +32,12 @@ const App = () => {
       {/* for notifications */}
       <Toaster />
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-        />
+        <Route path="/" element={<Layout />}>
+          <Route
+            path="/"
+            element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
+          />
+        </Route>
 
         <Route
           path="/login"
@@ -43,6 +48,13 @@ const App = () => {
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />}
         />
+
+        <Route element={<AdminRoute />}>
+          <Route
+            path="/add-problem"
+            element={authUser ? <AddProblem /> : <Navigate to="/" />}
+          />
+        </Route>
       </Routes>
     </div>
   );

@@ -4,7 +4,7 @@ import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { email, password, name } = req.body;
   
   try {
@@ -44,6 +44,9 @@ export const register = async (req, res) => {
       secure: process.env.NODE_ENV !== "development",
       maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
     });
+
+    console.log("User created successfully:", newUser);
+    
 
     res.status(201).json({
       success: true,
@@ -105,6 +108,8 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
     });
 
+    console.log("User logged in successfully:", user);
+
     res.status(200).json({
       success: true,
       message: "User logged in successfully",
@@ -131,6 +136,9 @@ export const logout = async (req, res) => {
       sameSite: "strict",
       secure: process.env.NODE_ENV !== "development",
     });
+
+    console.log("User logout successfully");
+    
 
     res.status(200).json({
       success: true,
