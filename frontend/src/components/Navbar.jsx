@@ -8,6 +8,9 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { authUser } = useAuthStore();
 
+  console.log("Auth_User:", authUser);
+  
+
   return (
     <>
       {/* Navbar */}
