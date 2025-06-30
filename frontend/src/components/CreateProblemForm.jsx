@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, set } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -10,7 +10,7 @@ import {
   BookOpen,
   CheckCircle2,
   Download,
-  Lightbulb
+  Lightbulb,
 } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
@@ -52,12 +52,12 @@ const problemSchema = z.object({
       explanation: z.string().optional(),
     }),
   }),
-  codeSnippets: z.object({
+  codeSnippet: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
     PYTHON: z.string().min(1, "Python code snippet is required"),
     JAVA: z.string().min(1, "Java solution is required"),
   }),
-  referenceSolutions: z.object({
+  referenceSolution: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
     PYTHON: z.string().min(1, "Python solution is required"),
     JAVA: z.string().min(1, "Java solution is required"),
@@ -110,7 +110,7 @@ const sampledpData = {
         "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
     },
   },
-  codeSnippets: {
+  codeSnippet: {
     JAVASCRIPT: `/**
   * @param {number} n
   * @return {number}
@@ -173,7 +173,7 @@ const sampledpData = {
     }
   }`,
   },
-  referenceSolutions: {
+  referenceSolution: {
     JAVASCRIPT: `/**
   * @param {number} n
   * @return {number}
@@ -354,7 +354,7 @@ const sampleStringProblem = {
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
   },
-  codeSnippets: {
+  codeSnippet: {
     JAVASCRIPT: `/**
      * @param {string} s
      * @return {boolean}
@@ -418,7 +418,7 @@ const sampleStringProblem = {
   }
   `,
   },
-  referenceSolutions: {
+  referenceSolution: {
     JAVASCRIPT: `/**
      * @param {string} s
      * @return {boolean}
@@ -530,12 +530,12 @@ const CreateProblemForm = () => {
         PYTHON: { input: "", output: "", explanation: "" },
         JAVA: { input: "", output: "", explanation: "" },
       },
-      codeSnippets: {
+      codeSnippet: {
         JAVASCRIPT: "function solution() {\n  // Write your code here\n}",
         PYTHON: "def solution():\n    # Write your code here\n    pass",
         JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
       },
-      referenceSolutions: {
+      referenceSolution: {
         JAVASCRIPT: "// Add your reference solution here",
         PYTHON: "# Add your reference solution here",
         JAVA: "// Add your reference solution here",
@@ -566,7 +566,19 @@ const CreateProblemForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (value) => {
-    console.log(value);
+    try {
+      setIsLoading(true);
+      const res = await axiosInstance.post("/problem/create-problem", value);
+      console.log(res.data);
+
+      toast.success(res.data.message || "Problem created successfully");
+      navigation("/");
+    } catch (error) {
+      console.log("Error creating problem:", error);
+      toast.error("Error creating problem");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const loadSampleData = () => {
@@ -576,7 +588,7 @@ const CreateProblemForm = () => {
     replacetestcases(sampleData.testcases.map((tc) => tc));
 
     //Reset form with sample data
-    reset(sampleData)
+    reset(sampleData);
   };
 
   return (
@@ -839,7 +851,7 @@ const CreateProblemForm = () => {
                         </h4>
                         <div className="border rounded-md overflow-hidden">
                           <Controller
-                            name={`codeSnippets.${language}`}
+                            name={`codeSnippet.${language}`}
                             control={control}
                             render={({ field }) => (
                               <Editor
@@ -860,10 +872,10 @@ const CreateProblemForm = () => {
                             )}
                           />
                         </div>
-                        {errors.codeSnippets?.[language] && (
+                        {errors.codeSnippet?.[language] && (
                           <div className="mt-2">
                             <span className="text-error text-sm">
-                              {errors.codeSnippets[language].message}
+                              {errors.codeSnippet[language].message}
                             </span>
                           </div>
                         )}
@@ -879,7 +891,7 @@ const CreateProblemForm = () => {
                         </h4>
                         <div className="border rounded-md overflow-hidden">
                           <Controller
-                            name={`referenceSolutions.${language}`}
+                            name={`referenceSolution.${language}`}
                             control={control}
                             render={({ field }) => (
                               <Editor
@@ -900,10 +912,10 @@ const CreateProblemForm = () => {
                             )}
                           />
                         </div>
-                        {errors.referenceSolutions?.[language] && (
+                        {errors.referenceSolution?.[language] && (
                           <div className="mt-2">
                             <span className="text-error text-sm">
-                              {errors.referenceSolutions[language].message}
+                              {errors.referenceSolution[language].message}
                             </span>
                           </div>
                         )}
