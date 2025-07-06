@@ -9,11 +9,12 @@ export const useProblemStore = create((set) => ({
   isProblemsLoading: false,
   isProblemLoading: false,
 
-  getAllProblem: async () => {
+  getAllProblems: async () => {
     try {
       set({ isProblemsLoading: true });
 
       const res = await axiosInstance.get("/problem/get-all-problems");
+
       set({ problems: res.data.problems });
     } catch (error) {
       console.log("Error getting all problems:", error);
