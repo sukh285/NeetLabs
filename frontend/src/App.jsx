@@ -11,11 +11,11 @@ import Layout from "./layout/Layout";
 import AdminRoute from "./components/AdminRoute";
 import AddProblem from "./pages/AddProblem";
 import AllProblems from "./pages/AllProblems";
+import ProblemPage from "./pages/ProblemPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
-  //when first time app rendered
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -30,44 +30,44 @@ const App = () => {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      {/* for notifications */}
       <Toaster />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route
-            path="/"
-            element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-          />
-        </Route>
-
+        {/* Public Routes */}
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
         />
-
         <Route
           path="/signup"
-          element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
         />
 
-        <Route element={<AdminRoute />}>
-          <Route
-            path="/add-problem"
-            element={authUser ? <AddProblem /> : <Navigate to="/" />}
-          />
-        </Route>
-
+        {/* Protected Routes with Layout */}
         <Route path="/" element={<Layout />}>
           <Route
-            path="/problems"
-            element={authUser ? <AllProblems /> : <Navigate to={"/login"} />}
+            index
+            element={authUser ? <HomePage /> : <Navigate to="/login" />}
           />
+          <Route
+            path="problems"
+            element={authUser ? <AllProblems /> : <Navigate to="/login" />}
+          />
+
+          <Route element={<AdminRoute />}>
+            <Route
+              path="add-problem"
+              element={authUser ? <AddProblem /> : <Navigate to="/" />}
+            />
+          </Route>
         </Route>
 
         <Route
-          path="/problem/:id"
-          element={authUser ? <ProblemPage /> : <Navigate to={"/login"} />}
+          path="problem/:id"
+          element={authUser ? <ProblemPage /> : <Navigate to="/login" />}
         />
+
+        {/* Fallback Route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );

@@ -7,7 +7,6 @@ import LogoutButton from "./LogoutButton";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { authUser } = useAuthStore();
-  
 
   return (
     <>
@@ -43,12 +42,11 @@ const Navbar = () => {
             <div className="navbar-center hidden lg:flex">
               <ul className="menu menu-horizontal px-1 gap-4 text-sm font-medium">
                 <li>
-                  <a
-                    href="#problems"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Problems
-                  </a>
+                  <Link to={"/problems"}>
+                    <span className="hover:text-primary transition-colors">
+                      Problems
+                    </span>
+                  </Link>
                 </li>
                 <li>
                   <a
