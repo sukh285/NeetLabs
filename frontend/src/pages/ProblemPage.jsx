@@ -22,21 +22,32 @@ import {
 import { useProblemStore } from "../store/useProblemStore";
 import { useExecutionStore } from "../store/useExecutionStore";
 import { getLanguageId } from "../lib/lang";
+import { useSubmissionStore } from "../store/useSubmissionStore";
 import SubmissionResults from "../components/Submission";
+import SubmissionsList from "../components/SubmissionList";
 
 const ProblemPage = () => {
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
+
+  const {
+    submission: submissions,
+    isLoading: isSubmissionsLoading,
+    getSubmissionForProblem,
+    getSubmissionCountForProblem,
+    submissionCount,
+  } = useSubmissionStore();
+
+  const { executeCode, submission, isExecuting } = useExecutionStore();
+
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
   const [selectedLanguage, setSelectedLanguage] = useState("java");
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [testcases, setTestcases] = useState([]);
 
-  const { executeCode, submission, isExecuting } = useExecutionStore();
-
-  const submissionCount = 10;
+  // const submissionCount = 10;
 
   const handleLanguageChange = (e) => {
     const lang = e.target.value;
@@ -46,6 +57,7 @@ const ProblemPage = () => {
 
   useEffect(() => {
     getProblemById(id);
+    getSubmissionCountForProblem(id);
   }, [id]);
 
   useEffect(() => {
@@ -60,6 +72,12 @@ const ProblemPage = () => {
       );
     }
   }, [problem, selectedLanguage]);
+
+  useEffect(() => {
+    if(activeTab === 'submissions' && id){
+      getSubmissionForProblem(id)
+    }
+  }, [activeTab, id])
 
   //   Tab Content
   const renderTabContent = () => {
@@ -124,13 +142,10 @@ const ProblemPage = () => {
         );
       case "submissions":
         return (
-          <div className="p-4 text-center text-base-content/70">
-            No submissions yet
-          </div>
-          //   <SubmissionsList
-          //     submissions={submissions}
-          //     isLoading={isSubmissionsLoading}
-          //   />
+          <SubmissionsList
+            submissions={submissions}
+            isLoading={isSubmissionsLoading}
+          />
         );
       case "discussion":
         return (
