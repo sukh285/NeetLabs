@@ -10,13 +10,11 @@ import {
   Share2,
   Clock,
   ChevronRight,
-  BookOpen,
   Terminal,
   Code2,
   Users,
   ThumbsUp,
   Home,
-  Slice,
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -47,39 +45,45 @@ const ProblemPage = () => {
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [testcases, setTestcases] = useState([]);
 
-  // const submissionCount = 10;
-
+  // Handle language dropdown change
   const handleLanguageChange = (e) => {
     const lang = e.target.value;
     setSelectedLanguage(lang);
     setCode(problem.codeSnippet?.[lang] || "");
   };
 
+  // Fetch problem and submission count on mount or id change
   useEffect(() => {
     getProblemById(id);
     getSubmissionCountForProblem(id);
-  }, [id]);
+  }, [id, getProblemById, getSubmissionCountForProblem]);
 
+  // Update code and testcases when problem or language changes
   useEffect(() => {
-    if (problem) {
-      setCode(problem.codeSnippet?.[selectedLanguage] || "");
+    if (!problem) return;
 
+    if (problem.codeSnippet && problem.codeSnippet[selectedLanguage]) {
+      setCode(problem.codeSnippet[selectedLanguage]);
+    }
+
+    if (problem.testcases) {
       setTestcases(
-        problem.testcases?.map((tc) => ({
+        problem.testcases.map((tc) => ({
           input: tc.input,
           output: tc.output,
-        })) || []
+        }))
       );
     }
   }, [problem, selectedLanguage]);
 
+  // Fetch submissions when switching to submissions tab
   useEffect(() => {
-    if(activeTab === 'submissions' && id){
-      getSubmissionForProblem(id)
+    if (activeTab === "submissions" && id) {
+      getSubmissionForProblem(id);
     }
-  }, [activeTab, id])
+  }, [activeTab, id, getSubmissionForProblem]);
 
-  //   Tab Content
+  // Render content for the selected tab
   const renderTabContent = () => {
     switch (activeTab) {
       case "description":
@@ -91,7 +95,7 @@ const ProblemPage = () => {
               <>
                 <h3 className="text-xl font-bold mb-4">Examples:</h3>
                 {Object.entries(problem.examples).map(
-                  ([lang, example], idx) => (
+                  ([lang, example]) => (
                     <div
                       key={lang}
                       className="bg-base-200 p-6 rounded-xl mb-6 font-mono"
@@ -174,6 +178,7 @@ const ProblemPage = () => {
     }
   };
 
+  // Show loading spinner while problem is loading
   if (isProblemLoading || !problem) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -182,10 +187,12 @@ const ProblemPage = () => {
     );
   }
 
+  // Run code against testcases
   const handleRunCode = (e) => {
     e.preventDefault();
     try {
       const language_id = getLanguageId(selectedLanguage);
+      // Prepare stdin and expected outputs for all testcases
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
@@ -205,7 +212,6 @@ const ProblemPage = () => {
           </Link>
           <div className="mt-2">
             <h1 className="text-xl font-bold">{problem.title}</h1>
-            {/* {console.log(problem.title)} */}
             <div className="flex items-center gap-2 text-sm text-base-content/70 mt-5">
               <Clock className="w-4 h-4" />
               <span>
@@ -239,7 +245,7 @@ const ProblemPage = () => {
             <Share2 className="w-5 h-5" />
           </button>
 
-          {/* Dropdown for languages */}
+          {/* Language selection dropdown */}
           <select
             value={selectedLanguage}
             onChange={handleLanguageChange}
@@ -254,9 +260,9 @@ const ProblemPage = () => {
         </div>
       </nav>
 
-      {/* Left */}
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Problem description, submissions, etc. */}
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body p-0">
               <div className="tabs tabs-bordered">
@@ -302,7 +308,7 @@ const ProblemPage = () => {
             </div>
           </div>
 
-          {/* Right Side */}
+          {/* Code editor and run/submit buttons */}
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body p-0">
               <div className="tabs tabs-bordered">
@@ -312,7 +318,6 @@ const ProblemPage = () => {
                 </button>
               </div>
 
-              {/* Code Editor */}
               <div className="h-[50vh] w-full">
                 <Editor
                   height={"100%"}
@@ -332,7 +337,6 @@ const ProblemPage = () => {
                 />
               </div>
 
-              {/* Buttons */}
               <div className="p-4 border-t border-base-300 bg-base-200">
                 <div className="flex justify-between items-center">
                   <button
@@ -355,6 +359,7 @@ const ProblemPage = () => {
         </div>
       </div>
 
+      {/* Show either submission results or testcases */}
       <div className="card bg-base-100 shadow-xl mt-6">
         <div className="card-body">
           {submission ? (
