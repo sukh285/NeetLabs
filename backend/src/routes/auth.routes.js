@@ -1,6 +1,7 @@
 import express from "express";
 import {
   check,
+  getProfile,
   login,
   logout,
   register,
@@ -13,5 +14,7 @@ authRoutes.post("/register", register);
 authRoutes.post("/login", login);
 authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.get("/check", authMiddleware, check);
+
+authRoutes.get("/profile", authMiddleware, getProfile);
 
 export default authRoutes;
