@@ -1,14 +1,13 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
-// import { data } from "react-router-dom";
 
 export const useAuthStore = create((set) => ({
   //4 utility methods for 4 routes in auth that we have put
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
-  isCheckingAuth: false,
+  isCheckingAuth: true,
 
   //can use react query too (why?)
 
@@ -20,10 +19,13 @@ export const useAuthStore = create((set) => ({
 
       set({ authUser: res.data.user });
 
-      toast.success(res.data.message);
     } catch (error) {
       console.log("Error checking auth:", error);
       set({ authUser: null });
+      // Only show error toast if it's not a 401 (unauthorized)
+      if (error.response?.status !== 401) {
+        toast.error("Authentication check failed");
+      }
     } finally {
       set({ isCheckingAuth: false });
     }

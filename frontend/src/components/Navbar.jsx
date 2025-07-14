@@ -11,39 +11,27 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar bg-base-100 border-b border-base-300 px-4 lg:px-8 shadow-sm w-full max-w-full py-2">
+      <nav className="navbar font-inter fixed top-0 left-0 z-50 bg-gradient-to-r from-neet-neutral/80 via-neet-neutral to-neet-neutral/80 border-b border-neet-primary/20 px-4 lg:px-8 shadow-lg w-full max-w-full py-3 backdrop-blur-sm">
         <div className="navbar-start w-full">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full lg:grid lg:grid-cols-3 lg:gap-4 font-inter">
+            {/* Left section - Logo */}
             <div className="flex items-center gap-4">
-              <div className="dropdown">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="btn btn-ghost lg:hidden"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  {isMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
+              <Link to="/" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-xl bg-neet-base-100/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-neet-base-100/20 transition-all duration-300 shadow-lg border border-neet-base-100/20">
+                  <Code className="w-6 h-6 text-neet-primary group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <Link to="/" className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Code className="w-5 h-5 text-primary" />
-                  </div>
-                  <span className="text-xl font-bold hidden sm:block">
-                    LeetLab
-                  </span>
-                </Link>
-              </div>
+                <span className="text-2xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
+                  NeetLabs
+                </span>
+              </Link>
             </div>
 
-            <div className="navbar-center hidden lg:flex">
-              <ul className="menu menu-horizontal px-1 gap-4 text-sm font-medium">
+            {/* Center section - Navigation Links */}
+            <div className="hidden lg:flex justify-center">
+              <ul className="menu menu-horizontal px-1 gap-6 text-sm font-medium">
                 <li>
                   <Link to={"/problems"}>
-                    <span className="hover:text-primary transition-colors">
+                    <span className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300">
                       Problems
                     </span>
                   </Link>
@@ -51,7 +39,7 @@ const Navbar = () => {
                 <li>
                   <a
                     href="#playlists"
-                    className="hover:text-primary transition-colors"
+                    className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
                   >
                     Playlists
                   </a>
@@ -59,7 +47,7 @@ const Navbar = () => {
                 <li>
                   <a
                     href="#leaderboard"
-                    className="hover:text-primary transition-colors"
+                    className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
                   >
                     Leaderboard
                   </a>
@@ -67,146 +55,109 @@ const Navbar = () => {
               </ul>
             </div>
 
-            <div className="navbar-end">
-              <div className="flex items-center gap-4">
-                {authUser ? (
-                  <div className="flex items-center gap-3">
-                    <div className="relative group">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-secondary rounded-full opacity-15 blur group-hover:opacity-40 transition duration-300"></div>
-                      <div className="relative flex items-center gap-3 bg-base-200 px-4 py-2.5 rounded-full shadow-lg border border-base-300/50 backdrop-blur-sm z-10">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-content font-semibold text-sm shadow-md">
-                            {authUser.name?.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="hidden sm:block">
-                            <span className="text-sm font-medium text-base-content">
-                              Welcome back,
-                            </span>
-                            <div className="text-sm font-semibold text-primary">
-                              {authUser.name}
-                            </div>
-                          </div>
+            {/* Right section - User actions */}
+            <div className="flex items-center justify-end gap-4">
+              {authUser ? (
+                <div className="flex items-center gap-2">
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-neet-primary to-neet-accent rounded-full opacity-20 blur group-hover:opacity-40 transition duration-300"></div>
+                    <div className="relative flex items-center gap-2 bg-neet-base-100/10 backdrop-blur-xl px-8 py-1.5 rounded-full shadow-lg border border-neet-base-100/20 z-10 group-hover:bg-neet-primary/20 transition-colors duration-300 min-w-[220px]">
+                      {/* Only show name on md+ screens, smaller font */}
+                      <div className="leading-none hidden sm:block pl-1 flex-1 min-w-0">
+                        <span className="text-xs font-medium text-neet-accent/80">
+                          Welcome Back,
+                        </span>
+                        <div className="text-xs font-semibold text-neet-base-100 truncate max-w-[120px]">
+                          {authUser.name}
                         </div>
-                        <div className="h-6 w-px bg-base-300 hidden sm:block"></div>
+                      </div>
+                      <div className="h-5 w-px bg-neet-base-100/20 hidden sm:block"></div>
 
-                        {/* User Profile Dropdown */}
-                        <div className="dropdown dropdown-end">
-                          <label
-                            tabIndex={0}
-                            className="btn btn-ghost btn-circle avatar flex flex-row"
-                          >
-                            <div className="w-8 h-8 rounded-full">
-                              <img
-                                src={
-                                  authUser?.image ||
-                                  "https://avatar.iran.liara.run/public/boy"
-                                }
-                                alt="User Avatar"
-                                className="object-cover rounded-full"
-                              />
-                            </div>
-                          </label>
-                          <ul
-                            tabIndex={0}
-                            className="menu menu-sm dropdown-content mt-3 z-[9999] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
-                          >
-                            {/* Common Options */}
-                            <li>
-                              <p className="text-base font-semibold pointer-events-none">
-                                {authUser?.name}
-                              </p>
-                              <hr className="border-gray-200/10 pointer-events-none" />
-                            </li>
+                      {/* User Profile Dropdown */}
+                      <div className="dropdown dropdown-end">
+                        <label
+                          tabIndex={0}
+                          className="btn btn-ghost btn-circle avatar flex flex-row p-0 hover:bg-neet-primary/20 transition-colors duration-300"
+                        >
+                          <div className="w-7 h-7 rounded-full">
+                            <img
+                              src={
+                                authUser?.image ||
+                                "https://avatar.iran.liara.run/public/boy"
+                              }
+                              alt="User Avatar"
+                              className="object-cover rounded-full"
+                            />
+                          </div>
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="menu menu-sm dropdown-content mt-3 z-[9999] p-2 shadow-xl bg-neet-neutral/90 backdrop-blur-xl rounded-2xl w-44 space-y-2 border border-neet-base-100/20"
+                        >
+                          {/* Common Options */}
+                          <li>
+                            <p className="text-sm font-semibold text-neet-base-100 pointer-events-none">
+                              {authUser?.name}
+                            </p>
+                            <hr className="border-neet-base-100/20 pointer-events-none" />
+                          </li>
+                          <li>
+                            <Link
+                              to="/profile"
+                              className="hover:bg-neet-primary/20 hover:text-neet-primary text-sm font-semibold text-neet-accent rounded-xl transition-colors duration-200"
+                            >
+                              <User className="w-4 h-4 mr-2" />
+                              My Profile
+                            </Link>
+                          </li>
+                          {authUser?.role === "ADMIN" && (
                             <li>
                               <Link
-                                to="/profile"
-                                className="hover:bg-primary hover:text-white text-base font-semibold"
+                                to="/add-problem"
+                                className="hover:bg-neet-primary/20 hover:text-neet-primary text-sm font-semibold text-neet-accent rounded-xl transition-colors duration-200"
                               >
-                                <User className="w-4 h-4 mr-2" />
-                                My Profile
+                                <Code className="w-4 h-4 mr-1" />
+                                Add Problem
                               </Link>
                             </li>
-                            {authUser?.role === "ADMIN" && (
-                              <li>
-                                <Link
-                                  to="/add-problem"
-                                  className="hover:bg-primary hover:text-white text-base font-semibold"
-                                >
-                                  <Code className="w-4 h-4 mr-1" />
-                                  Add Problem
-                                </Link>
-                              </li>
-                            )}
-                            <li>
-                              <LogoutButton>
-                                <LogOut className="w-4 h-4 transition-transform group-hover/btn:rotate-12" />
-                                Logout
-                              </LogoutButton>
-                            </li>
-                          </ul>
-                        </div>
+                          )}
+                          <li>
+                            <LogoutButton>
+                              <LogOut className="w-4 h-4 transition-transform group-hover/btn:rotate-12" />
+                              Logout
+                            </LogoutButton>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <Link
-                      to="/login"
-                      className="relative group btn btn-ghost btn-sm px-6 py-2 rounded-full font-medium hover:bg-base-200/80 transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-                      <span className="relative">Login</span>
-                    </Link>
-                    <Link
-                      to="/signup"
-                      className="relative group btn btn-primary btn-sm px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-secondary rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300 -z-10"></div>
-                      <span className="relative">Sign Up</span>
-                    </Link>
-                  </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  {/* Login Button */}
+                  <Link
+                    to="/login"
+                    className="btn btn-sm px-4 py-2.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 bg-neet-base-100/10 backdrop-blur-sm border border-neet-base-100/20 text-neet-accent hover:bg-neet-primary/20 hover:text-neet-primary"
+                  >
+                    Login
+                  </Link>
+                  
+                  {/* Signup Button */}
+                  <Link
+                    to="/signup"
+                    className="relative group btn btn-sm px-6 py-2.5 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-secondary hover:to-neet-accent text-neet-primary-content border-none"
+                  >
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-neet-secondary to-neet-accent rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300 -z-10"></div>
+                    <span className="relative">Start for free</span>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </nav>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden bg-base-100 border-b border-base-300 shadow-md">
-          <ul className="menu p-4 flex flex-col gap-2">
-            <li>
-              <a
-                href="#problems"
-                className="py-3 text-base"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Problems
-              </a>
-            </li>
-            <li>
-              <a
-                href="#playlists"
-                className="py-3 text-base"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Playlists
-              </a>
-            </li>
-            <li>
-              <a
-                href="#leaderboard"
-                className="py-3 text-base"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Leaderboard
-              </a>
-            </li>
-          </ul>
-        </div>
-      )}
+      {/* Spacer to prevent content from being hidden under the fixed navbar */}
+      <div className="h-[68px] w-full"></div>
     </>
   );
 };

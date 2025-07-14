@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, useFieldArray, Controller, set } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -11,11 +11,18 @@ import {
   CheckCircle2,
   Download,
   Lightbulb,
+  Save,
+  Zap,
+  Target,
+  Trophy,
+  Settings,
+  TestTube,
+  Puzzle,
 } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { axiosInstance } from "../lib/axios";
 
@@ -66,7 +73,7 @@ const problemSchema = z.object({
 
 const sampledpData = {
   title: "Climbing Stairs",
-  category: "dp", // Dynamic Programming
+  category: "dp",
   description:
     "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
   difficulty: "EASY",
@@ -194,19 +201,6 @@ const sampledpData = {
   }
   
   return dp[n];
-  
-  /* Alternative approach with O(1) space
-  let a = 1; // ways to climb 1 step
-  let b = 2; // ways to climb 2 steps
-  
-  for (let i = 3; i <= n; i++) {
-    let temp = a + b;
-    a = b;
-    b = temp;
-  }
-  
-  return n === 1 ? a : b;
-  */
   }
   
   // Parse input and execute
@@ -239,14 +233,6 @@ const sampledpData = {
             dp[i] = dp[i - 1] + dp[i - 2]
         
         return dp[n]
-        
-        # Alternative approach with O(1) space
-        # a, b = 1, 2
-        # 
-        # for i in range(3, n + 1):
-        #     a, b = b, a + b
-        # 
-        # return a if n == 1 else b
   
   # Input parsing
   if __name__ == "__main__":
@@ -280,19 +266,6 @@ const sampledpData = {
         }
         
         return dp[n];
-        
-        /* Alternative approach with O(1) space
-        int a = 1; // ways to climb 1 step
-        int b = 2; // ways to climb 2 steps
-        
-        for (int i = 3; i <= n; i++) {
-            int temp = a + b;
-            a = b;
-            b = temp;
-        }
-        
-        return n == 1 ? a : b;
-        */
     }
     
     public static void main(String[] args) {
@@ -310,7 +283,6 @@ const sampledpData = {
   },
 };
 
-// Sample problem data for another type of question
 const sampleStringProblem = {
   title: "Valid Palindrome",
   description:
@@ -569,12 +541,9 @@ const CreateProblemForm = () => {
     try {
       setIsLoading(true);
       const res = await axiosInstance.post("/problem/create-problem", value);
-      console.log(res.data);
-
       toast.success(res.data.message || "Problem created successfully");
-      navigation("/");
+      navigation("/problems");
     } catch (error) {
-      console.log("Error creating problem:", error);
       toast.error("Error creating problem");
     } finally {
       setIsLoading(false);
@@ -583,475 +552,486 @@ const CreateProblemForm = () => {
 
   const loadSampleData = () => {
     const sampleData = sampleType === "DP" ? sampledpData : sampleStringProblem;
-
     replaceTags(sampleData.tags.map((tag) => tag));
     replacetestcases(sampleData.testcases.map((tc) => tc));
-
-    //Reset form with sample data
     reset(sampleData);
   };
 
-  return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl">
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body p-6 md:p-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 pb-4 border-b">
-            <h2 className="card-title text-2xl md:text-3xl flex items-center gap-3">
-              <FileText className="w-6 h-6 md:w-8 md:h-8 text-primary" />
-              Create Problem
-            </h2>
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case "EASY":
+        return "text-neet-success";
+      case "MEDIUM":
+        return "text-neet-warning";
+      case "HARD":
+        return "text-neet-error";
+      default:
+        return "text-neet-accent";
+    }
+  };
 
-            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
-              <div className="join">
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "DP" ? "btn-active" : ""
-                  }`}
-                  onClick={() => setSampleType("array")}
-                >
-                  DP Problem
-                </button>
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "string" ? "btn-active" : ""
-                  }`}
-                  onClick={() => setSampleType("string")}
-                >
-                  String Problem
-                </button>
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary gap-2"
-                onClick={loadSampleData}
-              >
-                <Download className="w-4 h-4" />
-                Load Sample
-              </button>
+  return (
+    <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <div className="relative pt-16 pb-8 text-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
+          <div className="relative">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
+              <Puzzle className="w-5 h-5 text-neet-primary" />
+              <span className="text-neet-accent/80 font-medium">
+                Create Problem
+              </span>
             </div>
           </div>
+        </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {/* Basic Information */}
+        {/* Sample Data Controls */}
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+          <div className="flex items-center gap-2 bg-neet-neutral/40 backdrop-blur-xl rounded-full p-2 border border-neet-accent/20">
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                sampleType === "DP"
+                  ? "bg-neet-primary text-neet-neutral shadow-lg"
+                  : "text-neet-accent/70 hover:text-neet-accent"
+              }`}
+              onClick={() => setSampleType("DP")}
+            >
+              DP Problem
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                sampleType === "string"
+                  ? "bg-neet-primary text-neet-neutral shadow-lg"
+                  : "text-neet-accent/70 hover:text-neet-accent"
+              }`}
+              onClick={() => setSampleType("string")}
+            >
+              String Problem
+            </button>
+          </div>
+          <button
+            type="button"
+            className="px-6 py-3 bg-neet-secondary/20 hover:bg-neet-secondary/30 text-neet-accent border border-neet-accent/20 rounded-full font-medium transition-all duration-200 flex items-center gap-2 backdrop-blur-xl"
+            onClick={loadSampleData}
+          >
+            <Download className="w-4 h-4" />
+            Load Sample Data
+          </button>
+        </div>
+
+        {/* Main Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pb-16">
+          {/* Basic Information Card */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-neet-primary to-neet-secondary rounded-xl flex items-center justify-center">
+                <FileText className="w-5 h-5 text-neet-neutral" />
+              </div>
+              <h3 className="text-xl font-semibold text-neet-base-100">
+                Basic Information
+              </h3>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="form-control md:col-span-2">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold">
-                    Title
-                  </span>
+              {/* Title */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Problem Title
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered w-full text-base md:text-lg"
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
                   {...register("title")}
-                  placeholder="Enter problem title"
+                  placeholder="Enter a descriptive problem title"
                 />
                 {errors.title && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">
-                      {errors.title.message}
-                    </span>
-                  </label>
+                  <p className="mt-1 text-sm text-neet-error">
+                    {errors.title.message}
+                  </p>
                 )}
               </div>
 
-              <div className="form-control md:col-span-2">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold">
-                    Description
-                  </span>
+              {/* Description */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Problem Description
                 </label>
                 <textarea
-                  className="textarea textarea-bordered min-h-32 w-full text-base md:text-lg p-4 resize-y"
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-32 resize-y"
                   {...register("description")}
-                  placeholder="Enter problem description"
+                  placeholder="Describe the problem clearly and concisely..."
                 />
                 {errors.description && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">
-                      {errors.description.message}
-                    </span>
-                  </label>
+                  <p className="mt-1 text-sm text-neet-error">
+                    {errors.description.message}
+                  </p>
                 )}
               </div>
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold">
-                    Difficulty
-                  </span>
+              {/* Difficulty */}
+              <div>
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Difficulty Level
                 </label>
                 <select
-                  className="select select-bordered w-full text-base md:text-lg"
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
                   {...register("difficulty")}
                 >
-                  <option value="EASY">Easy</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HARD">Hard</option>
+                  <option value="EASY">🟢 Easy</option>
+                  <option value="MEDIUM">🟡 Medium</option>
+                  <option value="HARD">🔴 Hard</option>
                 </select>
                 {errors.difficulty && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">
-                      {errors.difficulty.message}
-                    </span>
-                  </label>
+                  <p className="mt-1 text-sm text-neet-error">
+                    {errors.difficulty.message}
+                  </p>
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Tags */}
-            <div className="card bg-base-200 p-4 md:p-6 shadow-md">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" />
+          {/* Tags Section */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neet-secondary to-neet-accent rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-neet-neutral" />
+                </div>
+                <h3 className="text-xl font-semibold text-neet-base-100">
                   Tags
                 </h3>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  onClick={() => appendTag("")}
-                >
-                  <Plus className="w-4 h-4 mr-1" /> Add Tag
-                </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {tagFields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      className="input input-bordered flex-1"
-                      {...register(`tags.${index}`)}
-                      placeholder="Enter tag"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-ghost btn-square btn-sm"
-                      onClick={() => removeTag(index)}
-                      disabled={tagFields.length === 1}
-                    >
-                      <Trash2 className="w-4 h-4 text-error" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              {errors.tags && (
-                <div className="mt-2">
-                  <span className="text-error text-sm">
-                    {errors.tags.message}
-                  </span>
-                </div>
-              )}
+              <button
+                type="button"
+                className="px-4 py-2 bg-neet-primary/20 hover:bg-neet-primary/30 text-neet-primary border border-neet-primary/20 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                onClick={() => appendTag("")}
+              >
+                <Plus className="w-4 h-4" />
+                Add Tag
+              </button>
             </div>
 
-            {/* Test Cases */}
-            <div className="card bg-base-200 p-4 md:p-6 shadow-md">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {tagFields.map((field, index) => (
+                <div key={field.id} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    className="flex-1 px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
+                    {...register(`tags.${index}`)}
+                    placeholder="Tag name"
+                  />
+                  <button
+                    type="button"
+                    className="w-10 h-10 bg-neet-error/20 hover:bg-neet-error/30 text-neet-error rounded-lg transition-all duration-200 flex items-center justify-center"
+                    onClick={() => removeTag(index)}
+                    disabled={tagFields.length === 1}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {errors.tags && (
+              <p className="mt-4 text-sm text-neet-error">
+                {errors.tags.message}
+              </p>
+            )}
+          </div>
+
+          {/* Test Cases Section */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neet-info to-neet-success rounded-xl flex items-center justify-center">
+                  <TestTube className="w-5 h-5 text-neet-neutral" />
+                </div>
+                <h3 className="text-xl font-semibold text-neet-base-100">
                   Test Cases
                 </h3>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  onClick={() => appendTestCase({ input: "", output: "" })}
-                >
-                  <Plus className="w-4 h-4 mr-1" /> Add Test Case
-                </button>
               </div>
-              <div className="space-y-6">
-                {testCaseFields.map((field, index) => (
-                  <div key={field.id} className="card bg-base-100 shadow-md">
-                    <div className="card-body p-4 md:p-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-base md:text-lg font-semibold">
-                          Test Case #{index + 1}
-                        </h4>
-                        <button
-                          type="button"
-                          className="btn btn-ghost btn-sm text-error"
-                          onClick={() => removeTestCase(index)}
-                          disabled={testCaseFields.length === 1}
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" /> Remove
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <div className="form-control">
-                          <label className="label">
-                            <span className="label-text font-medium">
-                              Input
-                            </span>
-                          </label>
-                          <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                            {...register(`testcases.${index}.input`)}
-                            placeholder="Enter test case input"
-                          />
-                          {errors.testcases?.[index]?.input && (
-                            <label className="label">
-                              <span className="label-text-alt text-error">
-                                {errors.testcases[index].input.message}
-                              </span>
-                            </label>
-                          )}
-                        </div>
-                        <div className="form-control">
-                          <label className="label">
-                            <span className="label-text font-medium">
-                              Expected Output
-                            </span>
-                          </label>
-                          <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                            {...register(`testcases.${index}.output`)}
-                            placeholder="Enter expected output"
-                          />
-                          {errors.testcases?.[index]?.output && (
-                            <label className="label">
-                              <span className="label-text-alt text-error">
-                                {errors.testcases[index].output.message}
-                              </span>
-                            </label>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {errors.testcases && !Array.isArray(errors.testcases) && (
-                <div className="mt-2">
-                  <span className="text-error text-sm">
-                    {errors.testcases.message}
-                  </span>
-                </div>
-              )}
+              <button
+                type="button"
+                className="px-4 py-2 bg-neet-success/20 hover:bg-neet-success/30 text-neet-success border border-neet-success/20 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                onClick={() => appendTestCase({ input: "", output: "" })}
+              >
+                <Plus className="w-4 h-4" />
+                Add Test Case
+              </button>
             </div>
 
-            {/* Code Editor Sections */}
-            <div className="space-y-8">
-              {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
+            <div className="space-y-6">
+              {testCaseFields.map((field, index) => (
                 <div
-                  key={language}
-                  className="card bg-base-200 p-4 md:p-6 shadow-md"
+                  key={field.id}
+                  className="bg-neet-neutral/20 rounded-xl p-6 border border-neet-accent/10"
                 >
-                  <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
-                    <Code2 className="w-5 h-5" />
-                    {language}
-                  </h3>
-
-                  <div className="space-y-6">
-                    {/* Starter Code */}
-                    <div className="card bg-base-100 shadow-md">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4">
-                          Starter Code Template
-                        </h4>
-                        <div className="border rounded-md overflow-hidden">
-                          <Controller
-                            name={`codeSnippet.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onChange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.codeSnippet?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-error text-sm">
-                              {errors.codeSnippet[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold text-neet-base-100">
+                      Test Case #{index + 1}
+                    </h4>
+                    <button
+                      type="button"
+                      className="px-3 py-1 bg-neet-error/20 hover:bg-neet-error/30 text-neet-error rounded-lg transition-all duration-200 flex items-center gap-2 text-sm"
+                      onClick={() => removeTestCase(index)}
+                      disabled={testCaseFields.length === 1}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                        Input
+                      </label>
+                      <textarea
+                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                        {...register(`testcases.${index}.input`)}
+                        placeholder="Test case input"
+                      />
+                      {errors.testcases?.[index]?.input && (
+                        <p className="mt-1 text-sm text-neet-error">
+                          {errors.testcases[index].input.message}
+                        </p>
+                      )}
                     </div>
-
-                    {/* Reference Solution */}
-                    <div className="card bg-base-100 shadow-md">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-success" />
-                          Reference Solution
-                        </h4>
-                        <div className="border rounded-md overflow-hidden">
-                          <Controller
-                            name={`referenceSolution.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onChange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.referenceSolution?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-error text-sm">
-                              {errors.referenceSolution[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Examples */}
-                    <div className="card bg-base-100 shadow-md">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4">
-                          Example
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                Input
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
-                              {...register(`examples.${language}.input`)}
-                              placeholder="Example input"
-                            />
-                            {errors.examples?.[language]?.input && (
-                              <label className="label">
-                                <span className="label-text-alt text-error">
-                                  {errors.examples[language].input.message}
-                                </span>
-                              </label>
-                            )}
-                          </div>
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                Output
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
-                              {...register(`examples.${language}.output`)}
-                              placeholder="Example output"
-                            />
-                            {errors.examples?.[language]?.output && (
-                              <label className="label">
-                                <span className="label-text-alt text-error">
-                                  {errors.examples[language].output.message}
-                                </span>
-                              </label>
-                            )}
-                          </div>
-                          <div className="form-control md:col-span-2">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                Explanation
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                              {...register(`examples.${language}.explanation`)}
-                              placeholder="Explain the example"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                        Expected Output
+                      </label>
+                      <textarea
+                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                        {...register(`testcases.${index}.output`)}
+                        placeholder="Expected output"
+                      />
+                      {errors.testcases?.[index]?.output && (
+                        <p className="mt-1 text-sm text-neet-error">
+                          {errors.testcases[index].output.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+            {errors.testcases && !Array.isArray(errors.testcases) && (
+              <p className="mt-4 text-sm text-neet-error">
+                {errors.testcases.message}
+              </p>
+            )}
+          </div>
 
-            {/* Additional Information */}
-            <div className="card bg-base-200 p-4 md:p-6 shadow-md">
-              <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-warning" />
-                Additional Information
-              </h3>
-              <div className="space-y-6">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">Constraints</span>
-                  </label>
-                  <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                    {...register("constraints")}
-                    placeholder="Enter problem constraints"
-                  />
-                  {errors.constraints && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">
-                        {errors.constraints.message}
-                      </span>
-                    </label>
-                  )}
+          {/* Code Editor Sections */}
+          <div className="space-y-8">
+            {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
+              <div
+                key={language}
+                className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-neet-primary to-neet-accent rounded-xl flex items-center justify-center">
+                    <Code2 className="w-5 h-5 text-neet-neutral" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-neet-base-100">
+                    {language}
+                  </h3>
                 </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      Hints (Optional)
-                    </span>
-                  </label>
-                  <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                    {...register("hints")}
-                    placeholder="Enter hints for solving the problem"
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      Editorial (Optional)
-                    </span>
-                  </label>
-                  <textarea
-                    className="textarea textarea-bordered min-h-32 w-full p-3 resize-y"
-                    {...register("editorial")}
-                    placeholder="Enter problem editorial/solution explanation"
-                  />
+
+                <div className="space-y-6">
+                  {/* Starter Code */}
+                  <div>
+                    <h4 className="font-semibold text-base md:text-lg mb-2 text-neet-accent/80">
+                      Starter Code Template
+                    </h4>
+                    <div className="border border-neet-accent/10 rounded-xl overflow-hidden">
+                      <Controller
+                        name={`codeSnippet.${language}`}
+                        control={control}
+                        render={({ field }) => (
+                          <Editor
+                            height="300px"
+                            language={language.toLowerCase()}
+                            theme="vs-dark"
+                            value={field.value}
+                            onChange={field.onChange}
+                            options={{
+                              minimap: { enabled: false },
+                              fontSize: 14,
+                              lineNumbers: "on",
+                              roundedSelection: false,
+                              scrollBeyondLastLine: false,
+                              automaticLayout: true,
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                    {errors.codeSnippet?.[language] && (
+                      <p className="mt-2 text-sm text-neet-error">
+                        {errors.codeSnippet[language].message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Reference Solution */}
+                  <div>
+                    <h4 className="font-semibold text-base md:text-lg mb-2 text-neet-success flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />
+                      Reference Solution
+                    </h4>
+                    <div className="border border-neet-success/10 rounded-xl overflow-hidden">
+                      <Controller
+                        name={`referenceSolution.${language}`}
+                        control={control}
+                        render={({ field }) => (
+                          <Editor
+                            height="300px"
+                            language={language.toLowerCase()}
+                            theme="vs-dark"
+                            value={field.value}
+                            onChange={field.onChange}
+                            options={{
+                              minimap: { enabled: false },
+                              fontSize: 14,
+                              lineNumbers: "on",
+                              roundedSelection: false,
+                              scrollBeyondLastLine: false,
+                              automaticLayout: true,
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                    {errors.referenceSolution?.[language] && (
+                      <p className="mt-2 text-sm text-neet-error">
+                        {errors.referenceSolution[language].message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Examples */}
+                  <div>
+                    <h4 className="font-semibold text-base md:text-lg mb-2 text-neet-accent/80">
+                      Example
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                          Input
+                        </label>
+                        <textarea
+                          className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-16 resize-y"
+                          {...register(`examples.${language}.input`)}
+                          placeholder="Example input"
+                        />
+                        {errors.examples?.[language]?.input && (
+                          <p className="mt-1 text-sm text-neet-error">
+                            {errors.examples[language].input.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                          Output
+                        </label>
+                        <textarea
+                          className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-16 resize-y"
+                          {...register(`examples.${language}.output`)}
+                          placeholder="Example output"
+                        />
+                        {errors.examples?.[language]?.output && (
+                          <p className="mt-1 text-sm text-neet-error">
+                            {errors.examples[language].output.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                          Explanation
+                        </label>
+                        <textarea
+                          className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                          {...register(`examples.${language}.explanation`)}
+                          placeholder="Explain the example"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
 
-            <div className="card-actions justify-end pt-4 border-t">
-              <button type="submit" className="btn btn-primary btn-lg gap-2">
-                {isLoading ? (
-                  <span className="loading loading-spinner text-white"></span>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-5 h-5" />
-                    Create Problem
-                  </>
-                )}
-              </button>
+          {/* Additional Information */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-neet-warning to-neet-accent rounded-xl flex items-center justify-center">
+                <Lightbulb className="w-5 h-5 text-neet-neutral" />
+              </div>
+              <h3 className="text-xl font-semibold text-neet-base-100">
+                Additional Information
+              </h3>
             </div>
-          </form>
-        </div>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Constraints
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                  {...register("constraints")}
+                  placeholder="Enter problem constraints"
+                />
+                {errors.constraints && (
+                  <p className="mt-1 text-sm text-neet-error">
+                    {errors.constraints.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Hints (Optional)
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                  {...register("hints")}
+                  placeholder="Enter hints for solving the problem"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neet-accent/80 mb-2">
+                  Editorial (Optional)
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-24 resize-y"
+                  {...register("editorial")}
+                  placeholder="Enter problem editorial/solution explanation"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end pt-4">
+            <button
+              type="submit"
+              className="px-8 py-3 bg-neet-primary hover:bg-neet-secondary text-neet-neutral font-bold rounded-full text-lg flex items-center gap-3 shadow-lg transition-all duration-200"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="loading loading-spinner text-white"></span>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-5 h-5" />
+                  Create Problem
+                </>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

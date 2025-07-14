@@ -21,7 +21,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth && !authUser) {
+  if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -33,21 +33,20 @@ const App = () => {
     <div className="flex flex-col items-center justify-start">
       <Toaster />
       <Routes>
-        {/* Public Routes */}
-        <Route
-          path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/signup"
-          element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
-        />
-
         {/* Protected Routes with Layout */}
+
         <Route path="/" element={<Layout />}>
           <Route
+            path="/signup"
+            element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/login"
+            element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+          />
+          <Route
             index
-            element={authUser ? <HomePage /> : <Navigate to="/login" />}
+            element={<HomePage />}
           />
           <Route
             path="problems"
@@ -61,8 +60,10 @@ const App = () => {
             />
           </Route>
 
-          <Route path="profile"
-          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}/>
+          <Route
+            path="profile"
+            element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+          />
         </Route>
 
         <Route

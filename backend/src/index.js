@@ -14,12 +14,14 @@ const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true,
-}))
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://281fb4c9fd1b.ngrok-free.app"],
     credentials: true,
   })
 );

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useProfileStore } from "../store/useProfileStore";
-import { Loader2, BadgeCheck, CheckCircle, Flame, Target, Timer } from "lucide-react";
+import { Loader2, BadgeCheck, CheckCircle, Flame, Target, Timer, User, Calendar, Award, TrendingUp } from "lucide-react";
 import moment from "moment";
 
 const AVATAR_PLACEHOLDER = "https://avatar.iran.liara.run/public/boy";
@@ -15,107 +15,145 @@ const ProfilePage = () => {
 
   if (isLoading || !user || !stats) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+        <div className="flex flex-col items-center justify-center py-10">
+          <div className="relative">
+            <div className="w-10 h-10 border-2 border-neet-accent/20 border-t-neet-primary rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-10 h-10 border-2 border-transparent border-r-neet-secondary rounded-full animate-spin animate-reverse"></div>
+          </div>
+          <div className="mt-4 text-center">
+            <h3 className="text-base font-semibold text-neet-base-100 mb-1">
+              Loading Profile
+            </h3>
+            <p className="text-neet-accent/60 text-xs">
+              Fetching your coding journey...
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-base-100 py-12 px-4 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-12">
+    <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+      <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
         
+        {/* Hero Section */}
+        <div className="relative py-6 text-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-2xl"></div>
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 px-5 py-3.5 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20">
+              <User className="w-4 h-4 text-neet-primary" />
+              <span className="text-neet-accent/80 font-medium text-sm">Profile Dashboard</span>
+            </div>
+          </div>
+        </div>
 
-        {/* User Info */}
-        <div className="card bg-base-100 border border-base-300 shadow-md">
-          <div className="card-body">
-            <div className="flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8">
+        {/* User Info Card */}
+        <div className="mb-4">
+          <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
+            <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6">
               {/* Avatar */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 relative flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-neet-primary/20 to-neet-secondary/20 rounded-full blur-lg"></div>
                 <img
                   src={user.image || AVATAR_PLACEHOLDER}
                   alt="User avatar"
-                  className="w-24 h-24 rounded-full border-4 border-primary/30 object-cover shadow"
+                  className="relative w-20 h-20 rounded-full border-2 border-neet-primary/30 object-cover shadow-lg"
                 />
               </div>
-              {/* Info */}
-              <div className="flex-1 w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
+              
+              {/* User Info and Join Info */}
+              <div className="flex-1 w-full flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                {/* User Name & Email - vertically centered beside avatar */}
+                <div className="flex flex-col justify-center items-center md:items-start flex-1">
+                  <h1 className="text-xl font-bold text-neet-base-100 mb-1 flex items-center gap-2">
                     {user.name || "Unnamed User"}
                     {user.role === "ADMIN" && (
-                      <span className="badge badge-primary text-xs font-semibold ml-2">Admin</span>
+                      <span className="px-2 py-0.5 bg-neet-primary/20 text-neet-primary text-[10px] font-semibold rounded-full border border-neet-primary/30">
+                        Admin
+                      </span>
                     )}
-                  </h2>
-                  <p className="text-sm text-base-content/70 mb-1">
+                  </h1>
+                  <p className="text-neet-accent/80 text-sm">
                     {user.email}
                   </p>
-                  
                 </div>
-                <div className="text-sm text-base-content/50 md:text-right">
-                  <span className="block">
-                    Joined{" "}
-                    <span className="font-medium text-base-content">
-                      {moment(user.createdAt).format("MMMM D, YYYY")}
-                    </span>
-                  </span>
-                  <span className="block mt-1">
-                    Member for {moment(user.createdAt).fromNow(true)}
-                  </span>
+                
+                {/* Join Info - more spacious and visually separated */}
+                <div className="flex flex-col items-center md:items-end bg-neet-neutral/30 rounded-xl px-5 py-3 border border-neet-accent/10 shadow-md">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar className="w-4 h-4 text-neet-secondary" />
+                    <span className="text-neet-accent/70 text-xs font-medium">Member Since</span>
+                  </div>
+                  <div className="text-neet-base-100 font-semibold text-base">
+                    {moment(user.createdAt).format("MMM D, YYYY")}
+                  </div>
+                  <div className="text-neet-accent/60 text-xs mt-1">
+                    {moment(user.createdAt).fromNow(true)} ago
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
           {[
             {
               label: "Problems Solved",
               value: stats.problemsSolved,
-              icon: (
-                <CheckCircle className="w-7 h-7 text-success drop-shadow" />
-              ),
-              color: "bg-success/10",
+              icon: CheckCircle,
+              color: "from-neet-success/20 to-neet-success/5",
+              iconColor: "text-neet-success",
+              borderColor: "border-neet-success/20",
             },
             {
               label: "Total Submissions",
               value: stats.totalSubmissions,
-              icon: <Flame className="w-7 h-7 text-warning drop-shadow" />,
-              color: "bg-warning/10",
+              icon: Flame,
+              color: "from-neet-warning/20 to-neet-warning/5",
+              iconColor: "text-neet-warning",
+              borderColor: "border-neet-warning/20",
             },
             {
               label: "Accepted Submissions",
               value: stats.acceptedSubmissions,
-              icon: (
-                <BadgeCheck className="w-7 h-7 text-primary drop-shadow" />
-              ),
-              color: "bg-primary/10",
+              icon: BadgeCheck,
+              color: "from-neet-primary/20 to-neet-primary/5",
+              iconColor: "text-neet-primary",
+              borderColor: "border-neet-primary/20",
             },
             {
               label: "Accuracy Rate",
               value: stats.accuracyRate || "—",
-              icon: <Target className="w-7 h-7 text-info drop-shadow" />,
-              color: "bg-info/10",
+              icon: Target,
+              color: "from-neet-info/20 to-neet-info/5",
+              iconColor: "text-neet-info",
+              borderColor: "border-neet-info/20",
             },
             {
               label: "Last Submission",
               value: stats.lastSubmissionAt
                 ? moment(stats.lastSubmissionAt).fromNow()
                 : "—",
-              icon: <Timer className="w-7 h-7 text-base-content/70 drop-shadow" />,
-              color: "bg-base-200",
+              icon: Timer,
+              color: "from-neet-accent/20 to-neet-accent/5",
+              iconColor: "text-neet-accent",
+              borderColor: "border-neet-accent/20",
             },
           ].map((item, idx) => (
             <div
               key={idx}
-              className={`card border-0 shadow-md rounded-2xl ${item.color} transition-transform hover:scale-[1.03]`}
+              className={`bg-gradient-to-br ${item.color} backdrop-blur-xl rounded-2xl border ${item.borderColor} p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
             >
-              <div className="card-body flex flex-col items-center gap-2 p-6">
-                <div className="p-3 rounded-full bg-base-100 shadow">{item.icon}</div>
-                <div className="text-2xl font-bold">{item.value}</div>
-                <div className="text-sm text-base-content/70 text-center">
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className={`p-2 rounded-full bg-neet-neutral/40 ${item.iconColor} shadow-lg`}>
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <div className="text-lg font-bold text-neet-base-100">{item.value}</div>
+                <div className="text-xs text-neet-accent/70 font-medium">
                   {item.label}
                 </div>
               </div>
@@ -124,35 +162,48 @@ const ProfilePage = () => {
         </div>
 
         {/* Difficulty Breakdown */}
-        <div className="card bg-base-100 border border-base-300 shadow-lg rounded-2xl">
-          <div className="card-body">
-            <h2 className="text-xl font-bold mb-4 text-base-content">
-              Solved by Difficulty
-            </h2>
-            <div className="flex flex-col md:flex-row gap-4 justify-center">
+        <div className="mb-4">
+          <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="w-4 h-4 text-neet-secondary" />
+              <h2 className="text-lg font-bold text-neet-base-100">
+                Solved by Difficulty
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 {
                   label: "Easy",
                   value: stats.solvedDifficulty?.EASY || 0,
-                  color: "bg-success/10 text-success border-success/30",
+                  color: "from-neet-success/20 to-neet-success/5",
+                  textColor: "text-neet-success",
+                  borderColor: "border-neet-success/30",
                 },
                 {
                   label: "Medium",
                   value: stats.solvedDifficulty?.MEDIUM || 0,
-                  color: "bg-warning/10 text-warning border-warning/30",
+                  color: "from-neet-warning/20 to-neet-warning/5",
+                  textColor: "text-neet-warning",
+                  borderColor: "border-neet-warning/30",
                 },
                 {
                   label: "Hard",
                   value: stats.solvedDifficulty?.HARD || 0,
-                  color: "bg-error/10 text-error border-error/30",
+                  color: "from-neet-error/20 to-neet-error/5",
+                  textColor: "text-neet-error",
+                  borderColor: "border-neet-error/30",
                 },
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className={`flex-1 flex flex-col items-center justify-center p-6 rounded-xl border ${item.color} shadow-sm`}
+                  className={`bg-gradient-to-br ${item.color} backdrop-blur-xl rounded-xl border ${item.borderColor} p-4 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
                 >
-                  <div className="text-3xl font-extrabold mb-1">{item.value}</div>
-                  <div className="text-base font-medium tracking-wide">{item.label}</div>
+                  <div className={`text-2xl font-extrabold ${item.textColor} mb-1`}>
+                    {item.value}
+                  </div>
+                  <div className="text-neet-base-100 font-semibold text-base">
+                    {item.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -160,66 +211,78 @@ const ProfilePage = () => {
         </div>
 
         {/* Recent Submissions */}
-        <div className="card bg-base-100 border border-base-300 shadow-lg rounded-2xl">
-          <div className="card-body">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-base-content">
-                Recent Submissions
-              </h2>
-            </div>
-            {stats.recentSubmissions.length === 0 ? (
-              <p className="text-base-content/60 text-sm">
+        <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="w-4 h-4 text-neet-secondary" />
+            <h2 className="text-lg font-bold text-neet-base-100">
+              Recent Submissions
+            </h2>
+          </div>
+          
+          {stats.recentSubmissions.length === 0 ? (
+            <div className="text-center py-6">
+              <div className="w-10 h-10 mx-auto mb-2 bg-neet-neutral/40 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 text-neet-accent/40" />
+              </div>
+              <p className="text-neet-accent/60 text-base">
                 No recent submissions found.
               </p>
-            ) : (
-              <div className="overflow-x-auto rounded-xl border border-base-200">
-                <table className="table table-zebra w-full">
+              <p className="text-neet-accent/40 text-xs mt-1">
+                Start solving problems to see your progress here!
+              </p>
+            </div>
+          ) : (
+            <div className="bg-neet-neutral/40 rounded-xl border border-neet-accent/10 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-base-200 text-base-content/80">
-                      <th>Problem</th>
-                      <th>Difficulty</th>
-                      <th>Status</th>
-                      <th>Date</th>
+                    <tr className="bg-neet-neutral/60 border-b border-neet-accent/10">
+                      <th className="text-left p-2 text-neet-base-100 font-semibold">Problem</th>
+                      <th className="text-left p-2 text-neet-base-100 font-semibold">Difficulty</th>
+                      <th className="text-left p-2 text-neet-base-100 font-semibold">Status</th>
+                      <th className="text-left p-2 text-neet-base-100 font-semibold">Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {stats.recentSubmissions.map((submission) => (
-                      <tr key={submission.id}>
-                        <td className="font-medium">
+                    {stats.recentSubmissions.map((submission, idx) => (
+                      <tr key={submission.id} className={`border-b border-neet-accent/5 ${idx % 2 === 0 ? 'bg-neet-neutral/20' : 'bg-transparent'} hover:bg-neet-accent/5 transition-colors`}>
+                        <td className="p-2 text-neet-base-100 font-medium">
                           {submission.problem?.title}
                         </td>
-                        <td>
+                        <td className="p-2">
                           <span
-                            className={`badge px-3 py-1 text-xs font-semibold ${
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                               submission.problem?.difficulty === "EASY"
-                                ? "badge-success/20 text-success"
+                                ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
                                 : submission.problem?.difficulty === "MEDIUM"
-                                ? "badge-warning/20 text-warning"
-                                : "badge-error/20 text-error"
+                                ? "bg-neet-warning/20 text-neet-warning border border-neet-warning/30"
+                                : "bg-neet-error/20 text-neet-error border border-neet-error/30"
                             }`}
                           >
                             {submission.problem?.difficulty}
                           </span>
                         </td>
-                        <td>
+                        <td className="p-2">
                           <span
-                            className={`badge px-3 py-1 text-xs font-semibold ${
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                               submission.status === "Accepted"
-                                ? "badge-success"
-                                : "badge-error"
+                                ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
+                                : "bg-neet-error/20 text-neet-error border border-neet-error/30"
                             }`}
                           >
                             {submission.status}
                           </span>
                         </td>
-                        <td>{moment(submission.createdAt).fromNow()}</td>
+                        <td className="p-2 text-neet-accent/70">
+                          {moment(submission.createdAt).fromNow()}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

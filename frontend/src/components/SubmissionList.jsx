@@ -42,7 +42,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
+        <span className="loading loading-spinner loading-lg text-neet-primary"></span>
       </div>
     );
   }
@@ -51,58 +51,57 @@ const SubmissionsList = ({ submissions, isLoading }) => {
   if (!submissions?.length) {
     return (
       <div className="text-center p-8">
-        <div className="text-base-content/70">No submissions yet</div>
+        <div className="text-neet-base-100/70">No submissions yet</div>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {submissions.map((submissions) => {
-        const avgMemory = calculateAverageMemory(submissions.memory);
-        const avgTime = calculateAverageTime(submissions.time);
+      {submissions.map((submission) => {
+        const avgMemory = calculateAverageMemory(submission.memory);
+        const avgTime = calculateAverageTime(submission.time);
 
         return (
           <div
-            key={submissions.id}
-            className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg"
+            key={submission.id}
+            className="rounded-2xl bg-neet-neutral shadow-lg border border-neet-accent/10 transition-shadow"
           >
-            <div className="card-body p-4">
+            <div className="p-4">
               <div className="flex items-center justify-between">
                 {/* Left Section: Status and Language */}
                 <div className="flex items-center gap-4">
-                  {submissions.status === "Accepted" ? (
-                    <div className="flex items-center gap-2 text-success">
+                  {submission.status === "Accepted" ? (
+                    <div className="flex items-center gap-2 text-neet-success font-semibold">
                       <CheckCircle2 className="w-6 h-6" />
-                      <span className="font-semibold">Accepted</span>
+                      <span>Accepted</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-error">
+                    <div className="flex items-center gap-2 text-neet-error font-semibold">
                       <XCircle className="w-6 h-6" />
-                      <span className="font-semibold">
-                        {submissions.status}
-                      </span>
+                      <span>{submission.status}</span>
                     </div>
                   )}
-                  <div className="badge badge-neutral">
-                    {submissions.language}
-                  </div>
+                  <span className="px-2 py-1 text-xs font-medium rounded-md bg-neet-neutral/40 text-neet-accent/80 border border-neet-accent/20">
+                    {submission.language}
+                  </span>
                 </div>
 
                 {/* Right Section: Runtime, Memory, and Date */}
-                <div className="flex items-center gap-4 text-base-content/70">
+                <div className="flex items-center gap-6 text-neet-base-100/70 font-inter">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-neet-primary" />
                     <span>{avgTime.toFixed(3)} s</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Memory className="w-4 h-4" />
-                    <span>{avgMemory.toFixed(0)} KB</span>
+                    <Memory className="w-4 h-4 text-neet-primary" />
+                    <span>{(avgMemory / 1024).toFixed(2)} MB</span>
                   </div>
+
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-neet-primary" />
                     <span>
-                      {new Date(submissions.createdAt).toLocaleDateString()}
+                      {new Date(submission.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

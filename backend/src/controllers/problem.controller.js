@@ -179,30 +179,65 @@ export const deleteProblemById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Step 1: Check if the problem exists
     const problem = await db.problem.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
     });
 
     if (!problem) {
-      return res.status(404).json({
-        error: "Problem not found",
+      return res.status(404).json({ error: "Problem not found" });
+    }
+
+    // Step 2: Delete TestCaseResults linked via Submissions
+    const submissions = await db.submission.findMany({
+      where: { problemId: id },
+      select: { id: true },
+    });
+
+    const submissionIds = submissions.map((s) => s.id);
+
+    if (submissionIds.length > 0) {
+      await db.testCaseResult.deleteMany({
+        where: {
+          submissionId: { in: submissionIds },
+        },
       });
     }
 
+    // Step 3: Delete Submissions for this problem
+    await db.submission.deleteMany({
+      where: {
+        problemId: id,
+      },
+    });
+
+    // Step 4: Delete ProblemSolved entries
+    await db.problemSolved.deleteMany({
+      where: {
+        problemId: id,
+      },
+    });
+
+    // Step 5: Delete ProblemInPlaylist entries
+    await db.problemInPlaylist.deleteMany({
+      where: {
+        problemId: id,
+      },
+    });
+
+    // Step 6: Delete the Problem
     await db.problem.delete({
       where: { id },
     });
 
-    console.log("Problem was deleted -->", problem);
+    console.log("Problem deleted -->", problem);
 
     res.status(200).json({
       success: true,
       message: "Problem deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error while deleting problem:", error);
     return res.status(500).json({
       error: "Error while deleting problem",
     });

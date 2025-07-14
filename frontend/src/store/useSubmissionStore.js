@@ -4,19 +4,20 @@ import toast from "react-hot-toast";
 
 export const useSubmissionStore = create((set, get) => ({
   isLoading: null,
-  submissions: [],
-  submission: null,
+  submissionsByProblem: {}, // 🔄 stores submissions per problem ID
   submissionCount: null,
 
+  // Optional: still supports all submissions globally if needed
   getAllSubmissions: async () => {
     try {
       set({ isLoading: true });
 
       const res = await axiosInstance.get("/submission/get-all-submissions");
 
-      set({ submissions: res.data.submissions });
-
       toast.success(res.data.message);
+
+      // Optional: for admin/global view if needed
+      set({ submissionsByProblem: { all: res.data.submissions } });
     } catch (error) {
       console.error("Error getting all submissions", error);
       toast.error("Error getting all submissions");
@@ -27,14 +28,23 @@ export const useSubmissionStore = create((set, get) => ({
 
   getSubmissionForProblem: async (problemId) => {
     try {
+      set({ isLoading: true });
+
       const res = await axiosInstance.get(
-        `/submission/get-submissions/${"d773532a-3fbb-4418-9e3b-ed3636de0b87"}`
+        `/submission/get-submissions/${problemId}`
       );
 
-      set({ submission: res.data.submissions });
+      set((state) => ({
+        submissionsByProblem: {
+          ...state.submissionsByProblem,
+          [problemId]: res.data.submissions,
+        },
+        isLoading: false,
+      }));
     } catch (error) {
       console.error("Error getting submissions for problem", error);
       toast.error("Error getting submissions for problem");
+      set({ isLoading: false });
     }
   },
 

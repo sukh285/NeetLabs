@@ -1,6 +1,43 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Theme colors for neet */
+@theme {
+  --color-neet-primary: #FF9800;
+  --color-neet-primary-focus: #FFB74D;
+  --color-neet-primary-content: #232323;
+  --color-neet-secondary: #FFB74D;
+  --color-neet-secondary-focus: #FFE0B2;
+  --color-neet-secondary-content: #232323;
+  --color-neet-accent: #FFE0B2;
+  --color-neet-accent-focus: #FFF3E0;
+  --color-neet-accent-content: #232323;
+  --color-neet-neutral: #232323;
+  --color-neet-neutral-focus: #424242;
+  --color-neet-neutral-content: #FFE0B2;
+  --color-neet-base-100: #F5F5F5;
+  --color-neet-base-200: #E0E0E0;
+  --color-neet-base-300: #BDBDBD;
+  --color-neet-info: #64B5F6;
+  --color-neet-success: #81C784;
+  --color-neet-warning: #FFD54F;
+  --color-neet-error: #E57373;
+}
+
+/* Font utility classes for Tailwind */
+.font-inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.font-limelight {
+  font-family: "Limelight", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
 @keyframes blink {
     0%,
     100% {
