@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader2, Code, Trophy, Target, Zap } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -6,10 +6,18 @@ import ProblemTable from "../components/ProblemTable";
 
 const AllProblems = () => {
   const { getAllProblems, problems, isProblemsLoading } = useProblemStore();
+  const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
     getAllProblems();
+    setShowLoading(true);
+    const timer = setTimeout(() => {
+      setShowLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
+
+  const loading = isProblemsLoading || showLoading;
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
@@ -32,7 +40,7 @@ const AllProblems = () => {
         </div>
 
         {/* Loading State */}
-        {isProblemsLoading ? (
+        {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="relative">
               <div className="w-16 h-16 border-4 border-neet-accent/20 border-t-neet-primary rounded-full animate-spin"></div>

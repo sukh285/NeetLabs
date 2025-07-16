@@ -18,7 +18,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useActionStore } from "../store/useActionStore";
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import AddToPlaylist from "./AddToPlaylist";
-import CreatePlaylistModal from "./createPlaylistModal";
+import CreatePlaylistModal from "./CreatePlaylistModal";
 
 // Simple confirmation modal component
 const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }) => {

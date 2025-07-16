@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 export const useExecutionStore = create((set) => ({
   isExecuting: false,
   submission: null,
+  justSubmitted: false, // NEW FLAG
 
   executeCode: async (
     source_code,
@@ -14,8 +15,7 @@ export const useExecutionStore = create((set) => ({
     problem_id
   ) => {
     try {
-      set({ isExecuting: true });
-
+      set({ isExecuting: true, justSubmitted: false }); // reset
       const res = await axiosInstance.post("/execute-code", {
         source_code,
         language_id,
@@ -24,7 +24,10 @@ export const useExecutionStore = create((set) => ({
         problem_id,
       });
 
-      set({ submission: res.data.submission });
+      set({
+        submission: res.data.submission,
+        justSubmitted: true, // set true after actual submission
+      });
       toast.success(res.data.message);
     } catch (error) {
       console.error("Error executing code", error);
@@ -33,4 +36,8 @@ export const useExecutionStore = create((set) => ({
       set({ isExecuting: false });
     }
   },
+
+  resetJustSubmitted: () => set({ justSubmitted: false }),
+  resetSubmissionState: () => set({ submission: null, justSubmitted: false }), // utility
 }));
+

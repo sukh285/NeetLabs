@@ -13,6 +13,8 @@ import AddProblem from "./pages/AddProblem";
 import AllProblems from "./pages/AllProblems";
 import ProblemPage from "./pages/ProblemPage";
 import ProfilePage from "./pages/ProfilePage";
+import AllPlaylists from "./pages/AllPlaylists";
+import PlaylistPage from "./pages/PlaylistPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -44,10 +46,7 @@ const App = () => {
             path="/login"
             element={!authUser ? <LoginPage /> : <Navigate to="/" />}
           />
-          <Route
-            index
-            element={<HomePage />}
-          />
+          <Route index element={<HomePage />} />
           <Route
             path="problems"
             element={authUser ? <AllProblems /> : <Navigate to="/login" />}
@@ -63,6 +62,16 @@ const App = () => {
           <Route
             path="profile"
             element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="playlists"
+            element={authUser ? <AllPlaylists /> : <Navigate to="/login" />}
+          />
+          {/* Playlist by ID route */}
+          <Route
+            path="playlist/:playlistId"
+            element={authUser ? <PlaylistPage /> : <Navigate to="/login" />}
           />
         </Route>
 

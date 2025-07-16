@@ -10,6 +10,9 @@ import {
 const SubmissionsList = ({ submissions, isLoading }) => {
   // Helper function to safely parse JSON strings
   const safeParse = (data) => {
+    if (!data || typeof data !== "string") {
+      return [];
+    }
     try {
       return JSON.parse(data);
     } catch (error) {
@@ -24,9 +27,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
       parseFloat(m.split(" ")[0])
     );
     if (memoryArray.length === 0) return 0;
-    return (
-      memoryArray.reduce((acc, curr) => acc + curr, 0) / memoryArray.length
-    );
+    return memoryArray.reduce((acc, curr) => acc + curr, 0) / memoryArray.length;
   };
 
   // Helper function to calculate average runtime

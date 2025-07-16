@@ -37,12 +37,12 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#playlists"
+                  <Link
+                    to={"/playlists"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
                   >
                     Playlists
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
@@ -141,7 +141,7 @@ const Navbar = () => {
                   >
                     Login
                   </Link>
-                  
+
                   {/* Signup Button */}
                   <Link
                     to="/signup"

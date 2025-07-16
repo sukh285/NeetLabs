@@ -7,18 +7,23 @@ import {
 } from "lucide-react";
 
 import { useConfettiCannons } from "../hooks/useConfettiCannons";
+import { useExecutionStore } from "../store/useExecutionStore";
 
 const SubmissionResults = ({ submission }) => {
   const { fireCannons } = useConfettiCannons();
+  const lastAcceptedId = useRef(null);
 
-  const triggeredRef = useRef(false);
+  const justSubmitted = useExecutionStore((state) => state.justSubmitted);
+  const resetJustSubmitted = useExecutionStore(
+    (state) => state.resetJustSubmitted
+  );
 
   useEffect(() => {
-    if (submission.status === "Accepted" && !triggeredRef.current) {
+    if (submission?.status === "Accepted" && submission?.id && justSubmitted) {
       fireCannons();
-      triggeredRef.current = true;
+      resetJustSubmitted(); // prevent firing again on remount
     }
-  }, [submission.status, fireCannons]);
+  }, [submission, justSubmitted, fireCannons, resetJustSubmitted]);
 
   // Parse stringified arrays
   const memoryArr = JSON.parse(submission.memory || "[]");

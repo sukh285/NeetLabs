@@ -47,7 +47,7 @@ const ProblemPage = () => {
     submissionCount,
   } = useSubmissionStore();
 
-  const { executeCode, submission, isExecuting } = useExecutionStore();
+  const { executeCode, submission, isExecuting, resetSubmissionState } = useExecutionStore();
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -136,7 +136,8 @@ const ProblemPage = () => {
   useEffect(() => {
     getProblemById(id);
     getSubmissionCountForProblem(id);
-  }, [id, getProblemById, getSubmissionCountForProblem]);
+    resetSubmissionState()
+  }, [id, getProblemById, getSubmissionCountForProblem, resetSubmissionState]);
 
   // Update code and testcases when problem loads or changes
   useEffect(() => {
@@ -168,7 +169,7 @@ const ProblemPage = () => {
         }))
       );
     }
-  }, [problem]); // Remove selectedLanguage from dependency array
+  }, [problem, id]); // Remove selectedLanguage from dependency array
 
   // Separate effect for language changes (not initial load)
   useEffect(() => {
@@ -341,6 +342,7 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
+
     } catch (error) {
       console.error("Error executing code", error);
     }

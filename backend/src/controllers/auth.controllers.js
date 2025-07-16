@@ -107,7 +107,7 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
     });
 
-    console.log("User logged in successfully:", user);
+    console.log("User logged in successfully:", user.name);
 
     res.status(200).json({
       success: true,
