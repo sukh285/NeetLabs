@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Loader2, ListMusic } from "lucide-react";
+
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import PlaylistTable from "../components/PlaylistTable";
+import ProgressBar from "../templates/ProgressBar";
+import { useAuthStore } from "../store/useAuthStore";
 
 const PlaylistPage = () => {
   const { playlistId } = useParams();
   const { getPlaylistDetails, currentPlaylist, isLoading } = usePlaylistStore();
+  const { authUser } = useAuthStore();
 
   useEffect(() => {
     if (playlistId) getPlaylistDetails(playlistId);
@@ -21,7 +25,9 @@ const PlaylistPage = () => {
           <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-neet-secondary rounded-full animate-spin animate-reverse"></div>
         </div>
         <div className="mt-6 text-center">
-          <h3 className="text-xl font-semibold text-neet-base-100 mb-2">Loading Playlist</h3>
+          <h3 className="text-xl font-semibold text-neet-base-100 mb-2">
+            Loading Playlist
+          </h3>
           <p className="text-neet-accent/60">Fetching playlist details...</p>
         </div>
       </div>
@@ -29,6 +35,14 @@ const PlaylistPage = () => {
   }
 
   const { name, description, createdBy, problems = [] } = currentPlaylist || {};
+
+  // ✅ Filter problems that are solved by the current user
+  const solvedCount = problems.filter((problem) =>
+    problem.solvedProblems?.some((entry) => entry.userId === authUser.id)
+  ).length;
+
+  const totalCount = problems.length;
+  const progressPercent = Math.floor((solvedCount / totalCount) * 100 || 0);
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
@@ -45,10 +59,19 @@ const PlaylistPage = () => {
               {description || "No description provided."}
             </p>
             <div className="text-xs text-neet-accent/60 mb-2">
-              Created by: <span className="font-semibold text-neet-base-100">{createdBy?.username || "Unknown"}</span>
+              Created by:{" "}
+              <span className="font-semibold text-neet-base-100">
+                {createdBy?.username || "Unknown"}
+              </span>
             </div>
           </div>
         </div>
+
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <ProgressBar label={`Solved Problems: ${solvedCount} of ${totalCount}`} percentage={progressPercent} />
+        </div>
+
         {/* Problems Table Section */}
         <div className="pb-16">
           <PlaylistTable problems={problems} />
