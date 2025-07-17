@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Loader2, ListMusic } from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import { Loader2, ListMusic, ArrowLeft } from "lucide-react";
 
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import PlaylistTable from "../components/PlaylistTable";
@@ -47,8 +47,18 @@ const PlaylistPage = () => {
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <div className="pt-8 pb-2 flex items-center">
+          <Link
+            to="/allplaylist"
+            className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
+            <span className="text-neet-base-100 font-medium">Back to Playlists</span>
+          </Link>
+        </div>
         {/* Hero Section */}
-        <div className="relative pt-16 pb-4 text-center">
+        <div className="relative pt-8 pb-4 text-center">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
@@ -74,7 +84,7 @@ const PlaylistPage = () => {
 
         {/* Problems Table Section */}
         <div className="pb-16">
-          <PlaylistTable problems={problems} />
+          <PlaylistTable problems={problems} playlistId={playlistId} />
         </div>
       </div>
     </div>

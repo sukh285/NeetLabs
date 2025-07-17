@@ -56,7 +56,7 @@ const TagsDisplay = ({ tags }) => {
   );
 };
 
-const PlaylistTable = ({ problems }) => {
+const PlaylistTable = ({ problems, playlistId }) => {
   const { authUser } = useAuthStore();
   return (
     <div className="w-full mt-10 bg-neet-neutral/20 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-neet-accent/10">
@@ -102,6 +102,7 @@ const PlaylistTable = ({ problems }) => {
                       <td className="py-4 px-6">
                         <Link
                           to={`/problem/${problem.id}`}
+                          state={{ fromPlaylistId: playlistId }}
                           className="text-neet-base-100 hover:text-neet-primary transition-colors duration-200 font-medium group-hover:underline"
                         >
                           {problem.title}

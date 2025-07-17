@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import CreatePlaylistModal from "../components/CreatePlaylistModal";
-import PlaylistDivider from "../components/Divider";
+import PlaylistDivider from "../templates/Divider";
 
 const AllPlaylists = () => {
   const [allMockPlaylists, setMockPlaylists] = useState([]);

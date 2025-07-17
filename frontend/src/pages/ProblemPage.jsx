@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import {
   Play,
@@ -35,6 +35,8 @@ import SubmissionResults from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
 
 const ProblemPage = () => {
+  const location = useLocation();
+
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
@@ -47,7 +49,8 @@ const ProblemPage = () => {
     submissionCount,
   } = useSubmissionStore();
 
-  const { executeCode, submission, isExecuting, resetSubmissionState } = useExecutionStore();
+  const { executeCode, submission, isExecuting, resetSubmissionState } =
+    useExecutionStore();
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -136,7 +139,7 @@ const ProblemPage = () => {
   useEffect(() => {
     getProblemById(id);
     getSubmissionCountForProblem(id);
-    resetSubmissionState()
+    resetSubmissionState();
   }, [id, getProblemById, getSubmissionCountForProblem, resetSubmissionState]);
 
   // Update code and testcases when problem loads or changes
@@ -342,11 +345,13 @@ const ProblemPage = () => {
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
-
     } catch (error) {
       console.error("Error executing code", error);
     }
   };
+
+  const fromPlaylistId = location.state?.fromPlaylistId;
+  const toPath = fromPlaylistId ? `/playlist/${fromPlaylistId}` : "/problems"; //"to" prop using conditionals
 
   return (
     <div className="w-full min-h-screen bg-neet-neutral font-inter">
@@ -357,8 +362,9 @@ const ProblemPage = () => {
             {/* Left Section - Back Button & Title */}
             <div className="flex items-center gap-6">
               <Link
-                to="/problems"
+                to={toPath}
                 className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+                state={fromPlaylistId ? { fromPlaylistId } : undefined} // preserve state if needed
               >
                 <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
               </Link>
