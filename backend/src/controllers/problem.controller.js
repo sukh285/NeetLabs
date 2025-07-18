@@ -204,6 +204,7 @@ export const updateProblemById = async (req, res) => {
 
     for (const [language, solutionCode] of Object.entries(referenceSolution)) {
       const languageId = getJudge0LanguageId(language);
+      
     
       if (!languageId) {
         return res.status(400).json({
@@ -223,15 +224,29 @@ export const updateProblemById = async (req, res) => {
       const tokens = submissionResults.map((res) => res.token);
     
       const results = await pollBatchResults(tokens);
+
     
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
+      
         if (result.status.id !== 3) {
+          console.error(`❌ Judge0 Failure for ${language}, Testcase #${i + 1}`);
+          console.error("🔎 Full result:", JSON.stringify(result, null, 2));
+          
           return res.status(400).json({
             error: `Testcase ${i + 1} failed for language ${language}`,
+            details: {
+              status: result.status,
+              stderr: result.stderr,
+              stdout: result.stdout,
+              expected_output: testcases[i].output,
+              compile_output: result.compile_output,
+              message: result.message,
+            },
           });
         }
       }
+      
     }
 
     //Update problem
@@ -260,9 +275,9 @@ export const updateProblemById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error fetching problem:", error);
+    console.error("Error updating problem:", error);
     return res.status(500).json({
-      error: "Internal Server Error while checking problem",
+      error: "Internal Server Error while updating problem",
     });
   }
 };

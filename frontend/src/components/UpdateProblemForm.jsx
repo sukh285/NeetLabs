@@ -170,10 +170,10 @@ const UpdateProblemForm = () => {
     }
   }, [problem, reset, replaceTags, replaceTestcases, dataLoaded]);
 
-  const onSubmit = async (value) => {
+  const onSubmit = async (formData) => {
     try {
       setIsLoading(true);
-      const res = await axiosInstance.put(`/problem/update-problem/${problemId}`, value);
+      const res = await axiosInstance.put(`/problem/update-problem/${problemId}`, formData);
       toast.success(res.data.message || "Problem updated successfully");
       navigate("/problems");
     } catch (error) {
