@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Loader2, ListMusic, ArrowLeft } from "lucide-react";
+import { Loader2, ListMusic, ArrowLeft, ListCheckIcon } from "lucide-react";
 
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import PlaylistTable from "../components/PlaylistTable";
 import ProgressBar from "../templates/ProgressBar";
 import { useAuthStore } from "../store/useAuthStore";
+import Divider from "../templates/Divider";
 
 const PlaylistPage = () => {
   const { playlistId } = useParams();
@@ -46,23 +47,24 @@ const PlaylistPage = () => {
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+      {/* Fixed Back Button - positioned absolutely at top */}
+      <div className="fixed mt-20 pl-5 top-10 left-4 z-50 sm:top-10 sm:left-6">
+        <Link
+          to="/playlists"
+          className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/80 backdrop-blur-md border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
+          <span className="text-neet-base-100 font-medium">Back to Playlists</span>
+        </Link>
+      </div>
+
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
-        <div className="pt-8 pb-2 flex items-center">
-          <Link
-            to="/allplaylist"
-            className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
-          >
-            <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
-            <span className="text-neet-base-100 font-medium">Back to Playlists</span>
-          </Link>
-        </div>
-        {/* Hero Section */}
-        <div className="relative pt-8 pb-4 text-center">
+        {/* Hero Section - added top padding to account for fixed back button */}
+        <div className="relative pt-20 pb-4 text-center sm:pt-24">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
-              <ListMusic className="w-5 h-5 text-neet-primary" />
+              <ListCheckIcon className="w-5 h-5 text-neet-primary" />
               <span className="text-neet-accent/80 font-medium">{name}</span>
             </div>
             <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto leading-relaxed mb-2">
@@ -81,6 +83,8 @@ const PlaylistPage = () => {
         <div className="mb-6">
           <ProgressBar label={`Solved Problems: ${solvedCount} of ${totalCount}`} percentage={progressPercent} />
         </div>
+
+        <Divider />
 
         {/* Problems Table Section */}
         <div className="pb-16">

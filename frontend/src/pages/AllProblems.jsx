@@ -3,6 +3,7 @@ import { Loader2, Code, Trophy, Target, Zap } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
 import ProblemTable from "../components/ProblemTable";
+import Divider from "../templates/Divider";
 
 const AllProblems = () => {
   const { getAllProblems, problems, isProblemsLoading } = useProblemStore();
@@ -38,6 +39,8 @@ const AllProblems = () => {
             </p>
           </div>
         </div>
+
+        <Divider />
 
         {/* Loading State */}
         {loading ? (

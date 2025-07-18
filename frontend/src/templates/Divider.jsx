@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 
-const PlaylistDivider = () => {
+const Divider = () => {
   return (
     <div className="py-8 px-4">
       {/* Option 1: Gradient line with center icon */}
@@ -18,4 +18,4 @@ const PlaylistDivider = () => {
   );
 };
 
-export default PlaylistDivider;
+export default Divider;

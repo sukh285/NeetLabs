@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import CreatePlaylistModal from "../components/CreatePlaylistModal";
-import PlaylistDivider from "../templates/Divider";
+import Divider from "../templates/Divider";
 
 const AllPlaylists = () => {
   const [allMockPlaylists, setMockPlaylists] = useState([]);
@@ -241,7 +241,7 @@ const AllPlaylists = () => {
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <div className="relative pt-16 mb-4 pb-4 text-center">
+        <div className="relative pt-16 mb-2 text-center">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
@@ -256,6 +256,8 @@ const AllPlaylists = () => {
             </p>
           </div>
         </div>
+
+        <Divider/>
 
         {/* Loading State */}
         {isPlaylistsLoading ? (
@@ -276,7 +278,7 @@ const AllPlaylists = () => {
         ) : (
           <>
             {/* Premium Playlists Grid */}
-            <div className="pb-12">
+            <div className="pt-5 pb-12">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {allMockPlaylists.map((mockPlaylist) => (
                   <PremiumPlaylistCard
@@ -287,7 +289,7 @@ const AllPlaylists = () => {
               </div>
             </div>
 
-            <PlaylistDivider />
+            <Divider />
 
             {/* My Playlists Section */}
             <div className="pb-16">
