@@ -333,12 +333,13 @@ const ProblemTable = ({ problems }) => {
                                   <TrashIcon className="w-4 h-4" />
                                 )}
                               </button>
-                              <button
-                                disabled
-                                className="p-2 rounded-lg bg-neet-accent/20 hover:bg-neet-accent/30 text-neet-accent/60 transition-all duration-200 opacity-50 cursor-not-allowed"
+                              <Link
+                                to={`/update-problem/${problem.id}`}
+                                className="p-2 rounded-lg bg-neet-accent/20 hover:bg-neet-accent/30 text-neet-accent/60 transition-all duration-200 hover:scale-110"
+                                title="Edit Problem"
                               >
                                 <PencilIcon className="w-4 h-4" />
-                              </button>
+                              </Link>
                             </div>
                           )}
                           <button

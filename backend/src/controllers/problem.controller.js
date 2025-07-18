@@ -170,10 +170,103 @@ export const getProblemById = async (req, res) => {
 };
 
 export const updateProblemById = async (req, res) => {
-  //check id and find problem by id
-  //once problem is found, perform same steps as createProblem with new data
-  //in the end perform db.update instead of db.save
+  const { id } = req.params;
+
+  try {
+    const existingProblem = await db.problem.findUnique({
+      where: { id },
+    });
+
+    if (!existingProblem) {
+      return res.status(404).json({
+        error: "Problem not found",
+      });
+    }
+
+    //Validation and data
+    const {
+      title,
+      description,
+      difficulty,
+      tags,
+      examples,
+      constraints,
+      testcases,
+      codeSnippet,
+      referenceSolution,
+    } = req.body;
+    
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({
+        error: "You are not allowed to update the problem",
+      });
+    }
+
+    for (const [language, solutionCode] of Object.entries(referenceSolution)) {
+      const languageId = getJudge0LanguageId(language);
+    
+      if (!languageId) {
+        return res.status(400).json({
+          error: `Language ${language} is not supported`,
+        });
+      }
+    
+      const submissions = testcases.map(({ input, output }) => ({
+        source_code: solutionCode,
+        language_id: languageId,
+        stdin: input,
+        expected_output: output,
+      }));
+    
+      const submissionResults = await submitBatch(submissions);
+    
+      const tokens = submissionResults.map((res) => res.token);
+    
+      const results = await pollBatchResults(tokens);
+    
+      for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        if (result.status.id !== 3) {
+          return res.status(400).json({
+            error: `Testcase ${i + 1} failed for language ${language}`,
+          });
+        }
+      }
+    }
+
+    //Update problem
+    const updatedProblem = await db.problem.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        difficulty,
+        tags,
+        examples,
+        constraints,
+        testcases,
+        codeSnippet,
+        referenceSolution,
+      },
+    });
+
+    console.log("Problem Updated -->", updatedProblem.title);
+    
+
+    return res.status(200).json({
+      success: true,
+      message: "Problem updated successfully",
+      problem: updatedProblem,
+    });
+
+  } catch (error) {
+    console.error("Error fetching problem:", error);
+    return res.status(500).json({
+      error: "Internal Server Error while checking problem",
+    });
+  }
 };
+
 
 export const deleteProblemById = async (req, res) => {
   try {
