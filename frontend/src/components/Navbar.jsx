@@ -83,7 +83,7 @@ const Navbar = () => {
                             <img
                               src={
                                 authUser?.image ||
-                                "https://avatar.iran.liara.run/public"
+                                "https://avatar.iran.liara.run/public/boy"
                               }
                               alt="User Avatar"
                               className="object-cover rounded-full"

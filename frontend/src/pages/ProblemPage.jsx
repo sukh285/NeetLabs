@@ -25,6 +25,7 @@ import {
   Hash,
   Eye,
   EyeOff,
+  Bot,
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -33,6 +34,7 @@ import { getLanguageId } from "../lib/lang";
 import { useSubmissionStore } from "../store/useSubmissionStore";
 import SubmissionResults from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
+import AiTab from "../components/AiTab";
 
 const ProblemPage = () => {
   const location = useLocation();
@@ -322,6 +324,8 @@ const ProblemPage = () => {
             )}
           </div>
         );
+      case "ai":
+        return <AiTab problemId={id} code={code} />;
       default:
         return null;
     }
@@ -510,6 +514,20 @@ const ProblemPage = () => {
                 >
                   <Lightbulb className="w-4 h-4" />
                   Hints
+                </button>
+                <button
+                  className={`tab gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                    activeTab === "ai"
+                      ? "bg-gradient-to-r from-neet-primary to-neet-secondary text-neet-neutral shadow-lg"
+                      : "text-neet-accent/80 hover:bg-neet-neutral/30 border border-neet-primary"
+                  }`}
+                  onClick={() => setActiveTab("ai")}
+                >
+                  <span className="absolute top-0 right-1">
+                    <span className="inline-block w-2 h-2 rounded-full bg-neet-primary shadow" />
+                  </span>
+                  <Bot className="w-4 h-4" />
+                  Ask Neet
                 </button>
               </div>
               <div className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">

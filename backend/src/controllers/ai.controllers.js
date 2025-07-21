@@ -81,3 +81,49 @@ export const askGemini = async (req, res) => {
     res.status(500).json({ error: "AI failed to respond" });
   }
 };
+
+// Add this new function to your AI controller
+
+export const getAiUsageStatus = async (req, res) => {
+  try {
+    const user = req.user;
+
+    // For admins, return unlimited status
+    if (user.role === "ADMIN") {
+      return res.status(200).json({
+        remaining: "NA", // or "Unlimited"
+        total: "NA",
+        used: "NA",
+        isAdmin: true
+      });
+    }
+
+    const dailyLimit = Number(process.env.MAX_DAILY_LIMIT) || 5;
+    
+    // Get the start of the current day (midnight)
+    const today = startOfDay(new Date());
+
+    // Find usage record for today
+    const usageRecord = await db.aiUsage.findUnique({
+      where: {
+        userId_date: {
+          userId: user.id,
+          date: today,
+        },
+      },
+    });
+
+    const usedToday = usageRecord?.count || 0;
+    const remaining = Math.max(0, dailyLimit - usedToday);
+
+    return res.status(200).json({
+      remaining,
+      total: dailyLimit,
+      used: usedToday,
+      isAdmin: false
+    });
+  } catch (error) {
+    console.error("Error fetching AI usage status:", error);
+    res.status(500).json({ error: "Failed to fetch usage status" });
+  }
+};
