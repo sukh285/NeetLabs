@@ -39,6 +39,7 @@ model User {
   submission    Submission[]
   problemSolved ProblemSolved[]
   playlists     Playlist[]
+  aiUsage       AiUsage[]
 }
 
 model Problem {
@@ -154,4 +155,15 @@ model ProblemInPlaylist {
   problem  Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([playlistId, problemId])
+}
+
+model AiUsage {
+  id     String   @id @default(uuid())
+  userId String
+  count  Int      @default(0)
+  date   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date]) // one record per user per day
 }

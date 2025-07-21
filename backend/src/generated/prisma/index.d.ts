@@ -48,6 +48,11 @@ export type Playlist = $Result.DefaultSelection<Prisma.$PlaylistPayload>
  * 
  */
 export type ProblemInPlaylist = $Result.DefaultSelection<Prisma.$ProblemInPlaylistPayload>
+/**
+ * Model AiUsage
+ * 
+ */
+export type AiUsage = $Result.DefaultSelection<Prisma.$AiUsagePayload>
 
 /**
  * Enums
@@ -273,6 +278,16 @@ export class PrismaClient<
     * ```
     */
   get problemInPlaylist(): Prisma.ProblemInPlaylistDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.aiUsage`: Exposes CRUD operations for the **AiUsage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AiUsages
+    * const aiUsages = await prisma.aiUsage.findMany()
+    * ```
+    */
+  get aiUsage(): Prisma.AiUsageDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -719,7 +734,8 @@ export namespace Prisma {
     TestCaseResult: 'TestCaseResult',
     ProblemSolved: 'ProblemSolved',
     Playlist: 'Playlist',
-    ProblemInPlaylist: 'ProblemInPlaylist'
+    ProblemInPlaylist: 'ProblemInPlaylist',
+    AiUsage: 'AiUsage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -738,7 +754,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "problem" | "submission" | "testCaseResult" | "problemSolved" | "playlist" | "problemInPlaylist"
+      modelProps: "user" | "problem" | "submission" | "testCaseResult" | "problemSolved" | "playlist" | "problemInPlaylist" | "aiUsage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1260,6 +1276,80 @@ export namespace Prisma {
           }
         }
       }
+      AiUsage: {
+        payload: Prisma.$AiUsagePayload<ExtArgs>
+        fields: Prisma.AiUsageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AiUsageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AiUsageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          findFirst: {
+            args: Prisma.AiUsageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AiUsageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          findMany: {
+            args: Prisma.AiUsageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>[]
+          }
+          create: {
+            args: Prisma.AiUsageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          createMany: {
+            args: Prisma.AiUsageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AiUsageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>[]
+          }
+          delete: {
+            args: Prisma.AiUsageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          update: {
+            args: Prisma.AiUsageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          deleteMany: {
+            args: Prisma.AiUsageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AiUsageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AiUsageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>[]
+          }
+          upsert: {
+            args: Prisma.AiUsageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiUsagePayload>
+          }
+          aggregate: {
+            args: Prisma.AiUsageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAiUsage>
+          }
+          groupBy: {
+            args: Prisma.AiUsageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AiUsageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AiUsageCountArgs<ExtArgs>
+            result: $Utils.Optional<AiUsageCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1351,6 +1441,7 @@ export namespace Prisma {
     problemSolved?: ProblemSolvedOmit
     playlist?: PlaylistOmit
     problemInPlaylist?: ProblemInPlaylistOmit
+    aiUsage?: AiUsageOmit
   }
 
   /* Types for Logging */
@@ -1449,6 +1540,7 @@ export namespace Prisma {
     submission: number
     problemSolved: number
     playlists: number
+    aiUsage: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1456,6 +1548,7 @@ export namespace Prisma {
     submission?: boolean | UserCountOutputTypeCountSubmissionArgs
     problemSolved?: boolean | UserCountOutputTypeCountProblemSolvedArgs
     playlists?: boolean | UserCountOutputTypeCountPlaylistsArgs
+    aiUsage?: boolean | UserCountOutputTypeCountAiUsageArgs
   }
 
   // Custom InputTypes
@@ -1495,6 +1588,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPlaylistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlaylistWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAiUsageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiUsageWhereInput
   }
 
 
@@ -1805,6 +1905,7 @@ export namespace Prisma {
     submission?: boolean | User$submissionArgs<ExtArgs>
     problemSolved?: boolean | User$problemSolvedArgs<ExtArgs>
     playlists?: boolean | User$playlistsArgs<ExtArgs>
+    aiUsage?: boolean | User$aiUsageArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1847,6 +1948,7 @@ export namespace Prisma {
     submission?: boolean | User$submissionArgs<ExtArgs>
     problemSolved?: boolean | User$problemSolvedArgs<ExtArgs>
     playlists?: boolean | User$playlistsArgs<ExtArgs>
+    aiUsage?: boolean | User$aiUsageArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1859,6 +1961,7 @@ export namespace Prisma {
       submission: Prisma.$SubmissionPayload<ExtArgs>[]
       problemSolved: Prisma.$ProblemSolvedPayload<ExtArgs>[]
       playlists: Prisma.$PlaylistPayload<ExtArgs>[]
+      aiUsage: Prisma.$AiUsagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2267,6 +2370,7 @@ export namespace Prisma {
     submission<T extends User$submissionArgs<ExtArgs> = {}>(args?: Subset<T, User$submissionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     problemSolved<T extends User$problemSolvedArgs<ExtArgs> = {}>(args?: Subset<T, User$problemSolvedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProblemSolvedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     playlists<T extends User$playlistsArgs<ExtArgs> = {}>(args?: Subset<T, User$playlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaylistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    aiUsage<T extends User$aiUsageArgs<ExtArgs> = {}>(args?: Subset<T, User$aiUsageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2785,6 +2889,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlaylistScalarFieldEnum | PlaylistScalarFieldEnum[]
+  }
+
+  /**
+   * User.aiUsage
+   */
+  export type User$aiUsageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    where?: AiUsageWhereInput
+    orderBy?: AiUsageOrderByWithRelationInput | AiUsageOrderByWithRelationInput[]
+    cursor?: AiUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AiUsageScalarFieldEnum | AiUsageScalarFieldEnum[]
   }
 
   /**
@@ -9699,6 +9827,1085 @@ export namespace Prisma {
 
 
   /**
+   * Model AiUsage
+   */
+
+  export type AggregateAiUsage = {
+    _count: AiUsageCountAggregateOutputType | null
+    _avg: AiUsageAvgAggregateOutputType | null
+    _sum: AiUsageSumAggregateOutputType | null
+    _min: AiUsageMinAggregateOutputType | null
+    _max: AiUsageMaxAggregateOutputType | null
+  }
+
+  export type AiUsageAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type AiUsageSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type AiUsageMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    count: number | null
+    date: Date | null
+  }
+
+  export type AiUsageMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    count: number | null
+    date: Date | null
+  }
+
+  export type AiUsageCountAggregateOutputType = {
+    id: number
+    userId: number
+    count: number
+    date: number
+    _all: number
+  }
+
+
+  export type AiUsageAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type AiUsageSumAggregateInputType = {
+    count?: true
+  }
+
+  export type AiUsageMinAggregateInputType = {
+    id?: true
+    userId?: true
+    count?: true
+    date?: true
+  }
+
+  export type AiUsageMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    count?: true
+    date?: true
+  }
+
+  export type AiUsageCountAggregateInputType = {
+    id?: true
+    userId?: true
+    count?: true
+    date?: true
+    _all?: true
+  }
+
+  export type AiUsageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiUsage to aggregate.
+     */
+    where?: AiUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsages to fetch.
+     */
+    orderBy?: AiUsageOrderByWithRelationInput | AiUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AiUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AiUsages
+    **/
+    _count?: true | AiUsageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AiUsageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AiUsageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AiUsageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AiUsageMaxAggregateInputType
+  }
+
+  export type GetAiUsageAggregateType<T extends AiUsageAggregateArgs> = {
+        [P in keyof T & keyof AggregateAiUsage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAiUsage[P]>
+      : GetScalarType<T[P], AggregateAiUsage[P]>
+  }
+
+
+
+
+  export type AiUsageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiUsageWhereInput
+    orderBy?: AiUsageOrderByWithAggregationInput | AiUsageOrderByWithAggregationInput[]
+    by: AiUsageScalarFieldEnum[] | AiUsageScalarFieldEnum
+    having?: AiUsageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AiUsageCountAggregateInputType | true
+    _avg?: AiUsageAvgAggregateInputType
+    _sum?: AiUsageSumAggregateInputType
+    _min?: AiUsageMinAggregateInputType
+    _max?: AiUsageMaxAggregateInputType
+  }
+
+  export type AiUsageGroupByOutputType = {
+    id: string
+    userId: string
+    count: number
+    date: Date
+    _count: AiUsageCountAggregateOutputType | null
+    _avg: AiUsageAvgAggregateOutputType | null
+    _sum: AiUsageSumAggregateOutputType | null
+    _min: AiUsageMinAggregateOutputType | null
+    _max: AiUsageMaxAggregateOutputType | null
+  }
+
+  type GetAiUsageGroupByPayload<T extends AiUsageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AiUsageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AiUsageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AiUsageGroupByOutputType[P]>
+            : GetScalarType<T[P], AiUsageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AiUsageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    count?: boolean
+    date?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsage"]>
+
+  export type AiUsageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    count?: boolean
+    date?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsage"]>
+
+  export type AiUsageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    count?: boolean
+    date?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["aiUsage"]>
+
+  export type AiUsageSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    count?: boolean
+    date?: boolean
+  }
+
+  export type AiUsageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "count" | "date", ExtArgs["result"]["aiUsage"]>
+  export type AiUsageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AiUsageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AiUsageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AiUsagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AiUsage"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      count: number
+      date: Date
+    }, ExtArgs["result"]["aiUsage"]>
+    composites: {}
+  }
+
+  type AiUsageGetPayload<S extends boolean | null | undefined | AiUsageDefaultArgs> = $Result.GetResult<Prisma.$AiUsagePayload, S>
+
+  type AiUsageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AiUsageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AiUsageCountAggregateInputType | true
+    }
+
+  export interface AiUsageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AiUsage'], meta: { name: 'AiUsage' } }
+    /**
+     * Find zero or one AiUsage that matches the filter.
+     * @param {AiUsageFindUniqueArgs} args - Arguments to find a AiUsage
+     * @example
+     * // Get one AiUsage
+     * const aiUsage = await prisma.aiUsage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AiUsageFindUniqueArgs>(args: SelectSubset<T, AiUsageFindUniqueArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AiUsage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AiUsageFindUniqueOrThrowArgs} args - Arguments to find a AiUsage
+     * @example
+     * // Get one AiUsage
+     * const aiUsage = await prisma.aiUsage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AiUsageFindUniqueOrThrowArgs>(args: SelectSubset<T, AiUsageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiUsage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageFindFirstArgs} args - Arguments to find a AiUsage
+     * @example
+     * // Get one AiUsage
+     * const aiUsage = await prisma.aiUsage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AiUsageFindFirstArgs>(args?: SelectSubset<T, AiUsageFindFirstArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiUsage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageFindFirstOrThrowArgs} args - Arguments to find a AiUsage
+     * @example
+     * // Get one AiUsage
+     * const aiUsage = await prisma.aiUsage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AiUsageFindFirstOrThrowArgs>(args?: SelectSubset<T, AiUsageFindFirstOrThrowArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AiUsages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AiUsages
+     * const aiUsages = await prisma.aiUsage.findMany()
+     * 
+     * // Get first 10 AiUsages
+     * const aiUsages = await prisma.aiUsage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const aiUsageWithIdOnly = await prisma.aiUsage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AiUsageFindManyArgs>(args?: SelectSubset<T, AiUsageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AiUsage.
+     * @param {AiUsageCreateArgs} args - Arguments to create a AiUsage.
+     * @example
+     * // Create one AiUsage
+     * const AiUsage = await prisma.aiUsage.create({
+     *   data: {
+     *     // ... data to create a AiUsage
+     *   }
+     * })
+     * 
+     */
+    create<T extends AiUsageCreateArgs>(args: SelectSubset<T, AiUsageCreateArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AiUsages.
+     * @param {AiUsageCreateManyArgs} args - Arguments to create many AiUsages.
+     * @example
+     * // Create many AiUsages
+     * const aiUsage = await prisma.aiUsage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AiUsageCreateManyArgs>(args?: SelectSubset<T, AiUsageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AiUsages and returns the data saved in the database.
+     * @param {AiUsageCreateManyAndReturnArgs} args - Arguments to create many AiUsages.
+     * @example
+     * // Create many AiUsages
+     * const aiUsage = await prisma.aiUsage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AiUsages and only return the `id`
+     * const aiUsageWithIdOnly = await prisma.aiUsage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AiUsageCreateManyAndReturnArgs>(args?: SelectSubset<T, AiUsageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AiUsage.
+     * @param {AiUsageDeleteArgs} args - Arguments to delete one AiUsage.
+     * @example
+     * // Delete one AiUsage
+     * const AiUsage = await prisma.aiUsage.delete({
+     *   where: {
+     *     // ... filter to delete one AiUsage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AiUsageDeleteArgs>(args: SelectSubset<T, AiUsageDeleteArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AiUsage.
+     * @param {AiUsageUpdateArgs} args - Arguments to update one AiUsage.
+     * @example
+     * // Update one AiUsage
+     * const aiUsage = await prisma.aiUsage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AiUsageUpdateArgs>(args: SelectSubset<T, AiUsageUpdateArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AiUsages.
+     * @param {AiUsageDeleteManyArgs} args - Arguments to filter AiUsages to delete.
+     * @example
+     * // Delete a few AiUsages
+     * const { count } = await prisma.aiUsage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AiUsageDeleteManyArgs>(args?: SelectSubset<T, AiUsageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AiUsages
+     * const aiUsage = await prisma.aiUsage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AiUsageUpdateManyArgs>(args: SelectSubset<T, AiUsageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiUsages and returns the data updated in the database.
+     * @param {AiUsageUpdateManyAndReturnArgs} args - Arguments to update many AiUsages.
+     * @example
+     * // Update many AiUsages
+     * const aiUsage = await prisma.aiUsage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AiUsages and only return the `id`
+     * const aiUsageWithIdOnly = await prisma.aiUsage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AiUsageUpdateManyAndReturnArgs>(args: SelectSubset<T, AiUsageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AiUsage.
+     * @param {AiUsageUpsertArgs} args - Arguments to update or create a AiUsage.
+     * @example
+     * // Update or create a AiUsage
+     * const aiUsage = await prisma.aiUsage.upsert({
+     *   create: {
+     *     // ... data to create a AiUsage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AiUsage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AiUsageUpsertArgs>(args: SelectSubset<T, AiUsageUpsertArgs<ExtArgs>>): Prisma__AiUsageClient<$Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AiUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageCountArgs} args - Arguments to filter AiUsages to count.
+     * @example
+     * // Count the number of AiUsages
+     * const count = await prisma.aiUsage.count({
+     *   where: {
+     *     // ... the filter for the AiUsages we want to count
+     *   }
+     * })
+    **/
+    count<T extends AiUsageCountArgs>(
+      args?: Subset<T, AiUsageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AiUsageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AiUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AiUsageAggregateArgs>(args: Subset<T, AiUsageAggregateArgs>): Prisma.PrismaPromise<GetAiUsageAggregateType<T>>
+
+    /**
+     * Group by AiUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiUsageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AiUsageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AiUsageGroupByArgs['orderBy'] }
+        : { orderBy?: AiUsageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AiUsageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAiUsageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AiUsage model
+   */
+  readonly fields: AiUsageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AiUsage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AiUsageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AiUsage model
+   */
+  interface AiUsageFieldRefs {
+    readonly id: FieldRef<"AiUsage", 'String'>
+    readonly userId: FieldRef<"AiUsage", 'String'>
+    readonly count: FieldRef<"AiUsage", 'Int'>
+    readonly date: FieldRef<"AiUsage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AiUsage findUnique
+   */
+  export type AiUsageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsage to fetch.
+     */
+    where: AiUsageWhereUniqueInput
+  }
+
+  /**
+   * AiUsage findUniqueOrThrow
+   */
+  export type AiUsageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsage to fetch.
+     */
+    where: AiUsageWhereUniqueInput
+  }
+
+  /**
+   * AiUsage findFirst
+   */
+  export type AiUsageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsage to fetch.
+     */
+    where?: AiUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsages to fetch.
+     */
+    orderBy?: AiUsageOrderByWithRelationInput | AiUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiUsages.
+     */
+    cursor?: AiUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiUsages.
+     */
+    distinct?: AiUsageScalarFieldEnum | AiUsageScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsage findFirstOrThrow
+   */
+  export type AiUsageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsage to fetch.
+     */
+    where?: AiUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsages to fetch.
+     */
+    orderBy?: AiUsageOrderByWithRelationInput | AiUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiUsages.
+     */
+    cursor?: AiUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiUsages.
+     */
+    distinct?: AiUsageScalarFieldEnum | AiUsageScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsage findMany
+   */
+  export type AiUsageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which AiUsages to fetch.
+     */
+    where?: AiUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiUsages to fetch.
+     */
+    orderBy?: AiUsageOrderByWithRelationInput | AiUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AiUsages.
+     */
+    cursor?: AiUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiUsages.
+     */
+    skip?: number
+    distinct?: AiUsageScalarFieldEnum | AiUsageScalarFieldEnum[]
+  }
+
+  /**
+   * AiUsage create
+   */
+  export type AiUsageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AiUsage.
+     */
+    data: XOR<AiUsageCreateInput, AiUsageUncheckedCreateInput>
+  }
+
+  /**
+   * AiUsage createMany
+   */
+  export type AiUsageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AiUsages.
+     */
+    data: AiUsageCreateManyInput | AiUsageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AiUsage createManyAndReturn
+   */
+  export type AiUsageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * The data used to create many AiUsages.
+     */
+    data: AiUsageCreateManyInput | AiUsageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiUsage update
+   */
+  export type AiUsageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AiUsage.
+     */
+    data: XOR<AiUsageUpdateInput, AiUsageUncheckedUpdateInput>
+    /**
+     * Choose, which AiUsage to update.
+     */
+    where: AiUsageWhereUniqueInput
+  }
+
+  /**
+   * AiUsage updateMany
+   */
+  export type AiUsageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AiUsages.
+     */
+    data: XOR<AiUsageUpdateManyMutationInput, AiUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which AiUsages to update
+     */
+    where?: AiUsageWhereInput
+    /**
+     * Limit how many AiUsages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiUsage updateManyAndReturn
+   */
+  export type AiUsageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * The data used to update AiUsages.
+     */
+    data: XOR<AiUsageUpdateManyMutationInput, AiUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which AiUsages to update
+     */
+    where?: AiUsageWhereInput
+    /**
+     * Limit how many AiUsages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiUsage upsert
+   */
+  export type AiUsageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AiUsage to update in case it exists.
+     */
+    where: AiUsageWhereUniqueInput
+    /**
+     * In case the AiUsage found by the `where` argument doesn't exist, create a new AiUsage with this data.
+     */
+    create: XOR<AiUsageCreateInput, AiUsageUncheckedCreateInput>
+    /**
+     * In case the AiUsage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AiUsageUpdateInput, AiUsageUncheckedUpdateInput>
+  }
+
+  /**
+   * AiUsage delete
+   */
+  export type AiUsageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+    /**
+     * Filter which AiUsage to delete.
+     */
+    where: AiUsageWhereUniqueInput
+  }
+
+  /**
+   * AiUsage deleteMany
+   */
+  export type AiUsageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiUsages to delete
+     */
+    where?: AiUsageWhereInput
+    /**
+     * Limit how many AiUsages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiUsage without action
+   */
+  export type AiUsageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiUsage
+     */
+    select?: AiUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiUsage
+     */
+    omit?: AiUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiUsageInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9818,6 +11025,16 @@ export namespace Prisma {
   };
 
   export type ProblemInPlaylistScalarFieldEnum = (typeof ProblemInPlaylistScalarFieldEnum)[keyof typeof ProblemInPlaylistScalarFieldEnum]
+
+
+  export const AiUsageScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    count: 'count',
+    date: 'date'
+  };
+
+  export type AiUsageScalarFieldEnum = (typeof AiUsageScalarFieldEnum)[keyof typeof AiUsageScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9989,6 +11206,7 @@ export namespace Prisma {
     submission?: SubmissionListRelationFilter
     problemSolved?: ProblemSolvedListRelationFilter
     playlists?: PlaylistListRelationFilter
+    aiUsage?: AiUsageListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10004,6 +11222,7 @@ export namespace Prisma {
     submission?: SubmissionOrderByRelationAggregateInput
     problemSolved?: ProblemSolvedOrderByRelationAggregateInput
     playlists?: PlaylistOrderByRelationAggregateInput
+    aiUsage?: AiUsageOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -10022,6 +11241,7 @@ export namespace Prisma {
     submission?: SubmissionListRelationFilter
     problemSolved?: ProblemSolvedListRelationFilter
     playlists?: PlaylistListRelationFilter
+    aiUsage?: AiUsageListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -10551,6 +11771,59 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ProblemInPlaylist"> | Date | string
   }
 
+  export type AiUsageWhereInput = {
+    AND?: AiUsageWhereInput | AiUsageWhereInput[]
+    OR?: AiUsageWhereInput[]
+    NOT?: AiUsageWhereInput | AiUsageWhereInput[]
+    id?: StringFilter<"AiUsage"> | string
+    userId?: StringFilter<"AiUsage"> | string
+    count?: IntFilter<"AiUsage"> | number
+    date?: DateTimeFilter<"AiUsage"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AiUsageOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    date?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type AiUsageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_date?: AiUsageUserIdDateCompoundUniqueInput
+    AND?: AiUsageWhereInput | AiUsageWhereInput[]
+    OR?: AiUsageWhereInput[]
+    NOT?: AiUsageWhereInput | AiUsageWhereInput[]
+    userId?: StringFilter<"AiUsage"> | string
+    count?: IntFilter<"AiUsage"> | number
+    date?: DateTimeFilter<"AiUsage"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_date">
+
+  export type AiUsageOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    date?: SortOrder
+    _count?: AiUsageCountOrderByAggregateInput
+    _avg?: AiUsageAvgOrderByAggregateInput
+    _max?: AiUsageMaxOrderByAggregateInput
+    _min?: AiUsageMinOrderByAggregateInput
+    _sum?: AiUsageSumOrderByAggregateInput
+  }
+
+  export type AiUsageScalarWhereWithAggregatesInput = {
+    AND?: AiUsageScalarWhereWithAggregatesInput | AiUsageScalarWhereWithAggregatesInput[]
+    OR?: AiUsageScalarWhereWithAggregatesInput[]
+    NOT?: AiUsageScalarWhereWithAggregatesInput | AiUsageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AiUsage"> | string
+    userId?: StringWithAggregatesFilter<"AiUsage"> | string
+    count?: IntWithAggregatesFilter<"AiUsage"> | number
+    date?: DateTimeWithAggregatesFilter<"AiUsage"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -10564,6 +11837,7 @@ export namespace Prisma {
     submission?: SubmissionCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedCreateNestedManyWithoutUserInput
     playlists?: PlaylistCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -10579,6 +11853,7 @@ export namespace Prisma {
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
     playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -10594,6 +11869,7 @@ export namespace Prisma {
     submission?: SubmissionUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -10609,6 +11885,7 @@ export namespace Prisma {
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -11187,6 +12464,54 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AiUsageCreateInput = {
+    id?: string
+    count?: number
+    date?: Date | string
+    user: UserCreateNestedOneWithoutAiUsageInput
+  }
+
+  export type AiUsageUncheckedCreateInput = {
+    id?: string
+    userId: string
+    count?: number
+    date?: Date | string
+  }
+
+  export type AiUsageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAiUsageNestedInput
+  }
+
+  export type AiUsageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageCreateManyInput = {
+    id?: string
+    userId: string
+    count?: number
+    date?: Date | string
+  }
+
+  export type AiUsageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -11259,6 +12584,12 @@ export namespace Prisma {
     none?: PlaylistWhereInput
   }
 
+  export type AiUsageListRelationFilter = {
+    every?: AiUsageWhereInput
+    some?: AiUsageWhereInput
+    none?: AiUsageWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -11277,6 +12608,10 @@ export namespace Prisma {
   }
 
   export type PlaylistOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AiUsageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11766,6 +13101,40 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type AiUsageUserIdDateCompoundUniqueInput = {
+    userId: string
+    date: Date | string
+  }
+
+  export type AiUsageCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    date?: SortOrder
+  }
+
+  export type AiUsageAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type AiUsageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    date?: SortOrder
+  }
+
+  export type AiUsageMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    date?: SortOrder
+  }
+
+  export type AiUsageSumOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
   export type ProblemCreateNestedManyWithoutUserInput = {
     create?: XOR<ProblemCreateWithoutUserInput, ProblemUncheckedCreateWithoutUserInput> | ProblemCreateWithoutUserInput[] | ProblemUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProblemCreateOrConnectWithoutUserInput | ProblemCreateOrConnectWithoutUserInput[]
@@ -11794,6 +13163,13 @@ export namespace Prisma {
     connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
   }
 
+  export type AiUsageCreateNestedManyWithoutUserInput = {
+    create?: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput> | AiUsageCreateWithoutUserInput[] | AiUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageCreateOrConnectWithoutUserInput | AiUsageCreateOrConnectWithoutUserInput[]
+    createMany?: AiUsageCreateManyUserInputEnvelope
+    connect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+  }
+
   export type ProblemUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ProblemCreateWithoutUserInput, ProblemUncheckedCreateWithoutUserInput> | ProblemCreateWithoutUserInput[] | ProblemUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProblemCreateOrConnectWithoutUserInput | ProblemCreateOrConnectWithoutUserInput[]
@@ -11820,6 +13196,13 @@ export namespace Prisma {
     connectOrCreate?: PlaylistCreateOrConnectWithoutUserInput | PlaylistCreateOrConnectWithoutUserInput[]
     createMany?: PlaylistCreateManyUserInputEnvelope
     connect?: PlaylistWhereUniqueInput | PlaylistWhereUniqueInput[]
+  }
+
+  export type AiUsageUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput> | AiUsageCreateWithoutUserInput[] | AiUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageCreateOrConnectWithoutUserInput | AiUsageCreateOrConnectWithoutUserInput[]
+    createMany?: AiUsageCreateManyUserInputEnvelope
+    connect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -11894,6 +13277,20 @@ export namespace Prisma {
     deleteMany?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
   }
 
+  export type AiUsageUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput> | AiUsageCreateWithoutUserInput[] | AiUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageCreateOrConnectWithoutUserInput | AiUsageCreateOrConnectWithoutUserInput[]
+    upsert?: AiUsageUpsertWithWhereUniqueWithoutUserInput | AiUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AiUsageCreateManyUserInputEnvelope
+    set?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    disconnect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    delete?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    connect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    update?: AiUsageUpdateWithWhereUniqueWithoutUserInput | AiUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AiUsageUpdateManyWithWhereWithoutUserInput | AiUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AiUsageScalarWhereInput | AiUsageScalarWhereInput[]
+  }
+
   export type ProblemUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ProblemCreateWithoutUserInput, ProblemUncheckedCreateWithoutUserInput> | ProblemCreateWithoutUserInput[] | ProblemUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProblemCreateOrConnectWithoutUserInput | ProblemCreateOrConnectWithoutUserInput[]
@@ -11948,6 +13345,20 @@ export namespace Prisma {
     update?: PlaylistUpdateWithWhereUniqueWithoutUserInput | PlaylistUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PlaylistUpdateManyWithWhereWithoutUserInput | PlaylistUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PlaylistScalarWhereInput | PlaylistScalarWhereInput[]
+  }
+
+  export type AiUsageUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput> | AiUsageCreateWithoutUserInput[] | AiUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AiUsageCreateOrConnectWithoutUserInput | AiUsageCreateOrConnectWithoutUserInput[]
+    upsert?: AiUsageUpsertWithWhereUniqueWithoutUserInput | AiUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AiUsageCreateManyUserInputEnvelope
+    set?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    disconnect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    delete?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    connect?: AiUsageWhereUniqueInput | AiUsageWhereUniqueInput[]
+    update?: AiUsageUpdateWithWhereUniqueWithoutUserInput | AiUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AiUsageUpdateManyWithWhereWithoutUserInput | AiUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AiUsageScalarWhereInput | AiUsageScalarWhereInput[]
   }
 
   export type ProblemCreatetagsInput = {
@@ -12311,6 +13722,20 @@ export namespace Prisma {
     update?: XOR<XOR<ProblemUpdateToOneWithWhereWithoutPlaylistProblemsInput, ProblemUpdateWithoutPlaylistProblemsInput>, ProblemUncheckedUpdateWithoutPlaylistProblemsInput>
   }
 
+  export type UserCreateNestedOneWithoutAiUsageInput = {
+    create?: XOR<UserCreateWithoutAiUsageInput, UserUncheckedCreateWithoutAiUsageInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiUsageInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutAiUsageNestedInput = {
+    create?: XOR<UserCreateWithoutAiUsageInput, UserUncheckedCreateWithoutAiUsageInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiUsageInput
+    upsert?: UserUpsertWithoutAiUsageInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAiUsageInput, UserUpdateWithoutAiUsageInput>, UserUncheckedUpdateWithoutAiUsageInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -12663,6 +14088,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AiUsageCreateWithoutUserInput = {
+    id?: string
+    count?: number
+    date?: Date | string
+  }
+
+  export type AiUsageUncheckedCreateWithoutUserInput = {
+    id?: string
+    count?: number
+    date?: Date | string
+  }
+
+  export type AiUsageCreateOrConnectWithoutUserInput = {
+    where: AiUsageWhereUniqueInput
+    create: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type AiUsageCreateManyUserInputEnvelope = {
+    data: AiUsageCreateManyUserInput | AiUsageCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProblemUpsertWithWhereUniqueWithoutUserInput = {
     where: ProblemWhereUniqueInput
     update: XOR<ProblemUpdateWithoutUserInput, ProblemUncheckedUpdateWithoutUserInput>
@@ -12791,6 +14238,32 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
   }
 
+  export type AiUsageUpsertWithWhereUniqueWithoutUserInput = {
+    where: AiUsageWhereUniqueInput
+    update: XOR<AiUsageUpdateWithoutUserInput, AiUsageUncheckedUpdateWithoutUserInput>
+    create: XOR<AiUsageCreateWithoutUserInput, AiUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type AiUsageUpdateWithWhereUniqueWithoutUserInput = {
+    where: AiUsageWhereUniqueInput
+    data: XOR<AiUsageUpdateWithoutUserInput, AiUsageUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AiUsageUpdateManyWithWhereWithoutUserInput = {
+    where: AiUsageScalarWhereInput
+    data: XOR<AiUsageUpdateManyMutationInput, AiUsageUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AiUsageScalarWhereInput = {
+    AND?: AiUsageScalarWhereInput | AiUsageScalarWhereInput[]
+    OR?: AiUsageScalarWhereInput[]
+    NOT?: AiUsageScalarWhereInput | AiUsageScalarWhereInput[]
+    id?: StringFilter<"AiUsage"> | string
+    userId?: StringFilter<"AiUsage"> | string
+    count?: IntFilter<"AiUsage"> | number
+    date?: DateTimeFilter<"AiUsage"> | Date | string
+  }
+
   export type UserCreateWithoutProblemsInput = {
     id?: string
     name?: string | null
@@ -12803,6 +14276,7 @@ export namespace Prisma {
     submission?: SubmissionCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedCreateNestedManyWithoutUserInput
     playlists?: PlaylistCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProblemsInput = {
@@ -12817,6 +14291,7 @@ export namespace Prisma {
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
     playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProblemsInput = {
@@ -12939,6 +14414,7 @@ export namespace Prisma {
     submission?: SubmissionUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProblemsInput = {
@@ -12953,6 +14429,7 @@ export namespace Prisma {
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubmissionUpsertWithWhereUniqueWithoutProblemInput = {
@@ -13026,6 +14503,7 @@ export namespace Prisma {
     problems?: ProblemCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedCreateNestedManyWithoutUserInput
     playlists?: PlaylistCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubmissionInput = {
@@ -13040,6 +14518,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
     playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubmissionInput = {
@@ -13155,6 +14634,7 @@ export namespace Prisma {
     problems?: ProblemUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubmissionInput = {
@@ -13169,6 +14649,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProblemUpsertWithoutSubmissionInput = {
@@ -13353,6 +14834,7 @@ export namespace Prisma {
     problems?: ProblemCreateNestedManyWithoutUserInput
     submission?: SubmissionCreateNestedManyWithoutUserInput
     playlists?: PlaylistCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProblemSolvedInput = {
@@ -13367,6 +14849,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
     playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProblemSolvedInput = {
@@ -13442,6 +14925,7 @@ export namespace Prisma {
     problems?: ProblemUpdateManyWithoutUserNestedInput
     submission?: SubmissionUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProblemSolvedInput = {
@@ -13456,6 +14940,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
     playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProblemUpsertWithoutSolvedProblemsInput = {
@@ -13545,6 +15030,7 @@ export namespace Prisma {
     problems?: ProblemCreateNestedManyWithoutUserInput
     submission?: SubmissionCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlaylistsInput = {
@@ -13559,6 +15045,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
     problemSolved?: ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
+    aiUsage?: AiUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlaylistsInput = {
@@ -13605,6 +15092,7 @@ export namespace Prisma {
     problems?: ProblemUpdateManyWithoutUserNestedInput
     submission?: SubmissionUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlaylistsInput = {
@@ -13619,6 +15107,7 @@ export namespace Prisma {
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
     problemSolved?: ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
+    aiUsage?: AiUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PlaylistCreateWithoutProblemsInput = {
@@ -13769,6 +15258,82 @@ export namespace Prisma {
     solvedProblems?: ProblemSolvedUncheckedUpdateManyWithoutProblemNestedInput
   }
 
+  export type UserCreateWithoutAiUsageInput = {
+    id?: string
+    name?: string | null
+    email: string
+    image?: string | null
+    role?: $Enums.UserRole
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    problems?: ProblemCreateNestedManyWithoutUserInput
+    submission?: SubmissionCreateNestedManyWithoutUserInput
+    problemSolved?: ProblemSolvedCreateNestedManyWithoutUserInput
+    playlists?: PlaylistCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAiUsageInput = {
+    id?: string
+    name?: string | null
+    email: string
+    image?: string | null
+    role?: $Enums.UserRole
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
+    submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
+    problemSolved?: ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
+    playlists?: PlaylistUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAiUsageInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAiUsageInput, UserUncheckedCreateWithoutAiUsageInput>
+  }
+
+  export type UserUpsertWithoutAiUsageInput = {
+    update: XOR<UserUpdateWithoutAiUsageInput, UserUncheckedUpdateWithoutAiUsageInput>
+    create: XOR<UserCreateWithoutAiUsageInput, UserUncheckedCreateWithoutAiUsageInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAiUsageInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAiUsageInput, UserUncheckedUpdateWithoutAiUsageInput>
+  }
+
+  export type UserUpdateWithoutAiUsageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    problems?: ProblemUpdateManyWithoutUserNestedInput
+    submission?: SubmissionUpdateManyWithoutUserNestedInput
+    problemSolved?: ProblemSolvedUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAiUsageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
+    submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
+    problemSolved?: ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
+    playlists?: PlaylistUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type ProblemCreateManyUserInput = {
     id?: string
     title: string
@@ -13815,6 +15380,12 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AiUsageCreateManyUserInput = {
+    id?: string
+    count?: number
+    date?: Date | string
   }
 
   export type ProblemUpdateWithoutUserInput = {
@@ -13969,6 +15540,24 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiUsageUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SubmissionCreateManyProblemInput = {
