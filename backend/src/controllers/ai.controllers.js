@@ -71,7 +71,7 @@ export const askGemini = async (req, res) => {
 
     // ✅ Use same style as your test file
     const result = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.0-flash-lite",
       contents: prompt,
     });
 

@@ -10,6 +10,10 @@ import submissionRoutes from "./routes/submission.routes.js";
 import playlistRoutes from "./routes/playlist.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 
+import session from "express-session";
+import passport from "passport";
+import "./config/passport.js";
+
 dotenv.config();
 const port = process.env.PORT;
 
@@ -27,6 +31,23 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development", // true in production
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+  })
+);
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Welcome to leetlab");

@@ -1870,7 +1870,7 @@ export namespace Prisma {
     email: string
     image: string | null
     role: $Enums.UserRole
-    password: string
+    password: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1969,7 +1969,7 @@ export namespace Prisma {
       email: string
       image: string | null
       role: $Enums.UserRole
-      password: string
+      password: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -11199,7 +11199,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     problems?: ProblemListRelationFilter
@@ -11215,7 +11215,7 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     problems?: ProblemOrderByRelationAggregateInput
@@ -11234,7 +11234,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     problems?: ProblemListRelationFilter
@@ -11250,7 +11250,7 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrderInput | SortOrder
     role?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -11267,7 +11267,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-    password?: StringWithAggregatesFilter<"User"> | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -11830,7 +11830,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -11846,7 +11846,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -11862,7 +11862,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -11878,7 +11878,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -11894,7 +11894,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11905,7 +11905,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11916,7 +11916,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14270,7 +14270,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     submission?: SubmissionCreateNestedManyWithoutUserInput
@@ -14285,7 +14285,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
@@ -14408,7 +14408,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submission?: SubmissionUpdateManyWithoutUserNestedInput
@@ -14423,7 +14423,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
@@ -14497,7 +14497,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -14512,7 +14512,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -14628,7 +14628,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -14643,7 +14643,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -14828,7 +14828,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -14843,7 +14843,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -14919,7 +14919,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -14934,7 +14934,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -15024,7 +15024,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -15039,7 +15039,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -15086,7 +15086,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -15101,7 +15101,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -15264,7 +15264,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -15279,7 +15279,7 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -15310,7 +15310,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -15325,7 +15325,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
