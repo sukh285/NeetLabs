@@ -247,7 +247,8 @@ export const getProfile = async (req, res) => {
     });
 
     // Last submission timestamp (from the most recent one)
-    const lastSubmissionAt = submission.length > 0 ? submission[0].createdAt : null;
+    const lastSubmissionAt =
+      submission.length > 0 ? submission[0].createdAt : null;
 
     const accuracyRate =
       totalSubmissions > 0
@@ -272,3 +273,45 @@ export const getProfile = async (req, res) => {
   }
 };
 
+// controllers/authController.js
+export const deleteProfile = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    // Safety check: Confirm user exists
+    const existingUser = await db.user.findUnique({ where: { id: userId } });
+    if (!existingUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Delete related data that may not cascade
+    await db.aiUsage.deleteMany({ where: { userId } });
+
+    // Delete the user — this will cascade delete:
+    // - Problems created by user
+    // - Submissions by user
+    // - ProblemSolved records
+    // - Playlists
+    // - ProblemsInPlaylist (via playlist cascade)
+    await db.user.delete({
+      where: { id: userId },
+    });
+
+    // Clear cookie to logout
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    console.log(`User account deleted: ${userId}`);
+
+    return res.status(200).json({
+      success: true,
+      message: "User account and all related data deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    return res.status(500).json({ error: "Failed to delete user account." });
+  }
+};

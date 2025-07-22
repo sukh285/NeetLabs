@@ -3,9 +3,9 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 export const useProfileStore = create((set) => ({
-  profile: null,       // Contains full profile (user + stats)
-  user: null,          // Optional shortcut for just basic user info
-  stats: null,         // Optional shortcut for stats
+  profile: null,
+  user: null,
+  stats: null,
   isLoading: false,
 
   fetchProfile: async () => {
@@ -22,6 +22,18 @@ export const useProfileStore = create((set) => ({
       toast.error("Failed to load profile");
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  deleteProfile: async () => {
+    try {
+      await axiosInstance.delete("/auth/profile");
+      set({ profile: null, user: null, stats: null });
+      toast.success("Profile deleted successfully.");
+      window.location.href = "/"; // Or navigate using your router
+    } catch (error) {
+      console.error("Failed to delete profile:", error);
+      toast.error("Failed to delete profile.");
     }
   },
 }));

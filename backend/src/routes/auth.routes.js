@@ -3,13 +3,17 @@ import passport from "passport";
 
 import {
   check,
+  deleteProfile,
   getProfile,
   login,
   logout,
   register,
 } from "../controllers/auth.controllers.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
-import { googleAuthFail, googleAuthSuccess } from "../controllers/oauth.controllers.js";
+import {
+  googleAuthFail,
+  googleAuthSuccess,
+} from "../controllers/oauth.controllers.js";
 
 const authRoutes = express.Router();
 
@@ -19,9 +23,12 @@ authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.get("/check", authMiddleware, check);
 
 authRoutes.get("/profile", authMiddleware, getProfile);
+authRoutes.delete("/profile", authMiddleware, deleteProfile);
 
-
-authRoutes.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+authRoutes.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
 authRoutes.get(
   "/google/callback",
@@ -33,6 +40,5 @@ authRoutes.get(
 );
 
 authRoutes.get("/google/failure", googleAuthFail);
-
 
 export default authRoutes;
