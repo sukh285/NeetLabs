@@ -101,7 +101,9 @@ const LoginPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     className={`input w-full pl-12 pr-4 py-2.5 bg-neet-base-100 border-2 border-neet-base-200/50 rounded-xl hover:border-neet-secondary/50 focus:border-neet-secondary focus:bg-neet-base-100 transition-all duration-300 text-neet-neutral placeholder-neet-neutral/50 ${
-                      errors.email ? "border-neet-error focus:border-neet-error" : ""
+                      errors.email
+                        ? "border-neet-error focus:border-neet-error"
+                        : ""
                     }`}
                     {...register("email")}
                   />
@@ -169,6 +171,25 @@ const LoginPage = () => {
                     "Login"
                   )}
                 </button>
+              </div>
+              <div className="flex items-center my-4">
+                <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
+                <span className="mx-3 text-neet-accent/60 text-sm font-medium">or</span>
+                <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
+              </div>
+              <div className="form-control pt-1">
+                <a
+                  href="http://localhost:8080/api/v1/auth/google"
+                  className="btn w-full py-3 bg-white text-black border border-gray-300 hover:shadow-md rounded-xl transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105 active:scale-95"
+                  style={{ willChange: "transform" }}
+                >
+                  <img
+                    src="https://developers.google.com/identity/images/g-logo.png"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  Continue with Google
+                </a>
               </div>
             </form>
 

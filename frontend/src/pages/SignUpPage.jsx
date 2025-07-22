@@ -73,7 +73,9 @@ const SignUpPage = () => {
               <div className="w-10 h-10 rounded-2xl bg-neet-base-100/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-neet-base-100/20 transition-all duration-300 shadow-lg border border-neet-base-100/20">
                 <Code className="w-5 h-5 text-neet-accent group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <h1 className="text-2xl font-bold mt-2 text-neet-base-100">Welcome</h1>
+              <h1 className="text-2xl font-bold mt-2 text-neet-base-100">
+                Welcome
+              </h1>
               <p className="text-neet-accent/80 text-sm text-center">
                 Sign up to continue your journey
               </p>
@@ -86,7 +88,9 @@ const SignUpPage = () => {
               {/* Name */}
               <div className="form-control">
                 <label htmlFor="name" className="label">
-                  <span className="label-text pb-1 font-semibold text-neet-accent">Name</span>
+                  <span className="label-text pb-1 font-semibold text-neet-accent">
+                    Name
+                  </span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
@@ -96,7 +100,9 @@ const SignUpPage = () => {
                     type="text"
                     placeholder="Enter your name"
                     className={`input w-full pl-12 pr-4 py-2.5 bg-neet-base-100 border-2 border-neet-base-200/50 rounded-xl hover:border-neet-secondary/50 focus:border-neet-secondary focus:bg-neet-base-100 transition-all duration-300 text-neet-neutral placeholder-neet-neutral/50 ${
-                      errors.name ? "border-neet-error focus:border-neet-error" : ""
+                      errors.name
+                        ? "border-neet-error focus:border-neet-error"
+                        : ""
                     }`}
                     {...register("name")}
                   />
@@ -111,7 +117,9 @@ const SignUpPage = () => {
               {/* Email */}
               <div className="form-control">
                 <label htmlFor="email" className="label">
-                  <span className="label-text pb-1 font-semibold text-neet-accent">Email Address</span>
+                  <span className="label-text pb-1 font-semibold text-neet-accent">
+                    Email Address
+                  </span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
@@ -121,7 +129,9 @@ const SignUpPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     className={`input w-full pl-12 pr-4 py-2.5 bg-neet-base-100 border-2 border-neet-base-200/50 rounded-xl hover:border-neet-secondary/50 focus:border-neet-secondary focus:bg-neet-base-100 transition-all duration-300 text-neet-neutral placeholder-neet-neutral/50 ${
-                      errors.email ? "border-neet-error focus:border-neet-error" : ""
+                      errors.email
+                        ? "border-neet-error focus:border-neet-error"
+                        : ""
                     }`}
                     {...register("email")}
                   />
@@ -136,7 +146,9 @@ const SignUpPage = () => {
               {/* Password */}
               <div className="form-control">
                 <label htmlFor="password" className="label">
-                  <span className="label-text pb-1 font-semibold text-neet-accent">Password</span>
+                  <span className="label-text pb-1 font-semibold text-neet-accent">
+                    Password
+                  </span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
@@ -146,7 +158,9 @@ const SignUpPage = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className={`input w-full pl-12 pr-12 py-2.5 bg-neet-base-100 border-2 border-neet-base-200/50 rounded-xl hover:border-neet-secondary/50 focus:border-neet-secondary focus:bg-neet-base-100 transition-all duration-300 text-neet-neutral placeholder-neet-neutral/50 ${
-                      errors.password ? "border-neet-error focus:border-neet-error" : ""
+                      errors.password
+                        ? "border-neet-error focus:border-neet-error"
+                        : ""
                     }`}
                     {...register("password")}
                   />
@@ -185,6 +199,27 @@ const SignUpPage = () => {
                     "Sign Up"
                   )}
                 </button>
+              </div>
+              <div className="flex items-center my-4">
+                <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
+                <span className="mx-3 text-neet-accent/60 text-sm font-medium">
+                  or
+                </span>
+                <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
+              </div>
+              <div className="form-control pt-1">
+                <a
+                  href="http://localhost:8080/api/v1/auth/google"
+                  className="btn w-full py-3 bg-white text-black border border-gray-300 hover:shadow-md rounded-xl transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105 active:scale-95"
+                  style={{ willChange: "transform" }}
+                >
+                  <img
+                    src="https://developers.google.com/identity/images/g-logo.png"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  Continue with Google
+                </a>
               </div>
             </form>
 
