@@ -313,43 +313,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="w-full bg-neet-neutral border-t border-neet-base-300 py-12">
-        <div className="w-full px-4 lg:px-8">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-neet-primary/10 flex items-center justify-center">
-                <Code className="w-5 h-5 text-neet-primary" />
-              </div>
-              <span className="text-xl font-bold">LeetLab</span>
-            </div>
 
-            <div className="flex flex-wrap justify-center gap-6">
-              <a href="#problems" className="link link-hover">
-                Problems
-              </a>
-              <a href="#playlists" className="link link-hover">
-                Playlists
-              </a>
-              <a href="#leaderboard" className="link link-hover">
-                Leaderboard
-              </a>
-              <Link to="/login" className="link link-hover">
-                Login
-              </Link>
-              <Link to="/signup" className="link link-hover">
-                Sign Up
-              </Link>
-            </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-base-content/70">
-                © 2023 LeetLab. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

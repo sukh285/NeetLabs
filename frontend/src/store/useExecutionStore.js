@@ -12,7 +12,8 @@ export const useExecutionStore = create((set) => ({
     language_id,
     stdin,
     expected_outputs,
-    problem_id
+    problem_id,
+    options = { record: false }
   ) => {
     try {
       set({ isExecuting: true, justSubmitted: false }); // reset
@@ -22,11 +23,12 @@ export const useExecutionStore = create((set) => ({
         stdin,
         expected_outputs,
         problem_id,
+        record: options.record,
       });
 
       set({
         submission: res.data.submission,
-        justSubmitted: true, // set true after actual submission
+        justSubmitted: options.record, // set true after actual submission
       });
       toast.success(res.data.message);
     } catch (error) {

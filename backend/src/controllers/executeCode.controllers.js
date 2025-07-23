@@ -7,8 +7,14 @@ import { db } from "../libs/db.js";
 
 export const executeCode = async (req, res) => {
   try {
-    const { source_code, language_id, stdin, expected_outputs, problem_id } =
-      req.body;
+    const {
+      source_code,
+      language_id,
+      stdin,
+      expected_outputs,
+      problem_id,
+      record,
+    } = req.body;
 
     const userId = req.user.id;
 
@@ -67,81 +73,104 @@ export const executeCode = async (req, res) => {
 
     console.log(testResults);
 
-    // 5. Store testResults to summary
-    const submission = await db.submission.create({
-      data: {
-        userId,
-        problemId: problem_id,
-        sourceCode: source_code,
-        language: getLanguageName(language_id),
-        stdin: stdin.join("\n"),
-        stdout: JSON.stringify(testResults.map((r) => r.stdout)),
-        stderr: testResults.some((r) => r.stderr)
-          ? JSON.stringify(testResults.map((r) => r.stderr))
-          : null,
-        compileOutput: testResults.some((r) => r.compile_output)
-          ? JSON.stringify(testResults.map((r) => r.compile_output))
-          : null,
-        status: allPassed ? "Accepted" : "Wrong Answer",
-        memory: testResults.some((r) => r.memory)
-          ? JSON.stringify(testResults.map((r) => r.memory))
-          : null,
-        time: testResults.some((r) => r.time)
-          ? JSON.stringify(testResults.map((r) => r.time))
-          : null,
-      },
-    });
+    let submission = null;
+    let submissionWithTestCase = null;
 
-    // 6. If allPassed = true, mark problem as solved for user
-    if (allPassed) {
-      await db.problemSolved.upsert({
-        //upsert --> create if no record else update if it exists
-        where: {
-          userId_problemId: {
+    if (!record) {
+      return res.status(200).json({
+        success: true,
+        message: "Code Executed Successfully (Not Saved)",
+        submission: {
+          status: allPassed ? "Accepted" : "Wrong Answer",
+          testCases: testResults,
+          memory: JSON.stringify(testResults.map((r) => r.memory)),
+          time: JSON.stringify(testResults.map((r) => r.time)),
+        },
+      });
+    } else {
+      // 5. Store testResults to summary
+      submission = await db.submission.create({
+        data: {
+          userId,
+          problemId: problem_id,
+          sourceCode: source_code,
+          language: getLanguageName(language_id),
+          stdin: stdin.join("\n"),
+          stdout: JSON.stringify(testResults.map((r) => r.stdout)),
+          stderr: testResults.some((r) => r.stderr)
+            ? JSON.stringify(testResults.map((r) => r.stderr))
+            : null,
+          compileOutput: testResults.some((r) => r.compile_output)
+            ? JSON.stringify(testResults.map((r) => r.compile_output))
+            : null,
+          status: allPassed ? "Accepted" : "Wrong Answer",
+          memory: testResults.some((r) => r.memory)
+            ? JSON.stringify(testResults.map((r) => r.memory))
+            : null,
+          time: testResults.some((r) => r.time)
+            ? JSON.stringify(testResults.map((r) => r.time))
+            : null,
+        },
+      });
+
+      // 6. If allPassed = true, mark problem as solved for user
+      if (allPassed) {
+        await db.problemSolved.upsert({
+          //upsert --> create if no record else update if it exists
+          where: {
+            userId_problemId: {
+              userId,
+              problemId: problem_id,
+            },
+          },
+          update: {},
+          create: {
             userId,
             problemId: problem_id,
           },
+        });
+      }
+
+      // 7. Save individual testcase results
+      const testCaseResults = testResults.map((result) => ({
+        submissionId: submission.id,
+        testCase: result.testCase,
+        passed: result.passed,
+        stdout: result.stdout,
+        expected: result.expected,
+        stderr: result.stderr,
+        compiledOutput: result.compile_output,
+        status: result.status,
+        memory: result.memory,
+        time: result.time,
+      }));
+
+      await db.testCaseResult.createMany({
+        data: testCaseResults,
+      });
+
+      //
+      submissionWithTestCase = await db.submission.findUnique({
+        where: {
+          id: submission.id,
         },
-        update: {},
-        create: {
-          userId,
-          problemId: problem_id,
+        include: {
+          testCases: true,
         },
       });
     }
 
-    // 7. Save individual testcase results
-    const testCaseResults = testResults.map((result) => ({
-      submissionId: submission.id,
-      testCase: result.testCase,
-      passed: result.passed,
-      stdout: result.stdout,
-      expected: result.expected,
-      stderr: result.stderr,
-      compiledOutput: result.compile_output,
-      status: result.status,
-      memory: result.memory,
-      time: result.time,
-    }));
-
-    await db.testCaseResult.createMany({
-      data: testCaseResults,
-    });
-
-    //
-    const submissionWithTestCase = await db.submission.findUnique({
-      where: {
-        id: submission.id,
-      },
-      include: {
-        testCases: true,
-      },
-    });
-
     res.status(200).json({
       success: true,
-      message: "Code Executed Successfully",
-      submission: submissionWithTestCase,
+      message: record
+        ? "Code Executed and Submitted Successfully"
+        : "Code Executed Successfully (Not Submitted)",
+      submission: record
+        ? submissionWithTestCase
+        : {
+            testCases: testResults,
+            status: allPassed ? "Accepted" : "Wrong Answer",
+          },
     });
   } catch (error) {
     console.error("Error during code execution: ", error);

@@ -1,27 +1,35 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Theme colors for neet */
 @theme {
-  --color-neet-primary: #FF9800;
-  --color-neet-primary-focus: #FFB74D;
+  --color-neet-primary: #ff9800;
+  --color-neet-primary-focus: #ffb74d;
   --color-neet-primary-content: #232323;
-  --color-neet-secondary: #FFB74D;
-  --color-neet-secondary-focus: #FFE0B2;
+  --color-neet-secondary: #ffb74d;
+  --color-neet-secondary-focus: #ffe0b2;
   --color-neet-secondary-content: #232323;
-  --color-neet-accent: #FFE0B2;
-  --color-neet-accent-focus: #FFF3E0;
+  --color-neet-accent: #ffe0b2;
+  --color-neet-accent-focus: #fff3e0;
   --color-neet-accent-content: #232323;
   --color-neet-neutral: #232323;
   --color-neet-neutral-focus: #424242;
-  --color-neet-neutral-content: #FFE0B2;
-  --color-neet-base-100: #F5F5F5;
-  --color-neet-base-200: #E0E0E0;
-  --color-neet-base-300: #BDBDBD;
-  --color-neet-info: #64B5F6;
-  --color-neet-success: #81C784;
-  --color-neet-warning: #FFD54F;
-  --color-neet-error: #E57373;
+  --color-neet-neutral-content: #ffe0b2;
+  --color-neet-base-100: #f5f5f5;
+  --color-neet-base-200: #e0e0e0;
+  --color-neet-base-300: #bdbdbd;
+  --color-neet-info: #64b5f6;
+  --color-neet-success: #81c784;
+  --color-neet-warning: #ffd54f;
+  --color-neet-error: #e57373;
+
+  --color-neet-primary-rgb: 255, 152, 0;
+  --color-neet-neutral-rgb: 35, 35, 35;
+
 }
 
 /* Font utility classes for Tailwind */
@@ -37,54 +45,81 @@
   font-style: normal;
 }
 
-
 @keyframes blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
+  0%,
+  100% {
+    opacity: 1;
   }
-  
-  .animate-blink {
-    animation: blink 1s infinite;
+  50% {
+    opacity: 0;
   }
-  
-  .animate-pulse {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+.animate-pulse {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-100 {
+  animation-delay: 1s;
+}
+
+.delay-200 {
+  animation-delay: 2s;
+}
+
+.delay-300 {
+  animation-delay: 3s;
+}
+
+.delay-500 {
+  animation-delay: 5s;
+}
+
+.delay-700 {
+  animation-delay: 7s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
   }
-  
-  .delay-100 {
-    animation-delay: 1s;
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
-  
-  .delay-200 {
-    animation-delay: 2s;
-  }
-  
-  .delay-300 {
-    animation-delay: 3s;
-  }
-  
-  .delay-500 {
-    animation-delay: 5s;
-  }
-  
-  .delay-700 {
-    animation-delay: 7s;
-  }
-  
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 0.3;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.8;
-      transform: scale(1.05);
-    }
-  }
-  
+}
+
+/* For browsers supporting WebKit scrollbar (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neet-neutral); /* dark background */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-neet-primary) 60%, transparent); /* 50% opacity */
+  border-radius: 8px;
+  border: 3px solid var(--color-neet-neutral); /* creates padding effect */
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-neet-accent); /* brighter on hover */
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--color-neet-primary-rgb), 0.6)
+                   rgba(var(--color-neet-neutral-rgb), 1); /* 50% opacity for thumb, full for track */
+}

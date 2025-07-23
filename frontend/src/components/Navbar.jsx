@@ -17,10 +17,13 @@ const Navbar = () => {
             {/* Left section - Logo */}
             <div className="flex items-center gap-4">
               <Link to="/" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-xl bg-neet-base-100/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-neet-base-100/20 transition-all duration-300 shadow-lg border border-neet-base-100/20">
-                  <Code className="w-6 h-6 text-neet-primary group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <span className="text-2xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
+              <img
+                    src="/logo.png"
+                    alt="NeetLabs Logo"
+                    className="w-16 h-16 rounded-2xl object-contain"
+                  />
+
+                <span className="text-3xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
                   NeetLabs
                 </span>
               </Link>

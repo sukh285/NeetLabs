@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import CreatePlaylistModal from "../components/CreatePlaylistModal";
 import Divider from "../templates/Divider";
+import { HashLoader } from "react-spinners";
 
 const AllPlaylists = () => {
   const [allMockPlaylists, setMockPlaylists] = useState([]);
@@ -262,10 +263,7 @@ const AllPlaylists = () => {
         {/* Loading State */}
         {isPlaylistsLoading ? (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="relative">
-              <div className="w-16 h-16 border-4 border-neet-accent/20 border-t-neet-primary rounded-full animate-spin"></div>
-              <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-neet-secondary rounded-full animate-spin animate-reverse"></div>
-            </div>
+            <HashLoader color="#FF9800" />
             <div className="mt-6 text-center">
               <h3 className="text-xl font-semibold text-neet-base-100 mb-2">
                 Loading Playlists

@@ -26,6 +26,7 @@ import {
   Eye,
   EyeOff,
   Bot,
+  CheckCircle,
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -340,17 +341,40 @@ const ProblemPage = () => {
     );
   }
 
-  // Run code against testcases
-  const handleRunCode = (e) => {
-    e.preventDefault();
+  //Just run code
+  const handleRun = () => {
     try {
       const language_id = getLanguageId(selectedLanguage);
-      // Prepare stdin and expected outputs for all testcases
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
-      executeCode(code, language_id, stdin, expected_outputs, id);
+      executeCode(code, language_id, stdin, expected_outputs, id, {
+        record: false, // don't save to DB
+      });
     } catch (error) {
-      console.error("Error executing code", error);
+      console.error("Error running code", error);
+    }
+  };
+
+  //Record submission
+  const handleSubmit = async () => {
+    try {
+      const language_id = getLanguageId(selectedLanguage);
+      const stdin = problem.testcases.map((tc) => tc.input);
+      const expected_outputs = problem.testcases.map((tc) => tc.output);
+
+      // Wait for executeCode to complete
+      await executeCode(code, language_id, stdin, expected_outputs, id, {
+        record: true, // save to DB
+      });
+
+      // After submission success, reload or switch tab
+      if (activeTab === "submissions") {
+        getSubmissionForProblem(id); // directly refetch
+      } else {
+        setActiveTab("submissions"); // switch to submissions tab and fetch via useEffect
+      }
+    } catch (error) {
+      console.error("Error submitting code", error);
     }
   };
 
@@ -465,12 +489,12 @@ const ProblemPage = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 max-w-7xl pt-6">
+      <div className="container mx-auto px-4 w-full pt-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Problem description, submissions, etc. */}
-          <div className="rounded-2xl bg-neet-neutral/40 shadow-2xl border border-neet-accent/10">
+          <div className="rounded-2xl mx-auto bg-neet-neutral/40 shadow-2xl border border-neet-accent/10">
             <div className="card-body p-0">
-              <div className="flex gap-2 border-b border-neet-accent/10 px-6 py-4">
+              <div className="flex gap-2 border-b border-neet-accent/10 px-6 mx-auto py-4">
                 <button
                   className={`tab gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 ${
                     activeTab === "description"
@@ -523,9 +547,6 @@ const ProblemPage = () => {
                   }`}
                   onClick={() => setActiveTab("ai")}
                 >
-                  <span className="absolute top-0 right-1">
-                    <span className="inline-block w-2 h-2 rounded-full bg-neet-primary shadow" />
-                  </span>
                   <Bot className="w-4 h-4" />
                   Ask Neet
                 </button>
@@ -768,17 +789,25 @@ const ProblemPage = () => {
               {/* Action buttons */}
               <div className="px-6 py-4 border-t border-neet-accent/10 bg-neet-neutral/30 rounded-b-2xl">
                 <div className="flex justify-between items-center">
+                  {/* Run Button */}
                   <button
                     className={`btn bg-gradient-to-r from-neet-primary to-neet-secondary text-neet-primary-content font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl border-none gap-2 px-6 py-3 ${
                       isExecuting ? "loading" : ""
                     }`}
-                    onClick={handleRunCode}
+                    onClick={handleRun}
                     disabled={isExecuting}
                   >
                     {!isExecuting && <Play className="w-4 h-4" />}
                     {isExecuting ? "Running..." : "Run Code"}
                   </button>
-                  <button className="btn bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl border-none gap-2 px-6 py-3">
+
+                  {/* Submit Button */}
+                  <button
+                    className="btn bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl border-none gap-2 px-6 py-3"
+                    onClick={handleSubmit}
+                    disabled={isExecuting}
+                  >
+                    <CheckCircle className="w-4 h-4" />
                     Submit Solution
                   </button>
                 </div>

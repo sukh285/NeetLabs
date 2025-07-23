@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { HashLoader } from "react-spinners";
 
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
@@ -15,7 +16,7 @@ import ProblemPage from "./pages/ProblemPage";
 import ProfilePage from "./pages/ProfilePage";
 import AllPlaylists from "./pages/AllPlaylists";
 import PlaylistPage from "./pages/PlaylistPage";
-import UpdateProblem from "./pages/UpdateProblem"
+import UpdateProblem from "./pages/UpdateProblem";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -27,7 +28,7 @@ const App = () => {
   if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+      <HashLoader color="#FF9800" />
       </div>
     );
   }

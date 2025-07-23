@@ -25,20 +25,20 @@ const SubmissionResults = ({ submission }) => {
     }
   }, [submission, justSubmitted, fireCannons, resetJustSubmitted]);
 
-  // Parse stringified arrays
-  const memoryArr = JSON.parse(submission.memory || "[]");
-  const timeArr = JSON.parse(submission.time || "[]");
+  // Parse stringified arrays safely and filter out null/undefined
+  const memoryArr = JSON.parse(submission.memory || "[]").filter(Boolean);
+  const timeArr = JSON.parse(submission.time || "[]").filter(Boolean);
 
-  // Calculate averages
-  const avgMemory =
-    memoryArr
-      .map((m) => parseFloat(m)) // remove ' KB' using parseFloat
-      .reduce((a, b) => a + b, 0) / memoryArr.length;
+  // Calculate averages with safe fallback
+  const avgMemory = memoryArr.length
+    ? memoryArr.map((m) => parseFloat(m)).reduce((a, b) => a + b, 0) /
+      memoryArr.length
+    : null;
 
-  const avgTime =
-    timeArr
-      .map((t) => parseFloat(t)) // remove ' s' using parseFloat
-      .reduce((a, b) => a + b, 0) / timeArr.length;
+  const avgTime = timeArr.length
+    ? timeArr.map((t) => parseFloat(t)).reduce((a, b) => a + b, 0) /
+      timeArr.length
+    : null;
 
   const passedTests = submission.testCases.filter((tc) => tc.passed).length;
   const totalTests = submission.testCases.length;
@@ -83,7 +83,7 @@ const SubmissionResults = ({ submission }) => {
               Avg. Runtime
             </h3>
             <div className="text-lg font-bold font-inter text-neet-base-100">
-              {avgTime.toFixed(3)} s
+              {avgTime !== null ? `${avgTime.toFixed(3)} s` : "N/A"}
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ const SubmissionResults = ({ submission }) => {
               Avg. Memory
             </h3>
             <div className="text-lg font-bold font-inter text-neet-base-100">
-              {avgMemory.toFixed(0)} KB
+              {avgMemory !== null ? `${avgMemory.toFixed(0)} KB` : "N/A"}
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ const SubmissionResults = ({ submission }) => {
               <tbody>
                 {submission.testCases.map((testCase) => (
                   <tr
-                    key={testCase.id}
+                    key={testCase.id || testCase.testCase}
                     className="border-t border-neet-accent/10 hover:bg-neet-neutral/20 transition-colors"
                   >
                     <td className="py-4 px-6">
@@ -153,8 +153,8 @@ const SubmissionResults = ({ submission }) => {
                     <td className="font-mono text-neet-base-100 py-4 px-6 bg-neet-neutral/20 whitespace-pre-wrap">
                       {testCase.stdout || "null"}
                     </td>
-                    <td className="py-4 px-6">{testCase.memory}</td>
-                    <td className="py-4 px-6">{testCase.time}</td>
+                    <td className="py-4 px-6">{testCase.memory || "N/A"}</td>
+                    <td className="py-4 px-6">{testCase.time || "N/A"}</td>
                   </tr>
                 ))}
               </tbody>
