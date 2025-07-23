@@ -11,6 +11,8 @@ import {
 } from "../controllers/auth.controllers.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import {
+  githubAuthFail,
+  githubAuthSuccess,
   googleAuthFail,
   googleAuthSuccess,
 } from "../controllers/oauth.controllers.js";
@@ -40,5 +42,22 @@ authRoutes.get(
 );
 
 authRoutes.get("/google/failure", googleAuthFail);
+
+// GitHub OAuth
+authRoutes.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+authRoutes.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    failureRedirect: "/api/v1/auth/github/failure",
+    session: true,
+  }),
+  githubAuthSuccess
+);
+
+authRoutes.get("/github/failure", githubAuthFail);
 
 export default authRoutes;

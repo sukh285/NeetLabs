@@ -45,7 +45,6 @@ app.use(
   })
 );
 
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -61,5 +60,5 @@ app.use("/api/v1/playlist", playlistRoutes);
 app.use("/api/v1/ai", aiRoutes);
 
 app.listen(port, () => {
-  console.log("Server running on port 8080");
+  console.log(`Server running on port ${port}`);
 });

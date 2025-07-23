@@ -174,21 +174,38 @@ const LoginPage = () => {
               </div>
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
-                <span className="mx-3 text-neet-accent/60 text-sm font-medium">or</span>
+                <span className="mx-3 text-neet-accent/60 text-sm font-medium">
+                  or continue via
+                </span>
                 <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
               </div>
-              <div className="form-control pt-1">
+
+              {/* OAuth Buttons Row */}
+              <div className="form-control pt-1 flex flex-row gap-3 w-full">
                 <a
                   href="http://localhost:8080/api/v1/auth/google"
-                  className="btn w-full py-3 bg-white text-black border border-gray-300 hover:shadow-md rounded-xl transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105 active:scale-95"
+                  className="flex-1 btn py-3 bg-white text-neet-neutral border border-neet-base-200 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 font-semibold"
                   style={{ willChange: "transform" }}
                 >
                   <img
-                    src="https://developers.google.com/identity/images/g-logo.png"
+                    src="/google-logo.png"
                     alt="Google"
+                    className="w-5 h-5 m-0 p-0"
+                  />
+                  <span className="ml-1">Google</span>
+                </a>
+
+                <a
+                  href="http://localhost:8080/api/v1/auth/github"
+                  className="flex-1 btn py-3 bg-[#18181b] text-white border border-[#fff]/20 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 active:scale-95 font-semibold"
+                  style={{ willChange: "transform" }}
+                >
+                  <img
+                    src="/github-logo.png"
+                    alt="GitHub"
                     className="w-5 h-5"
                   />
-                  Continue with Google
+                  <span className="ml-1">GitHub</span>
                 </a>
               </div>
             </form>
