@@ -17,6 +17,8 @@ import ProfilePage from "./pages/ProfilePage";
 import AllPlaylists from "./pages/AllPlaylists";
 import PlaylistPage from "./pages/PlaylistPage";
 import UpdateProblem from "./pages/UpdateProblem";
+import PricingPage from "./pages/PricingPage";
+import FeedbackPage from "./pages/FeedbackPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -27,8 +29,8 @@ const App = () => {
 
   if (isCheckingAuth) {
     return (
-      <div className="flex items-center justify-center h-screen">
-      <HashLoader color="#FF9800" />
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-neet-neutral">
+        <HashLoader color="#FF9800" />
       </div>
     );
   }
@@ -73,6 +75,16 @@ const App = () => {
           <Route
             path="playlists"
             element={authUser ? <AllPlaylists /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/pricing"
+            element={<PricingPage />}
+          />
+
+          <Route
+            path="/feedback"
+            element={authUser ? <FeedbackPage /> : <Navigate to="/login" />}
           />
           {/* Playlist by ID route */}
           <Route

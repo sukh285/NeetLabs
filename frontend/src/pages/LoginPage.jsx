@@ -46,7 +46,7 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral font-inter">
+    <div className="relative pb-5 w-full h-screen overflow-hidden bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral font-inter">
       {/* Background Particles */}
       <div className="absolute inset-0 z-0">
         <Particles

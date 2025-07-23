@@ -11,7 +11,7 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar font-inter fixed top-0 left-0 z-50 bg-gradient-to-r from-neet-neutral/80 via-neet-neutral to-neet-neutral/80 border-b border-neet-primary/20 px-4 lg:px-8 shadow-lg w-full max-w-full py-3 backdrop-blur-sm">
+      <nav className="navbar font-inter fixed top-0 left-0 z-50 bg-neet-neutral border-b border-neet-primary/20 px-4 lg:px-8 shadow-lg w-full max-w-full py-3 backdrop-blur-sm">
         <div className="navbar-start w-full">
           <div className="flex items-center justify-between w-full lg:grid lg:grid-cols-3 lg:gap-4 font-inter">
             {/* Left section - Logo */}
@@ -20,10 +20,10 @@ const Navbar = () => {
               <img
                     src="/logo.png"
                     alt="NeetLabs Logo"
-                    className="w-16 h-16 rounded-2xl object-contain"
+                    className="w-12 h-12 rounded-2xl object-contain"
                   />
 
-                <span className="text-3xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
+                <span className="text-2xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
                   NeetLabs
                 </span>
               </Link>
@@ -48,12 +48,28 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#leaderboard"
+                <Link
+                    to={"/resources"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
                   >
-                    Leaderboard
-                  </a>
+                    Resources
+                  </Link>
+                </li>
+                <li>
+                <Link
+                    to={"/pricing"}
+                    className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
+                  >
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                <Link
+                    to={"/feedback"}
+                    className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300"
+                  >
+                    Feedback
+                  </Link>
                 </li>
               </ul>
             </div>
