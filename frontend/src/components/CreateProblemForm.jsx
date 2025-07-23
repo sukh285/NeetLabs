@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { problemSchema } from "../lib/problemSchema";
 import {
   Plus,
   Trash2,
@@ -25,463 +25,8 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import { axiosInstance } from "../lib/axios";
-
-const problemSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
-  tags: z.array(z.string()).min(1, "At least one tag is required"),
-  constraints: z.string().min(1, "Constraints are required"),
-  hints: z.string().optional(),
-  editorial: z.string().optional(),
-  testcases: z
-    .array(
-      z.object({
-        input: z.string().min(1, "Input is required"),
-        output: z.string().min(1, "Output is required"),
-      })
-    )
-    .min(1, "At least one test case is required"),
-  examples: z.object({
-    JAVASCRIPT: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-    PYTHON: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-    JAVA: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-  }),
-  codeSnippet: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
-    PYTHON: z.string().min(1, "Python code snippet is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
-  referenceSolution: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
-    PYTHON: z.string().min(1, "Python solution is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
-});
-
-const sampledpData = {
-  title: "Climbing Stairs",
-  category: "dp",
-  description:
-    "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
-  difficulty: "EASY",
-  tags: ["Dynamic Programming", "Math", "Memoization"],
-  constraints: "1 <= n <= 45",
-  hints:
-    "To reach the nth step, you can either come from the (n-1)th step or the (n-2)th step.",
-  editorial:
-    "This is a classic dynamic programming problem. The number of ways to reach the nth step is the sum of the number of ways to reach the (n-1)th step and the (n-2)th step, forming a Fibonacci-like sequence.",
-  testcases: [
-    {
-      input: "2",
-      output: "2",
-    },
-    {
-      input: "3",
-      output: "3",
-    },
-    {
-      input: "4",
-      output: "5",
-    },
-  ],
-  examples: {
-    JAVASCRIPT: {
-      input: "n = 2",
-      output: "2",
-      explanation:
-        "There are two ways to climb to the top:\n1. 1 step + 1 step\n2. 2 steps",
-    },
-    PYTHON: {
-      input: "n = 3",
-      output: "3",
-      explanation:
-        "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step",
-    },
-    JAVA: {
-      input: "n = 4",
-      output: "5",
-      explanation:
-        "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
-    },
-  },
-  codeSnippet: {
-    JAVASCRIPT: `/**
-  * @param {number} n
-  * @return {number}
-  */
-  function climbStairs(n) {
-  // Write your code here
-  }
-  
-  // Parse input and execute
-  const readline = require('readline');
-  const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-  });
-  
-  rl.on('line', (line) => {
-  const n = parseInt(line.trim());
-  const result = climbStairs(n);
-  
-  console.log(result);
-  rl.close();
-  });`,
-    PYTHON: `class Solution:
-    def climbStairs(self, n: int) -> int:
-        # Write your code here
-        pass
-  
-  # Input parsing
-  if __name__ == "__main__":
-    import sys
-    
-    # Parse input
-    n = int(sys.stdin.readline().strip())
-    
-    # Solve
-    sol = Solution()
-    result = sol.climbStairs(n)
-    
-    # Print result
-    print(result)`,
-    JAVA: `import java.util.Scanner;
-  
-  class Main {
-    public int climbStairs(int n) {
-        // Write your code here
-        return 0;
-    }
-    
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = Integer.parseInt(scanner.nextLine().trim());
-        
-        // Use Main class instead of Solution
-        Main main = new Main();
-        int result = main.climbStairs(n);
-        
-        System.out.println(result);
-        scanner.close();
-    }
-  }`,
-  },
-  referenceSolution: {
-    JAVASCRIPT: `/**
-  * @param {number} n
-  * @return {number}
-  */
-  function climbStairs(n) {
-  // Base cases
-  if (n <= 2) {
-    return n;
-  }
-  
-  // Dynamic programming approach
-  let dp = new Array(n + 1);
-  dp[1] = 1;
-  dp[2] = 2;
-  
-  for (let i = 3; i <= n; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2];
-  }
-  
-  return dp[n];
-  }
-  
-  // Parse input and execute
-  const readline = require('readline');
-  const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-  });
-  
-  rl.on('line', (line) => {
-  const n = parseInt(line.trim());
-  const result = climbStairs(n);
-  
-  console.log(result);
-  rl.close();
-  });`,
-    PYTHON: `class Solution:
-    def climbStairs(self, n: int) -> int:
-        # Base cases
-        if n <= 2:
-            return n
-        
-        # Dynamic programming approach
-        dp = [0] * (n + 1)
-        dp[1] = 1
-        dp[2] = 2
-        
-        for i in range(3, n + 1):
-            dp[i] = dp[i - 1] + dp[i - 2]
-        
-        return dp[n]
-  
-  # Input parsing
-  if __name__ == "__main__":
-    import sys
-    
-    # Parse input
-    n = int(sys.stdin.readline().strip())
-    
-    # Solve
-    sol = Solution()
-    result = sol.climbStairs(n)
-    
-    # Print result
-    print(result)`,
-    JAVA: `import java.util.Scanner;
-  
-  class Main {
-    public int climbStairs(int n) {
-        // Base cases
-        if (n <= 2) {
-            return n;
-        }
-        
-        // Dynamic programming approach
-        int[] dp = new int[n + 1];
-        dp[1] = 1;
-        dp[2] = 2;
-        
-        for (int i = 3; i <= n; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
-        }
-        
-        return dp[n];
-    }
-    
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = Integer.parseInt(scanner.nextLine().trim());
-        
-        // Use Main class instead of Solution
-        Main main = new Main();
-        int result = main.climbStairs(n);
-        
-        System.out.println(result);
-        scanner.close();
-    }
-  }`,
-  },
-};
-
-const sampleStringProblem = {
-  title: "Valid Palindrome",
-  description:
-    "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers. Given a string s, return true if it is a palindrome, or false otherwise.",
-  difficulty: "EASY",
-  tags: ["String", "Two Pointers"],
-  constraints:
-    "1 <= s.length <= 2 * 10^5\ns consists only of printable ASCII characters.",
-  hints:
-    "Consider using two pointers, one from the start and one from the end, moving towards the center.",
-  editorial:
-    "We can use two pointers approach to check if the string is a palindrome. One pointer starts from the beginning and the other from the end, moving towards each other.",
-  testcases: [
-    {
-      input: "A man, a plan, a canal: Panama",
-      output: "true",
-    },
-    {
-      input: "race a car",
-      output: "false",
-    },
-    {
-      input: " ",
-      output: "true",
-    },
-  ],
-  examples: {
-    JAVASCRIPT: {
-      input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
-      explanation: '"amanaplanacanalpanama" is a palindrome.',
-    },
-    PYTHON: {
-      input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
-      explanation: '"amanaplanacanalpanama" is a palindrome.',
-    },
-    JAVA: {
-      input: 's = "A man, a plan, a canal: Panama"',
-      output: "true",
-      explanation: '"amanaplanacanalpanama" is a palindrome.',
-    },
-  },
-  codeSnippet: {
-    JAVASCRIPT: `/**
-     * @param {string} s
-     * @return {boolean}
-     */
-    function isPalindrome(s) {
-      // Write your code here
-    }
-    
-    // Add readline for dynamic input handling
-    const readline = require('readline');
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      terminal: false
-    });
-    
-    // Process input line
-    rl.on('line', (line) => {
-      // Call solution with the input string
-      const result = isPalindrome(line);
-      
-      // Output the result
-      console.log(result ? "true" : "false");
-      rl.close();
-    });`,
-    PYTHON: `class Solution:
-        def isPalindrome(self, s: str) -> bool:
-            # Write your code here
-            pass
-    
-    # Input parsing
-    if __name__ == "__main__":
-        import sys
-        # Read the input string
-        s = sys.stdin.readline().strip()
-        
-        # Call solution
-        sol = Solution()
-        result = sol.isPalindrome(s)
-        
-        # Output result
-        print(str(result).lower())  # Convert True/False to lowercase true/false`,
-    JAVA: `import java.util.Scanner;
-  
-  public class Main {
-      public static String preprocess(String s) {
-          return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-      }
-  
-      public static boolean isPalindrome(String s) {
-         
-      }
-  
-      public static void main(String[] args) {
-          Scanner sc = new Scanner(System.in);
-          String input = sc.nextLine();
-  
-          boolean result = isPalindrome(input);
-          System.out.println(result ? "true" : "false");
-      }
-  }
-  `,
-  },
-  referenceSolution: {
-    JAVASCRIPT: `/**
-     * @param {string} s
-     * @return {boolean}
-     */
-    function isPalindrome(s) {
-      // Convert to lowercase and remove non-alphanumeric characters
-      s = s.toLowerCase().replace(/[^a-z0-9]/g, '');
-      
-      // Check if it's a palindrome
-      let left = 0;
-      let right = s.length - 1;
-      
-      while (left < right) {
-        if (s[left] !== s[right]) {
-          return false;
-        }
-        left++;
-        right--;
-      }
-      
-      return true;
-    }
-    
-    // Add readline for dynamic input handling
-    const readline = require('readline');
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      terminal: false
-    });
-    
-    // Process input line
-    rl.on('line', (line) => {
-      // Call solution with the input string
-      const result = isPalindrome(line);
-      
-      // Output the result
-      console.log(result ? "true" : "false");
-      rl.close();
-    });`,
-    PYTHON: `class Solution:
-        def isPalindrome(self, s: str) -> bool:
-            # Convert to lowercase and keep only alphanumeric characters
-            filtered_chars = [c.lower() for c in s if c.isalnum()]
-            
-            # Check if it's a palindrome
-            return filtered_chars == filtered_chars[::-1]
-    
-    # Input parsing
-    if __name__ == "__main__":
-        import sys
-        # Read the input string
-        s = sys.stdin.readline().strip()
-        
-        # Call solution
-        sol = Solution()
-        result = sol.isPalindrome(s)
-        
-        # Output result
-        print(str(result).lower())  # Convert True/False to lowercase true/false`,
-    JAVA: `import java.util.Scanner;
-  
-  public class Main {
-      public static String preprocess(String s) {
-          return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-      }
-  
-      public static boolean isPalindrome(String s) {
-          s = preprocess(s);
-          int left = 0, right = s.length() - 1;
-  
-          while (left < right) {
-              if (s.charAt(left) != s.charAt(right)) return false;
-              left++;
-              right--;
-          }
-  
-          return true;
-      }
-  
-      public static void main(String[] args) {
-          Scanner sc = new Scanner(System.in);
-          String input = sc.nextLine();
-  
-          boolean result = isPalindrome(input);
-          System.out.println(result ? "true" : "false");
-      }
-  }
-  `,
-  },
-};
+import { sampledpData, sampleStringProblem } from "../data/sampleData";
+import SetCodeModal from "./SetCodeModal";
 
 const CreateProblemForm = () => {
   const [sampleType, setSampleType] = useState("DP");
@@ -497,6 +42,7 @@ const CreateProblemForm = () => {
     defaultValues: {
       testcases: [{ input: "", output: "" }],
       tags: [""],
+      companyTags: [""],
       examples: {
         JAVASCRIPT: { input: "", output: "", explanation: "" },
         PYTHON: { input: "", output: "", explanation: "" },
@@ -535,7 +81,17 @@ const CreateProblemForm = () => {
     name: "tags",
   });
 
+  const {
+    fields: companyFields,
+    append: appendCompany,
+    remove: removeCompany,
+  } = useFieldArray({
+    control,
+    name: "companyTags",
+  });
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isSetCodeModalOpen, setIsSetCodeModalOpen] = useState(false);
 
   const onSubmit = async (value) => {
     try {
@@ -555,6 +111,13 @@ const CreateProblemForm = () => {
     replaceTags(sampleData.tags.map((tag) => tag));
     replacetestcases(sampleData.testcases.map((tc) => tc));
     reset(sampleData);
+  };
+
+  const handleLoadJson = (json) => {
+    // Try to load the JSON into the form, similar to loadSampleData
+    if (json.tags) replaceTags(json.tags.map((tag) => tag));
+    if (json.testcases) replacetestcases(json.testcases.map((tc) => tc));
+    reset(json);
   };
 
   const getDifficultyColor = (difficulty) => {
@@ -620,7 +183,21 @@ const CreateProblemForm = () => {
             <Download className="w-4 h-4" />
             Load Sample Data
           </button>
+          <button
+            type="button"
+            className="px-6 py-3 bg-neet-info/20 hover:bg-neet-info/30 text-neet-info border border-neet-info/20 rounded-full font-medium transition-all duration-200 flex items-center gap-2 backdrop-blur-xl"
+            onClick={() => setIsSetCodeModalOpen(true)}
+          >
+            <Code2 className="w-4 h-4" />
+            Load from JSON
+          </button>
         </div>
+
+        <SetCodeModal
+          isOpen={isSetCodeModalOpen}
+          onClose={() => setIsSetCodeModalOpen(false)}
+          onLoad={handleLoadJson}
+        />
 
         {/* Main Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pb-16">
@@ -737,6 +314,54 @@ const CreateProblemForm = () => {
             {errors.tags && (
               <p className="mt-4 text-sm text-neet-error">
                 {errors.tags.message}
+              </p>
+            )}
+          </div>
+
+          {/* Company Tags Section */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neet-secondary to-neet-accent rounded-xl flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-neet-neutral" />
+                </div>
+                <h3 className="text-xl font-semibold text-neet-base-100">
+                  Company Tags
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="px-4 py-2 bg-neet-primary/20 hover:bg-neet-primary/30 text-neet-primary border border-neet-primary/20 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                onClick={() => appendCompany("")}
+              >
+                <Plus className="w-4 h-4" />
+                Add Company Tag
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {companyFields.map((field, idx) => (
+                <div key={field.id} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Company name"
+                    className="flex-1 px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl"
+                    {...register(`companyTags.${idx}`)}
+                  />
+                  <button
+                    type="button"
+                    className="w-10 h-10 bg-neet-error/20 hover:bg-neet-error/30 text-neet-error rounded-lg flex items-center justify-center"
+                    onClick={() => removeCompany(idx)}
+                    disabled={companyFields.length === 1}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {errors.companyTags && (
+              <p className="mt-4 text-sm text-neet-error">
+                {errors.companyTags.message}
               </p>
             )}
           </div>

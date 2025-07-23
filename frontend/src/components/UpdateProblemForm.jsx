@@ -21,51 +21,7 @@ import toast from "react-hot-toast";
 
 import { axiosInstance } from "../lib/axios";
 import { useProblemStore } from "../store/useProblemStore";
-
-const problemSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
-  tags: z.array(z.string()).min(1, "At least one tag is required"),
-  constraints: z.string().min(1, "Constraints are required"),
-  hints: z.string().optional(),
-  editorial: z.string().optional(),
-  testcases: z
-    .array(
-      z.object({
-        input: z.string().min(1, "Input is required"),
-        output: z.string().min(1, "Output is required"),
-      })
-    )
-    .min(1, "At least one test case is required"),
-  examples: z.object({
-    JAVASCRIPT: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-    PYTHON: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-    JAVA: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
-      explanation: z.string().optional(),
-    }),
-  }),
-  codeSnippet: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
-    PYTHON: z.string().min(1, "Python code snippet is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
-  referenceSolution: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
-    PYTHON: z.string().min(1, "Python solution is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
-});
+import { problemSchema } from "../lib/problemSchema";
 
 const UpdateProblemForm = () => {
   const { problemId } = useParams();
@@ -85,6 +41,7 @@ const UpdateProblemForm = () => {
     defaultValues: {
       testcases: [{ input: "", output: "" }],
       tags: [""],
+      companyTags: [""],
       examples: {
         JAVASCRIPT: { input: "", output: "", explanation: "" },
         PYTHON: { input: "", output: "", explanation: "" },
@@ -123,6 +80,16 @@ const UpdateProblemForm = () => {
     name: "tags",
   });
 
+  const {
+    fields: companyTagFields,
+    append: appendCompanyTag,
+    remove: removeCompanyTag,
+    replace: replaceCompanyTags,
+  } = useFieldArray({
+    control,
+    name: "companyTags",
+  });
+
   // Fetch problem data on component mount
   useEffect(() => {
     if (problemId) {
@@ -141,6 +108,7 @@ const UpdateProblemForm = () => {
         hints: problem.hints || "",
         editorial: problem.editorial || "",
         tags: problem.tags || [""],
+        companyTags: problem.companyTags || [""],
         testcases: problem.testcases || [{ input: "", output: "" }],
         examples: problem.examples || {
           JAVASCRIPT: { input: "", output: "", explanation: "" },
@@ -164,11 +132,12 @@ const UpdateProblemForm = () => {
       
       // Replace field arrays with loaded data
       replaceTags(problem.tags || [""]);
+      replaceCompanyTags(problem.companyTags || [""]);
       replaceTestcases(problem.testcases || [{ input: "", output: "" }]);
       
       setDataLoaded(true);
     }
-  }, [problem, reset, replaceTags, replaceTestcases, dataLoaded]);
+  }, [problem, reset, replaceTags, replaceCompanyTags, replaceTestcases, dataLoaded]);
 
   const onSubmit = async (formData) => {
     try {
@@ -346,6 +315,54 @@ const UpdateProblemForm = () => {
             {errors.tags && (
               <p className="mt-4 text-sm text-neet-error">
                 {errors.tags.message}
+              </p>
+            )}
+          </div>
+
+          {/* Company Tags Section */}
+          <div className="bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-8 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neet-info to-neet-success rounded-xl flex items-center justify-center">
+                  <TestTube className="w-5 h-5 text-neet-neutral" />
+                </div>
+                <h3 className="text-xl font-semibold text-neet-base-100">
+                  Company Tags
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="px-4 py-2 bg-neet-success/20 hover:bg-neet-success/30 text-neet-success border border-neet-success/20 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                onClick={() => appendCompanyTag("")}
+              >
+                <Plus className="w-4 h-4" />
+                Add Company Tag
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {companyTagFields.map((field, index) => (
+                <div key={field.id} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    className="flex-1 px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
+                    {...register(`companyTags.${index}`)}
+                    placeholder="Company tag name"
+                  />
+                  <button
+                    type="button"
+                    className="w-10 h-10 bg-neet-error/20 hover:bg-neet-error/30 text-neet-error rounded-lg transition-all duration-200 flex items-center justify-center"
+                    onClick={() => removeCompanyTag(index)}
+                    disabled={companyTagFields.length === 1}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {errors.companyTags && (
+              <p className="mt-4 text-sm text-neet-error">
+                {errors.companyTags.message}
               </p>
             )}
           </div>
