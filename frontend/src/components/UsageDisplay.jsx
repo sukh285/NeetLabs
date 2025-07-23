@@ -1,5 +1,5 @@
 // components/UsageDisplay.js
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Infinity as InfinityIcon } from "lucide-react";
 
 const UsageDisplay = ({ usageStatus, loadingUsage }) => {
   if (loadingUsage) {
@@ -25,28 +25,44 @@ const UsageDisplay = ({ usageStatus, loadingUsage }) => {
   }
 
   const { remaining, total } = usageStatus;
-  const isLow = remaining <= 1;
-  const isEmpty = remaining <= 0;
+  const isUnlimited =
+    (typeof remaining === "string" && remaining.toLowerCase() === "unlimited") &&
+    (typeof total === "string" && total.toLowerCase() === "unlimited");
+  const isLow = !isUnlimited && remaining <= 1;
+  const isEmpty = !isUnlimited && remaining <= 0;
 
   return (
     <div className="flex items-center gap-1 pb-1.5 text-xs justify-end">
       <div
         className={`w-2 h-2 rounded-full ${
-          isEmpty ? "bg-red-400" : isLow ? "bg-yellow-400" : "bg-green-400"
+          isUnlimited
+            ? "bg-neet-secondary"
+            : isEmpty
+            ? "bg-red-400"
+            : isLow
+            ? "bg-yellow-400"
+            : "bg-green-400"
         }`}
       ></div>
       <span className="text-neet-accent/60">Requests left:</span>
-      <span
-        className={`font-medium ${
-          isEmpty
-            ? "text-red-400"
-            : isLow
-            ? "text-yellow-400"
-            : "text-neet-base-100"
-        }`}
-      >
-        {remaining}/{total}
-      </span>
+      {isUnlimited ? (
+        <span className="flex items-center gap-1 font-medium text-neet-accent/50">
+          <InfinityIcon size={16} className="inline" />
+          <span>Unlimited</span>
+        </span>
+      ) : (
+        <span
+          className={`font-medium ${
+            isEmpty
+              ? "text-red-400"
+              : isLow
+              ? "text-yellow-400"
+              : "text-neet-base-100"
+          }`}
+        >
+          {remaining}/{total}
+        </span>
+      )}
     </div>
   );
 };

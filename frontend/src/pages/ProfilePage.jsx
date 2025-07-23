@@ -90,7 +90,29 @@ const ProfilePage = () => {
                       </span>
                     )}
                   </h1>
-                  <p className="text-neet-accent/80 text-sm">{user.email}</p>
+                  <p className="text-neet-accent/80 text-sm mb-2">
+                    {user.email}
+                  </p>
+
+                  {/* Plan Section - inline style */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-neet-accent/70 text-xs font-medium">
+                      Current Plan:
+                    </span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-semibold border ${
+                        user?.plan === "FREE"
+                          ? "bg-neet-neutral/40 text-neet-accent/80 border-neet-accent/20"
+                          : user?.plan === "PRO"
+                          ? "bg-neet-secondary/20 text-neet-secondary border-neet-secondary/30"
+                          : user?.plan === "ADVANCED"
+                          ? "bg-neet-primary/20 text-neet-primary border-neet-primary/30"
+                          : "bg-neet-neutral/40 text-neet-accent/80 border-neet-accent/20"
+                      }`}
+                    >
+                      {user?.plan || "Unknown"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Join Info - more spacious and visually separated */}
@@ -323,12 +345,12 @@ const ProfilePage = () => {
 
         {/* Delete Profile Button */}
         <div className="flex justify-end mt-8 mb-8">
-            <button
-              onClick={() => setModalOpen(true)}
-              className="px-6 py-2 text-sm font-semibold rounded-full bg-gradient-to-r from-neet-error/20 to-neet-error/10 hover:from-neet-error/30 hover:to-neet-error/20 text-neet-error border border-neet-error/30 shadow-md transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-            >
-              Delete My Profile
-            </button>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="px-6 py-2 text-sm font-semibold rounded-full bg-gradient-to-r from-neet-error/20 to-neet-error/10 hover:from-neet-error/30 hover:to-neet-error/20 text-neet-error border border-neet-error/30 shadow-md transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+          >
+            Delete My Profile
+          </button>
         </div>
       </div>
 

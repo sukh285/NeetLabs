@@ -177,6 +177,7 @@ export const getProfile = async (req, res) => {
         email: true,
         image: true,
         role: true,
+        plan: true,
         createdAt: true,
 
         problemSolved: {

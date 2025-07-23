@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   //4 utility methods for 4 routes in auth that we have put
   authUser: null,
   isSigningUp: false,
@@ -29,6 +29,17 @@ export const useAuthStore = create((set) => ({
     } finally {
       set({ isCheckingAuth: false });
     }
+  },
+
+  isAdmin: () => {
+    const user = get().authUser;
+    return user?.role === "ADMIN";
+  },
+
+  hasPlan: (allowedPlans = []) => {
+    const user = get().authUser;
+    if (!user) return false;
+    return allowedPlans.includes(user.plan);
   },
 
   signup: async (data) => {

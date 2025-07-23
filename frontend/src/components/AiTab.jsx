@@ -5,6 +5,7 @@ import { axiosInstance } from "../lib/axios";
 import { useAiUsageStatus } from "../hooks/useAiUsageStatus";
 import { useAuthStore } from "../store/useAuthStore";
 import UsageDisplay from "../components/UsageDisplay";
+import { useAccess } from "../hooks/useAccess";
 
 const AiTab = ({ problemId, code }) => {
   const authUser = useAuthStore((state) => state.authUser);
@@ -16,6 +17,7 @@ const AiTab = ({ problemId, code }) => {
   const textareaRef = useRef(null);
 
   const { usageStatus, loadingUsage, refreshUsageStatus } = useAiUsageStatus();
+  const { hasPlan } = useAccess();
 
   // To track if we've already shown the no-requests-left message
   const [noRequestsMessageShown, setNoRequestsMessageShown] = useState(false);
@@ -154,10 +156,10 @@ const AiTab = ({ problemId, code }) => {
     }
   };
 
-  const clearChat = () => {
-    setMessages([]);
-    localStorage.removeItem(`ai-chat-${problemId}`);
-  };
+  // const clearChat = () => {
+  //   setMessages([]);
+  //   localStorage.removeItem(storageKey);
+  // };
 
   const formatTime = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString([], {

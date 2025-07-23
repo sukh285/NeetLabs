@@ -9,6 +9,10 @@ export const useAiUsageStatus = () => {
     try {
       setLoadingUsage(true);
       const response = await axiosInstance.get("/ai/usage-status");
+
+      //Debugging
+      console.log("Frontend received usage data:", response.data);
+
       setUsageStatus(response.data);
     } catch (error) {
       console.error("Failed to fetch usage status:", error);

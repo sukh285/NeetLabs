@@ -10,9 +10,9 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const parseLimit = (val) => (val === "Infinity" ? Infinity : Number(val));
 
 const PLAN_DAILY_LIMITS = {
-  Free: parseLimit(process.env.FREE_LIMIT) || 5,
-  Pro: parseLimit(process.env.PRO_LIMIT) || 20,
-  Advanced: parseLimit(process.env.ADVANCED_LIMIT) || Infinity,
+  FREE: parseLimit(process.env.FREE_LIMIT) || 5,
+  PRO: parseLimit(process.env.PRO_LIMIT) || 50,
+  ADVANCED: parseLimit(process.env.ADVANCED_LIMIT) || Infinity,
 };
 
 export const askGemini = async (req, res) => {
@@ -95,6 +95,11 @@ export const getAiUsageStatus = async (req, res) => {
   try {
     const user = req.user;
 
+    // Debug logging
+    console.log("User plan:", user.plan);
+    console.log("Available limits:", PLAN_DAILY_LIMITS);
+    console.log("Matched limit:", PLAN_DAILY_LIMITS[user.plan]);
+
     if (user.role === "ADMIN") {
       return res.status(200).json({
         remaining: "Unlimited",
@@ -105,7 +110,8 @@ export const getAiUsageStatus = async (req, res) => {
     }
 
     const dailyLimit =
-      PLAN_DAILY_LIMITS[user.plan] ?? PLAN_DAILY_LIMITS["Free"];
+      PLAN_DAILY_LIMITS[user.plan] ?? PLAN_DAILY_LIMITS["FREE"];
+    console.log("Final daily limit:", dailyLimit);
     const today = startOfDay(new Date());
 
     const usageRecord = await db.aiUsage.findUnique({
