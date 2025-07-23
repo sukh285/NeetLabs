@@ -125,8 +125,9 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   image: 'image',
-  role: 'role',
   password: 'password',
+  role: 'role',
+  plan: 'plan',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -241,6 +242,12 @@ exports.Prisma.JsonNullValueFilter = {
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
   USER: 'USER'
+};
+
+exports.UserPlan = exports.$Enums.UserPlan = {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  ADVANCED: 'ADVANCED'
 };
 
 exports.Difficulty = exports.$Enums.Difficulty = {

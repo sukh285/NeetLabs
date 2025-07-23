@@ -31,6 +31,7 @@ export const authMiddleware = async (req, res, next) => {
         name: true,
         email: true,
         role: true,
+        plan: true,
       },
     });
 
@@ -76,4 +77,25 @@ export const checkAdmin = async (req, res, next) => {
       message: "Error checking admin role",
     });
   }
+};
+
+export const checkPlan = (requiredPlans = []) => {
+  return (req, res, next) => {
+    try {
+      const userPlan = req.user.plan;
+
+      if (!requiredPlans.includes(userPlan)) {
+        return res.status(403).json({
+          message: "Access denied. Upgrade your plan to access this feature.",
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error("Error checking user plan:", error);
+      res.status(500).json({
+        message: "Error checking user plan",
+      });
+    }
+  };
 };

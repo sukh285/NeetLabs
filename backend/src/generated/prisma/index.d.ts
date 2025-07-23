@@ -74,6 +74,15 @@ export const Difficulty: {
 
 export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]
 
+
+export const UserPlan: {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  ADVANCED: 'ADVANCED'
+};
+
+export type UserPlan = (typeof UserPlan)[keyof typeof UserPlan]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -83,6 +92,10 @@ export const UserRole: typeof $Enums.UserRole
 export type Difficulty = $Enums.Difficulty
 
 export const Difficulty: typeof $Enums.Difficulty
+
+export type UserPlan = $Enums.UserPlan
+
+export const UserPlan: typeof $Enums.UserPlan
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1728,8 +1741,9 @@ export namespace Prisma {
     name: string | null
     email: string | null
     image: string | null
-    role: $Enums.UserRole | null
     password: string | null
+    role: $Enums.UserRole | null
+    plan: $Enums.UserPlan | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1739,8 +1753,9 @@ export namespace Prisma {
     name: string | null
     email: string | null
     image: string | null
-    role: $Enums.UserRole | null
     password: string | null
+    role: $Enums.UserRole | null
+    plan: $Enums.UserPlan | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1750,8 +1765,9 @@ export namespace Prisma {
     name: number
     email: number
     image: number
-    role: number
     password: number
+    role: number
+    plan: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1763,8 +1779,9 @@ export namespace Prisma {
     name?: true
     email?: true
     image?: true
-    role?: true
     password?: true
+    role?: true
+    plan?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1774,8 +1791,9 @@ export namespace Prisma {
     name?: true
     email?: true
     image?: true
-    role?: true
     password?: true
+    role?: true
+    plan?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1785,8 +1803,9 @@ export namespace Prisma {
     name?: true
     email?: true
     image?: true
-    role?: true
     password?: true
+    role?: true
+    plan?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1869,8 +1888,9 @@ export namespace Prisma {
     name: string | null
     email: string
     image: string | null
-    role: $Enums.UserRole
     password: string | null
+    role: $Enums.UserRole
+    plan: $Enums.UserPlan
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1897,8 +1917,9 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     image?: boolean
-    role?: boolean
     password?: boolean
+    role?: boolean
+    plan?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     problems?: boolean | User$problemsArgs<ExtArgs>
@@ -1914,8 +1935,9 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     image?: boolean
-    role?: boolean
     password?: boolean
+    role?: boolean
+    plan?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1925,8 +1947,9 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     image?: boolean
-    role?: boolean
     password?: boolean
+    role?: boolean
+    plan?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1936,13 +1959,14 @@ export namespace Prisma {
     name?: boolean
     email?: boolean
     image?: boolean
-    role?: boolean
     password?: boolean
+    role?: boolean
+    plan?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "image" | "role" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "image" | "password" | "role" | "plan" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     problems?: boolean | User$problemsArgs<ExtArgs>
     submission?: boolean | User$submissionArgs<ExtArgs>
@@ -1968,8 +1992,9 @@ export namespace Prisma {
       name: string | null
       email: string
       image: string | null
-      role: $Enums.UserRole
       password: string | null
+      role: $Enums.UserRole
+      plan: $Enums.UserPlan
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2404,8 +2429,9 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly image: FieldRef<"User", 'String'>
-    readonly role: FieldRef<"User", 'UserRole'>
     readonly password: FieldRef<"User", 'String'>
+    readonly role: FieldRef<"User", 'UserRole'>
+    readonly plan: FieldRef<"User", 'UserPlan'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -10924,8 +10950,9 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     image: 'image',
-    role: 'role',
     password: 'password',
+    role: 'role',
+    plan: 'plan',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11111,6 +11138,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'UserPlan'
+   */
+  export type EnumUserPlanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPlan'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserPlan[]'
+   */
+  export type ListEnumUserPlanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPlan[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -11198,8 +11239,9 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
-    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     password?: StringNullableFilter<"User"> | string | null
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    plan?: EnumUserPlanFilter<"User"> | $Enums.UserPlan
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     problems?: ProblemListRelationFilter
@@ -11214,8 +11256,9 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     email?: SortOrder
     image?: SortOrderInput | SortOrder
-    role?: SortOrder
     password?: SortOrderInput | SortOrder
+    role?: SortOrder
+    plan?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     problems?: ProblemOrderByRelationAggregateInput
@@ -11233,8 +11276,9 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     image?: StringNullableFilter<"User"> | string | null
-    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     password?: StringNullableFilter<"User"> | string | null
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    plan?: EnumUserPlanFilter<"User"> | $Enums.UserPlan
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     problems?: ProblemListRelationFilter
@@ -11249,8 +11293,9 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     email?: SortOrder
     image?: SortOrderInput | SortOrder
-    role?: SortOrder
     password?: SortOrderInput | SortOrder
+    role?: SortOrder
+    plan?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -11266,8 +11311,9 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringWithAggregatesFilter<"User"> | string
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
-    role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
+    role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    plan?: EnumUserPlanWithAggregatesFilter<"User"> | $Enums.UserPlan
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -11829,8 +11875,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -11845,8 +11892,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -11861,8 +11909,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -11877,8 +11926,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -11893,8 +11943,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11904,8 +11955,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11915,8 +11967,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12549,6 +12602,13 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type EnumUserPlanFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPlan | EnumUserPlanFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPlanFilter<$PrismaModel> | $Enums.UserPlan
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -12620,8 +12680,9 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     image?: SortOrder
-    role?: SortOrder
     password?: SortOrder
+    role?: SortOrder
+    plan?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12631,8 +12692,9 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     image?: SortOrder
-    role?: SortOrder
     password?: SortOrder
+    role?: SortOrder
+    plan?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12642,8 +12704,9 @@ export namespace Prisma {
     name?: SortOrder
     email?: SortOrder
     image?: SortOrder
-    role?: SortOrder
     password?: SortOrder
+    role?: SortOrder
+    plan?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12692,6 +12755,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type EnumUserPlanWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPlan | EnumUserPlanFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPlanWithAggregatesFilter<$PrismaModel> | $Enums.UserPlan
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPlanFilter<$PrismaModel>
+    _max?: NestedEnumUserPlanFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -13215,6 +13288,10 @@ export namespace Prisma {
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
+  }
+
+  export type EnumUserPlanFieldUpdateOperationsInput = {
+    set?: $Enums.UserPlan
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -13771,6 +13848,13 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type NestedEnumUserPlanFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPlan | EnumUserPlanFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPlanFilter<$PrismaModel> | $Enums.UserPlan
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -13846,6 +13930,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserPlanWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPlan | EnumUserPlanFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPlan[] | ListEnumUserPlanFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPlanWithAggregatesFilter<$PrismaModel> | $Enums.UserPlan
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPlanFilter<$PrismaModel>
+    _max?: NestedEnumUserPlanFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -14269,8 +14363,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     submission?: SubmissionCreateNestedManyWithoutUserInput
@@ -14284,8 +14379,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     submission?: SubmissionUncheckedCreateNestedManyWithoutUserInput
@@ -14407,8 +14503,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submission?: SubmissionUpdateManyWithoutUserNestedInput
@@ -14422,8 +14519,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submission?: SubmissionUncheckedUpdateManyWithoutUserNestedInput
@@ -14496,8 +14594,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -14511,8 +14610,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -14627,8 +14727,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -14642,8 +14743,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -14827,8 +14929,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -14842,8 +14945,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -14918,8 +15022,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -14933,8 +15038,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -15023,8 +15129,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -15038,8 +15145,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -15085,8 +15193,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -15100,8 +15209,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
@@ -15263,8 +15373,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemCreateNestedManyWithoutUserInput
@@ -15278,8 +15389,9 @@ export namespace Prisma {
     name?: string | null
     email: string
     image?: string | null
-    role?: $Enums.UserRole
     password?: string | null
+    role?: $Enums.UserRole
+    plan?: $Enums.UserPlan
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemUncheckedCreateNestedManyWithoutUserInput
@@ -15309,8 +15421,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUpdateManyWithoutUserNestedInput
@@ -15324,8 +15437,9 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    plan?: EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemUncheckedUpdateManyWithoutUserNestedInput
