@@ -150,42 +150,62 @@ const CreateProblemForm = () => {
         </div>
 
         {/* Sample Data Controls */}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
-          <div className="flex items-center gap-2 bg-neet-neutral/40 backdrop-blur-xl rounded-full p-2 border border-neet-accent/20">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-6">
+          {/* Sample Data Controls Group */}
+          <div className="flex items-center gap-2 bg-neet-neutral/40 backdrop-blur-xl rounded-full p-1 border border-neet-accent/20">
+            {/* Sample Type Toggle */}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                  sampleType === "DP"
+                    ? "bg-neet-primary text-neet-neutral shadow"
+                    : "text-neet-accent/70 hover:text-neet-accent"
+                }`}
+                onClick={() => setSampleType("DP")}
+              >
+                DP Problem
+              </button>
+              <button
+                type="button"
+                className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                  sampleType === "string"
+                    ? "bg-neet-primary text-neet-neutral shadow"
+                    : "text-neet-accent/70 hover:text-neet-accent"
+                }`}
+                onClick={() => setSampleType("string")}
+              >
+                String Problem
+              </button>
+            </div>
+
+            {/* Separator */}
+            <div className="w-px h-6 bg-neet-accent/20"></div>
+
+            {/* Load Sample Data Button */}
             <button
               type="button"
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                sampleType === "DP"
-                  ? "bg-neet-primary text-neet-neutral shadow-lg"
-                  : "text-neet-accent/70 hover:text-neet-accent"
-              }`}
-              onClick={() => setSampleType("DP")}
+              className="px-3 py-1.5 bg-neet-secondary/20 hover:bg-neet-secondary/30 text-neet-accent rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5"
+              onClick={loadSampleData}
             >
-              DP Problem
-            </button>
-            <button
-              type="button"
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                sampleType === "string"
-                  ? "bg-neet-primary text-neet-neutral shadow-lg"
-                  : "text-neet-accent/70 hover:text-neet-accent"
-              }`}
-              onClick={() => setSampleType("string")}
-            >
-              String Problem
+              <Download className="w-3.5 h-3.5" />
+              Load Sample
             </button>
           </div>
+
+          {/* OR Separator */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-px bg-gradient-to-r from-transparent via-neet-accent/30 to-transparent"></div>
+            <span className="text-neet-accent/50 text-xs font-medium uppercase tracking-wider">
+              or
+            </span>
+            <div className="w-8 h-px bg-gradient-to-r from-transparent via-neet-accent/30 to-transparent"></div>
+          </div>
+
+          {/* JSON Upload Button */}
           <button
             type="button"
-            className="px-6 py-3 bg-neet-secondary/20 hover:bg-neet-secondary/30 text-neet-accent border border-neet-accent/20 rounded-full font-medium transition-all duration-200 flex items-center gap-2 backdrop-blur-xl"
-            onClick={loadSampleData}
-          >
-            <Download className="w-4 h-4" />
-            Load Sample Data
-          </button>
-          <button
-            type="button"
-            className="px-6 py-3 bg-neet-info/20 hover:bg-neet-info/30 text-neet-info border border-neet-info/20 rounded-full font-medium transition-all duration-200 flex items-center gap-2 backdrop-blur-xl"
+            className="px-4 py-2 bg-neet-info/20 hover:bg-neet-info/30 text-neet-info border border-neet-info/20 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-2 backdrop-blur-xl shadow-sm hover:shadow-md"
             onClick={() => setIsSetCodeModalOpen(true)}
           >
             <Code2 className="w-4 h-4" />

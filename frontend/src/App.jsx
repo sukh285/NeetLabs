@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { HashLoader } from "react-spinners";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
@@ -22,6 +24,13 @@ import FeedbackPage from "./pages/FeedbackPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+
+  useEffect(() => {
+    AOS.init({
+      duration:1500,
+      once: true,
+    })
+  });
 
   useEffect(() => {
     checkAuth();
@@ -77,10 +86,7 @@ const App = () => {
             element={authUser ? <AllPlaylists /> : <Navigate to="/login" />}
           />
 
-          <Route
-            path="/pricing"
-            element={<PricingPage />}
-          />
+          <Route path="/pricing" element={<PricingPage />} />
 
           <Route
             path="/feedback"
