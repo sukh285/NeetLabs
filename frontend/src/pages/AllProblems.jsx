@@ -28,12 +28,14 @@ const AllProblems = () => {
         <div className="relative pt-16 pb-4 text-center">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
-              <Code className="w-5 h-5 text-neet-primary" />
-              <span className="text-neet-accent/80 font-medium">All Problems</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neet-accent-200 backdrop-blur-sm rounded-full border border-neet-accent/20 mb-6">
+              <Code className="w-4 h-4 text-neet-primary" />
+              <span className="text-neet-accent font-medium text-sm">
+                All Problems
+              </span>
             </div>
 
-            <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs text-neet-accent/70 max-w-2xl mx-auto leading-relaxed">
               Challenge yourself with our comprehensive collection of coding
               problems. From algorithms to data structures, level up your
               programming skills.

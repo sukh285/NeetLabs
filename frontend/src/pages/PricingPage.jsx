@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Check,
   Zap,
@@ -14,12 +15,16 @@ import {
 import Particles from "../templates/Particles";
 import { useAccess } from "../hooks/useAccess";
 import useHandlePayment from "../store/usePaymentStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 const PricingPage = () => {
+  const { authUser } = useAuthStore();
+  const navigate = useNavigate();
+
   const { plan: userPlan } = useAccess();
   const [cardsVisible, setCardsVisible] = useState(false);
 
-  const handlePayment = useHandlePayment()
+  const handlePayment = useHandlePayment();
 
   const plans = [
     {
@@ -35,8 +40,8 @@ const PricingPage = () => {
         "Limited NeetBot requests per day",
       ],
       buttonText: "Get Started",
-      buttonStyle: (isCurrent) => 
-        isCurrent 
+      buttonStyle: (isCurrent) =>
+        isCurrent
           ? "bg-neet-success/20 border-2 border-neet-success/50 text-neet-success cursor-not-allowed"
           : "bg-white/10 border-2 border-neet-neutral/30 hover:border-neet-primary/50 text-neet-neutral hover:bg-neet-primary/10",
       cardStyle: "border-2 border-neet-success/20 bg-white/20 backdrop-blur-sm",
@@ -48,7 +53,7 @@ const PricingPage = () => {
     },
     {
       name: "Pro",
-      price: "₹1,499",
+      price: `₹${parseInt(import.meta.env.VITE_PRICE_PRO) / 100}`,
       originalPrice: "₹3,000",
       period: "One-time purchase",
       description: "Best for serious learners",
@@ -59,20 +64,22 @@ const PricingPage = () => {
         "Full access to NeetBot for AI guidance",
       ],
       buttonText: "Upgrade to Pro",
-      buttonStyle: (isCurrent) => 
+      buttonStyle: (isCurrent) =>
         isCurrent
           ? "bg-neet-primary/20 border-2 border-neet-primary/50 text-neet-primary cursor-not-allowed"
           : "bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-primary-focus hover:to-neet-secondary-focus text-white shadow-lg hover:shadow-xl",
-      cardStyle: "border-2 border-neet-primary/30 bg-white shadow-2xl shadow-neet-primary/10 backdrop-blur-sm transform transition-transform duration-500 ease-in-out hover:scale-[1.02]",
+      cardStyle:
+        "border-2 border-neet-primary/30 bg-white shadow-2xl shadow-neet-primary/10 backdrop-blur-sm transform transition-transform duration-500 ease-in-out hover:scale-[1.02]",
       badge: "Most Popular",
-      badgeStyle: "bg-gradient-to-r from-neet-primary to-neet-secondary text-white",
+      badgeStyle:
+        "bg-gradient-to-r from-neet-primary to-neet-secondary text-white",
       icon: Zap,
       popular: true,
       planKey: "PRO",
     },
     {
       name: "Advanced",
-      price: "₹2,999",
+      price: `₹${parseInt(import.meta.env.VITE_PRICE_ADVANCED) / 100}`,
       originalPrice: "₹5,000",
       period: "One-time purchase",
       description: "For interview preparation",
@@ -84,7 +91,7 @@ const PricingPage = () => {
         "1-on-1 Resume Feedback",
       ],
       buttonText: "Go Advanced",
-      buttonStyle: (isCurrent) => 
+      buttonStyle: (isCurrent) =>
         isCurrent
           ? "bg-neet-secondary/20 border-2 border-neet-secondary/50 text-neet-secondary cursor-not-allowed"
           : "border-2 border-neet-neutral/30 bg-white hover:bg-neet-primary/80 text-neet-neutral hover:text-white",
@@ -104,7 +111,7 @@ const PricingPage = () => {
 
   const getButtonContent = (plan) => {
     const isCurrent = userPlan === plan.planKey;
-    
+
     if (isCurrent) {
       return (
         <div className="flex items-center justify-center gap-2">
@@ -118,6 +125,11 @@ const PricingPage = () => {
 
   const isButtonDisabled = (plan) => {
     return userPlan === plan.planKey;
+  };
+
+  const handleClick = (planKey) => {
+    if (!authUser) return navigate("/login");
+    handlePayment(planKey);
   };
 
   return (
@@ -160,10 +172,9 @@ const PricingPage = () => {
         {/* Pricing Cards */}
         <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const IconComponent = plan.icon;
             const isCurrentPlan = userPlan === plan.planKey;
             const transitionDelay = `${100 + index * 100}ms`;
-            
+
             return (
               <div
                 key={index}
@@ -249,7 +260,7 @@ const PricingPage = () => {
                     ${isCurrentPlan ? "" : "hover:scale-105 active:scale-95"}
                   `}
                   disabled={isButtonDisabled(plan)}
-                  onClick={() => handlePayment(plan.planKey)}
+                  onClick={() => handleClick(plan.planKey)}
                 >
                   {getButtonContent(plan)}
                 </button>

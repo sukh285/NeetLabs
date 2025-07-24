@@ -408,4 +408,68 @@ export const sampleStringProblem = {
   }
   `,
   },
-}; 
+};
+
+export const sampleJson = {
+  title: "Longest Substring Without Repeating Characters",
+  description:
+    "Given a string s, find the length of the longest substring without repeating characters. A substring is a contiguous non-empty sequence of characters within a string.",
+  difficulty: "MEDIUM",
+  tags: ["Hash Table", "String", "Sliding Window"],
+  companyTags: ["Facebook", "Amazon"],
+  constraints:
+    "0 <= s.length <= 5 * 10^4\ns consists of English letters, digits, symbols and spaces.",
+  hints:
+    "Use the sliding window technique with two pointers. Keep track of characters in the current window using a hash set or hash map. When you encounter a duplicate character, move the left pointer until the duplicate is removed.",
+  editorial:
+    "We can solve this using the sliding window technique. We maintain a window with two pointers (left and right) and use a hash set to track characters in the current window. When we find a duplicate, we shrink the window from the left until the duplicate is removed, then continue expanding from the right.",
+  testcases: [
+    {
+      input: "abcabcbb",
+      output: "3",
+    },
+    {
+      input: "bbbbb",
+      output: "1",
+    },
+    {
+      input: "pwwkew",
+      output: "3",
+    },
+    {
+      input: "",
+      output: "0",
+    },
+  ],
+  examples: {
+    JAVASCRIPT: {
+      input: 's = "abcabcbb"',
+      output: "3",
+      explanation: 'The answer is "abc", with the length of 3.',
+    },
+    PYTHON: {
+      input: 's = "abcabcbb"',
+      output: "3",
+      explanation: 'The answer is "abc", with the length of 3.',
+    },
+    JAVA: {
+      input: 's = "abcabcbb"',
+      output: "3",
+      explanation: 'The answer is "abc", with the length of 3.',
+    },
+  },
+  codeSnippet: {
+    JAVASCRIPT:
+      "/**\n * @param {string} s\n * @return {number}\n */\nfunction lengthOfLongestSubstring(s) {\n    // Write your code here\n}\n\n// Add readline for dynamic input handling\nconst readline = require('readline');\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout,\n  terminal: false\n});\n\n// Process input line\nrl.on('line', (line) => {\n  const result = lengthOfLongestSubstring(line.trim());\n  console.log(result);\n  rl.close();\n});",
+    PYTHON:
+      'class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        # Write your code here\n        pass\n\n# Input parsing\nif __name__ == "__main__":\n    import sys\n    \n    # Read input string\n    s = sys.stdin.readline().strip()\n    \n    # Call solution\n    sol = Solution()\n    result = sol.lengthOfLongestSubstring(s)\n    \n    # Output result\n    print(result)',
+    JAVA: "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static int lengthOfLongestSubstring(String s) {\n        // Write your code here\n        return 0;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String input = br.readLine().trim();\n        \n        int result = lengthOfLongestSubstring(input);\n        System.out.println(result);\n    }\n}",
+  },
+  referenceSolution: {
+    JAVASCRIPT:
+      "/**\n * @param {string} s\n * @return {number}\n */\nfunction lengthOfLongestSubstring(s) {\n    if (s.length === 0) return 0;\n    \n    const charSet = new Set();\n    let left = 0;\n    let maxLength = 0;\n    \n    for (let right = 0; right < s.length; right++) {\n        // If character is already in set, remove characters from left\n        while (charSet.has(s[right])) {\n            charSet.delete(s[left]);\n            left++;\n        }\n        \n        // Add current character to set\n        charSet.add(s[right]);\n        \n        // Update max length\n        maxLength = Math.max(maxLength, right - left + 1);\n    }\n    \n    return maxLength;\n}\n\n// Add readline for dynamic input handling\nconst readline = require('readline');\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout,\n  terminal: false\n});\n\n// Process input line\nrl.on('line', (line) => {\n  const result = lengthOfLongestSubstring(line.trim());\n  console.log(result);\n  rl.close();\n});",
+    PYTHON:
+      'class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        if not s:\n            return 0\n        \n        char_set = set()\n        left = 0\n        max_length = 0\n        \n        for right in range(len(s)):\n            # If character is already in set, remove characters from left\n            while s[right] in char_set:\n                char_set.remove(s[left])\n                left += 1\n            \n            # Add current character to set\n            char_set.add(s[right])\n            \n            # Update max length\n            max_length = max(max_length, right - left + 1)\n        \n        return max_length\n\n# Input parsing\nif __name__ == "__main__":\n    import sys\n    \n    # Read input string\n    s = sys.stdin.readline().strip()\n    \n    # Call solution\n    sol = Solution()\n    result = sol.lengthOfLongestSubstring(s)\n    \n    # Output result\n    print(result)',
+    JAVA: "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static int lengthOfLongestSubstring(String s) {\n        if (s.length() == 0) return 0;\n        \n        Set<Character> charSet = new HashSet<>();\n        int left = 0;\n        int maxLength = 0;\n        \n        for (int right = 0; right < s.length(); right++) {\n            // If character is already in set, remove characters from left\n            while (charSet.contains(s.charAt(right))) {\n                charSet.remove(s.charAt(left));\n                left++;\n            }\n            \n            // Add current character to set\n            charSet.add(s.charAt(right));\n            \n            // Update max length\n            maxLength = Math.max(maxLength, right - left + 1);\n        }\n        \n        return maxLength;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String input = br.readLine().trim();\n        \n        int result = lengthOfLongestSubstring(input);\n        System.out.println(result);\n    }\n}",
+  },
+};

@@ -1,7 +1,12 @@
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "./useAuthStore";
 
 const useHandlePayment = () => {
+  const logout = useAuthStore((state) => state.logout)
+  const navigate = useNavigate();
+
   const handlePayment = async (planKey) => {
     try {
       // Step 1: Create order on backend
@@ -39,7 +44,11 @@ const useHandlePayment = () => {
 
             if (verifyRes.data.success) {
               toast.success("Payment verified & plan activated!");
-              // Optional: trigger user plan refresh here (e.g., refetch user)
+              // Optional: logout user and ask to login again
+              await logout()
+
+              toast.success("Payment verified! Please login again")
+              navigate("/login")
             } else {
               toast.error("Payment verification failed.");
             }

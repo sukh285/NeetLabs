@@ -47,33 +47,29 @@ const AllPlaylists = () => {
   const premiumPlaylists = playlists.filter((p) => p.accessLevel !== "CUSTOM");
 
   // For users, filter premium playlists by access level
-  const accessiblePremiumPlaylists = isAdmin
-    ? premiumPlaylists
-    : premiumPlaylists.filter((playlist) => {
-        if (playlist.accessLevel === "FREE") return true;
-        if (playlist.accessLevel === "PRO" && plan !== "FREE") return true;
-        if (playlist.accessLevel === "ADVANCED" && plan === "ADVANCED") return true;
-        return false;
-      });
+  const canUserAccess = (accessLevel) => {
+    if (isAdmin) return true;
+    if (accessLevel === "FREE") return true;
+    if (accessLevel === "PRO" && plan !== "FREE") return true;
+    if (accessLevel === "ADVANCED" && plan === "ADVANCED") return true;
+    return false;
+  };
 
-  const myPlaylists = playlists.filter(
+  const myPlaylists = (playlists || []).filter(
     (p) => p.accessLevel === "CUSTOM" && p.user?.id === authUser?.id
   );
 
   // PremiumPlaylistCard: clickable to playlist if accessible, else to pricing
-  const PremiumPlaylistCard = ({ playlist }) => {
+  const PremiumPlaylistCard = ({ playlist, canAccess }) => {
     const accessLabel =
       playlist.accessLevel === "FREE" ? "Free" : playlist.accessLevel;
 
-    // Admins can access all, users only if access level matches
-    const canAccess =
-      isAdmin ||
-      playlist.accessLevel === "FREE" ||
-      (playlist.accessLevel === "PRO" && plan !== "FREE") ||
-      (playlist.accessLevel === "ADVANCED" && plan === "ADVANCED");
-
     const CardContent = (
-      <div className="group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full">
+      <div
+        className={`group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full ${
+          !canAccess ? "opacity-80" : ""
+        }`}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-neet-primary/5 via-transparent to-neet-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
         {/* Lock or Access Label */}
@@ -245,13 +241,13 @@ const AllPlaylists = () => {
         <div className="relative pt-16 mb-2 text-center">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
-              <List className="w-5 h-5 text-neet-primary" />
-              <span className="text-neet-accent/80 font-medium">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neet-accent-200 backdrop-blur-sm rounded-full border border-neet-accent/20 mb-6">
+              <List className="w-4 h-4 text-neet-primary" />
+              <span className="text-neet-accent font-medium text-sm">
                 All Playlists
               </span>
             </div>
-            <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs text-neet-accent/70 max-w-2xl mx-auto leading-relaxed">
               Explore curated playlists of coding problems. Tackle topics,
               master skills, and track your progress with themed collections.
             </p>
@@ -282,7 +278,11 @@ const AllPlaylists = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {premiumPlaylists.map((playlist) => (
-                    <PremiumPlaylistCard key={playlist.id} playlist={playlist} />
+                    <PremiumPlaylistCard
+                      key={playlist.id}
+                      playlist={playlist}
+                      canAccess={canUserAccess(playlist.accessLevel)}
+                    />
                   ))}
                 </div>
               )}
@@ -326,7 +326,7 @@ const AllPlaylists = () => {
               ) : (
                 <>
                   {/* User Playlists Grid */}
-                  {playlists && playlists.length > 0 ? (
+                  {myPlaylists && myPlaylists.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {myPlaylists.map((playlist) => (
                         <UserPlaylistCard

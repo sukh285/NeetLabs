@@ -93,14 +93,88 @@ const CreateProblemForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSetCodeModalOpen, setIsSetCodeModalOpen] = useState(false);
 
+  // Updated onSubmit function for form component
   const onSubmit = async (value) => {
     try {
       setIsLoading(true);
-      const res = await axiosInstance.post("/problem/create-problem", value);
+
+      // Clean and validate the data before sending
+      const cleanedValue = {
+        ...value,
+        // Clean test cases - preserve empty strings but trim whitespace-only strings to empty
+        testcases: value.testcases.map((tc) => ({
+          input:
+            typeof tc.input === "string"
+              ? tc.input.trim() === ""
+                ? ""
+                : tc.input.trim()
+              : "",
+          output:
+            typeof tc.output === "string"
+              ? tc.output.trim() === ""
+                ? ""
+                : tc.output.trim()
+              : "",
+        })),
+
+        // Clean tags - trim and filter out empty ones
+        tags: value.tags
+          .map((tag) => tag?.trim())
+          .filter((tag) => tag && tag.length > 0),
+
+        // Clean company tags - trim and filter out empty ones
+        companyTags: value.companyTags
+          .map((tag) => tag?.trim())
+          .filter((tag) => tag && tag.length > 0),
+
+        // Clean examples for each language
+        examples: {
+          JAVASCRIPT: {
+            input: value.examples.JAVASCRIPT.input?.trim() || "",
+            output: value.examples.JAVASCRIPT.output?.trim() || "",
+            explanation: value.examples.JAVASCRIPT.explanation?.trim() || "",
+          },
+          PYTHON: {
+            input: value.examples.PYTHON.input?.trim() || "",
+            output: value.examples.PYTHON.output?.trim() || "",
+            explanation: value.examples.PYTHON.explanation?.trim() || "",
+          },
+          JAVA: {
+            input: value.examples.JAVA.input?.trim() || "",
+            output: value.examples.JAVA.output?.trim() || "",
+            explanation: value.examples.JAVA.explanation?.trim() || "",
+          },
+        },
+
+        // Clean other text fields
+        title: value.title?.trim(),
+        description: value.description?.trim(),
+        constraints: value.constraints?.trim() || undefined,
+        hints: value.hints?.trim() || undefined,
+        editorial: value.editorial?.trim() || undefined,
+      };
+
+      // Ensure we have at least one test case
+      if (cleanedValue.testcases.length === 0) {
+        toast.error("At least one test case is required");
+        return;
+      }
+
+      // Ensure we have at least one tag
+      if (cleanedValue.tags.length === 0) {
+        toast.error("At least one tag is required");
+        return;
+      }
+
+      const res = await axiosInstance.post(
+        "/problem/create-problem",
+        cleanedValue
+      );
       toast.success(res.data.message || "Problem created successfully");
       navigation("/problems");
     } catch (error) {
-      toast.error("Error creating problem");
+      console.error("Error creating problem:", error);
+      toast.error(error.response?.data?.message || "Error creating problem");
     } finally {
       setIsLoading(false);
     }
@@ -118,19 +192,6 @@ const CreateProblemForm = () => {
     if (json.tags) replaceTags(json.tags.map((tag) => tag));
     if (json.testcases) replacetestcases(json.testcases.map((tc) => tc));
     reset(json);
-  };
-
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty) {
-      case "EASY":
-        return "text-neet-success";
-      case "MEDIUM":
-        return "text-neet-warning";
-      case "HARD":
-        return "text-neet-error";
-      default:
-        return "text-neet-accent";
-    }
   };
 
   return (

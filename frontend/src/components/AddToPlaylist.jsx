@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { X, Loader, Plus } from "lucide-react";
 import { usePlaylistStore } from "../store/usePlaylistStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 const AddToPlaylist = ({ isOpen, onClose, problemId }) => {
   const { playlists, getAllPlaylists, addProblemToPlaylist, isLoading } =
     usePlaylistStore();
+  const { authUser } = useAuthStore();
 
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
 
@@ -56,15 +58,21 @@ const AddToPlaylist = ({ isOpen, onClose, problemId }) => {
               disabled={isLoading}
             >
               <option value="">-- Choose a playlist --</option>
-              {playlists.map((playlist) => (
-                <option
-                  key={playlist.id}
-                  value={playlist.id}
-                  className="bg-neet-neutral text-neet-base-100"
-                >
-                  {playlist.name}
-                </option>
-              ))}
+              {playlists
+                .filter(
+                  (playlist) =>
+                    playlist.accessLevel === "CUSTOM" &&
+                    playlist.createdBy?.id === authUser.id
+                )
+                .map((playlist) => (
+                  <option
+                    key={playlist.id}
+                    value={playlist.id}
+                    className="bg-neet-neutral text-neet-base-100"
+                  >
+                    {playlist.name}
+                  </option>
+                ))}
             </select>
           </div>
 
