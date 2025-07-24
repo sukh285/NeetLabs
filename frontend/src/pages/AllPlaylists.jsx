@@ -17,157 +17,144 @@ import {
 import { Link } from "react-router-dom";
 
 import { usePlaylistStore } from "../store/usePlaylistStore";
+import { useAccess } from "../hooks/useAccess";
 import CreatePlaylistModal from "../components/CreatePlaylistModal";
 import Divider from "../templates/Divider";
 import { HashLoader } from "react-spinners";
 
 const AllPlaylists = () => {
-  const [allMockPlaylists, setMockPlaylists] = useState([]);
   const [isPlaylistsLoading, setIsPlaylistsLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-
-  const { playlists, getAllPlaylists, isLoading, createPlaylist } = usePlaylistStore();
+  const { playlists, getAllPlaylists, isLoading, createPlaylist } =
+    usePlaylistStore();
+  const { authUser, plan, isAdmin } = useAccess();
 
   // Fetch user playlists
   useEffect(() => {
-    getAllPlaylists();
+    const fetchPlaylists = async () => {
+      setIsPlaylistsLoading(true);
+      try {
+        await getAllPlaylists();
+      } finally {
+        setIsPlaylistsLoading(false);
+      }
+    };
+    fetchPlaylists();
   }, [getAllPlaylists]);
 
-  // Mock data - premium playlists
-  const mockPlaylists = [
-    {
-      id: 1,
-      title: "Data Structures Fundamentals",
-      description:
-        "Master the core data structures every programmer should know",
-      problemCount: 25,
-      difficulty: "Beginner",
-      duration: "2-3 weeks",
-      upvotes: 1247,
-      thumbnail: "🏗️",
-    },
-    {
-      id: 2,
-      title: "Algorithm Design Patterns",
-      description:
-        "Learn essential algorithmic patterns and problem-solving techniques",
-      problemCount: 40,
-      difficulty: "Intermediate",
-      duration: "4-5 weeks",
-      upvotes: 892,
-      thumbnail: "🧩",
-    },
-    {
-      id: 3,
-      title: "System Design Basics",
-      description: "Build scalable systems with fundamental design principles",
-      problemCount: 18,
-      difficulty: "Advanced",
-      duration: "3-4 weeks",
-      upvotes: 634,
-      thumbnail: "⚙️",
-    },
-  ];
+  // All premium playlists
+  const premiumPlaylists = playlists.filter((p) => p.accessLevel !== "CUSTOM");
 
-  // Fetch mock playlists
-  useEffect(() => {
-    const fetchMockPlaylists = async () => {
-      setIsPlaylistsLoading(true);
-      setTimeout(() => {
-        setMockPlaylists(mockPlaylists);
-        setIsPlaylistsLoading(false);
-      }, 1000);
-    };
+  // For users, filter premium playlists by access level
+  const accessiblePremiumPlaylists = isAdmin
+    ? premiumPlaylists
+    : premiumPlaylists.filter((playlist) => {
+        if (playlist.accessLevel === "FREE") return true;
+        if (playlist.accessLevel === "PRO" && plan !== "FREE") return true;
+        if (playlist.accessLevel === "ADVANCED" && plan === "ADVANCED") return true;
+        return false;
+      });
 
-    fetchMockPlaylists();
-  }, []);
+  const myPlaylists = playlists.filter(
+    (p) => p.accessLevel === "CUSTOM" && p.user?.id === authUser?.id
+  );
 
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty.toLowerCase()) {
-      case "beginner":
-        return "text-green-400 bg-green-400/10 border-green-400/20";
-      case "intermediate":
-        return "text-yellow-400 bg-yellow-400/10 border-yellow-400/20";
-      case "advanced":
-        return "text-red-400 bg-red-400/10 border-red-400/20";
-      default:
-        return "text-neet-accent bg-neet-accent/10 border-neet-accent/20";
-    }
-  };
+  // PremiumPlaylistCard: clickable to playlist if accessible, else to pricing
+  const PremiumPlaylistCard = ({ playlist }) => {
+    const accessLabel =
+      playlist.accessLevel === "FREE" ? "Free" : playlist.accessLevel;
 
-  const PremiumPlaylistCard = ({ mockPlaylist }) => (
-    <div className="group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full">
-      <div className="absolute inset-0 bg-gradient-to-br from-neet-primary/5 via-transparent to-neet-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    // Admins can access all, users only if access level matches
+    const canAccess =
+      isAdmin ||
+      playlist.accessLevel === "FREE" ||
+      (playlist.accessLevel === "PRO" && plan !== "FREE") ||
+      (playlist.accessLevel === "ADVANCED" && plan === "ADVANCED");
 
-      {/* Coming Soon Badge */}
-      <div className="absolute top-4 right-0 bg-gradient-to-r from-neet-accent to-neet-primary text-white text-xs font-semibold px-3 py-1 transform rotate-12 translate-x-2 -translate-y-1 shadow-lg z-10">
-        Coming Soon
-      </div>
+    const CardContent = (
+      <div className="group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-neet-primary/5 via-transparent to-neet-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-      <div className="relative p-6 h-full flex flex-col">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-start gap-4 flex-1">
-            <div className="w-12 h-12 bg-gradient-to-br from-neet-primary/20 to-neet-secondary/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
-              {mockPlaylist.thumbnail}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold font-limelight text-neet-base-100 group-hover:text-neet-primary transition-colors leading-tight mb-2">
-                {mockPlaylist.title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
-                    mockPlaylist.difficulty
-                  )}`}
-                >
-                  {mockPlaylist.difficulty}
-                </span>
+        {/* Lock or Access Label */}
+        {!canAccess && (
+          <div className="absolute top-4 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-semibold px-3 py-1 shadow-lg z-10">
+            Locked
+          </div>
+        )}
+
+        <div className="relative p-6 h-full flex flex-col">
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start gap-4 flex-1">
+              <div className="w-12 h-12 bg-gradient-to-br from-neet-primary/20 to-neet-secondary/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                📘
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold font-limelight text-neet-base-100 group-hover:text-neet-primary transition-colors leading-tight mb-2">
+                  {playlist.name}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-xs font-medium border border-neet-primary/20 text-neet-primary bg-neet-primary/10">
+                    {accessLabel}
+                  </span>
+                </div>
               </div>
             </div>
+            <ChevronRight className="w-5 h-5 text-neet-accent/40 group-hover:text-neet-primary group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
           </div>
-          <ChevronRight className="w-5 h-5 text-neet-accent/40 group-hover:text-neet-primary group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
-        </div>
 
-        {/* Description */}
-        <p className="text-sm text-neet-accent/70 mb-6 line-clamp-2 leading-relaxed flex-grow">
-          {mockPlaylist.description}
-        </p>
+          <p className="text-sm text-neet-accent/70 mb-6 line-clamp-2 leading-relaxed flex-grow">
+            {playlist.description}
+          </p>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-6 pt-6 border-t border-neet-accent/10 mt-auto">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-2">
-              <BookOpen className="w-4 h-4 text-neet-accent/60" />
+          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-neet-accent/10 mt-auto">
+            <div className="text-center">
+              <BookOpen className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
+              <p className="text-sm font-semibold text-neet-base-100">
+                {playlist.problems?.length || 0}
+              </p>
+              <p className="text-xs text-neet-accent/60">Problems</p>
             </div>
-            <p className="text-sm font-semibold text-neet-base-100 mb-1">
-              {mockPlaylist.problemCount}
-            </p>
-            <p className="text-xs text-neet-accent/60">Problems</p>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-2">
-              <Clock className="w-4 h-4 text-neet-accent/60" />
+            <div className="text-center">
+              <Users className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
+              <p className="text-sm font-semibold text-neet-base-100">
+                {playlist.user?.name || "Admin"}
+              </p>
+              <p className="text-xs text-neet-accent/60">Created By</p>
             </div>
-            <p className="text-sm font-semibold text-neet-base-100 mb-1">
-              {mockPlaylist.duration}
-            </p>
-            <p className="text-xs text-neet-accent/60">Duration</p>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-2">
-              <ThumbsUp className="w-4 h-4 text-neet-accent/60" />
+            <div className="text-center">
+              <Calendar className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
+              <p className="text-sm font-semibold text-neet-base-100">
+                {new Date(playlist.createdAt).toLocaleDateString()}
+              </p>
+              <p className="text-xs text-neet-accent/60">Created</p>
             </div>
-            <p className="text-sm font-semibold text-neet-base-100 mb-1">
-              {mockPlaylist.upvotes.toLocaleString()}
-            </p>
-            <p className="text-xs text-neet-accent/60">Upvotes</p>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+
+    // If accessible, wrap in Link to playlist, else to pricing page
+    return canAccess ? (
+      <Link
+        to={`/playlist/${playlist.id}`}
+        className="block h-full"
+        tabIndex={0}
+        aria-label={`View playlist ${playlist.name}`}
+      >
+        {CardContent}
+      </Link>
+    ) : (
+      <Link
+        to="/pricing"
+        className="block h-full"
+        tabIndex={0}
+        aria-label={`Unlock playlist ${playlist.name} (go to pricing)`}
+      >
+        {CardContent}
+      </Link>
+    );
+  };
 
   const UserPlaylistCard = ({ playlist }) => (
     <Link
@@ -230,11 +217,24 @@ const AllPlaylists = () => {
     </div>
   );
 
+  // Empty Premium Playlists component
+  const EmptyPremiumPlaylists = () => (
+    <div className="text-center py-12">
+      <div className="w-16 h-16 bg-neet-neutral/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <ListMusic className="w-8 h-8 text-neet-accent/40" />
+      </div>
+      <h3 className="text-lg font-medium text-neet-base-100 mb-2">
+        No premium playlists
+      </h3>
+      <p className="text-sm text-neet-accent/60">
+        There are currently no curated premium playlists available.
+      </p>
+    </div>
+  );
+
   // Handler for creating a playlist
   const handleCreatePlaylist = async (data) => {
-    // addPlaylist is assumed to be available from the store
     await createPlaylist(data);
-    // Optionally, you can refresh playlists here if needed
     getAllPlaylists();
   };
 
@@ -258,7 +258,7 @@ const AllPlaylists = () => {
           </div>
         </div>
 
-        <Divider/>
+        <Divider />
 
         {/* Loading State */}
         {isPlaylistsLoading ? (
@@ -277,14 +277,15 @@ const AllPlaylists = () => {
           <>
             {/* Premium Playlists Grid */}
             <div className="pt-5 pb-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {allMockPlaylists.map((mockPlaylist) => (
-                  <PremiumPlaylistCard
-                    key={mockPlaylist.id}
-                    mockPlaylist={mockPlaylist}
-                  />
-                ))}
-              </div>
+              {premiumPlaylists.length === 0 ? (
+                <EmptyPremiumPlaylists />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {premiumPlaylists.map((playlist) => (
+                    <PremiumPlaylistCard key={playlist.id} playlist={playlist} />
+                  ))}
+                </div>
+              )}
             </div>
 
             <Divider />
@@ -317,7 +318,9 @@ const AllPlaylists = () => {
                 <div className="flex items-center justify-center py-12">
                   <div className="flex items-center gap-3">
                     <Loader2 className="w-5 h-5 animate-spin text-neet-primary" />
-                    <span className="text-neet-accent/70">Loading your playlists...</span>
+                    <span className="text-neet-accent/70">
+                      Loading your playlists...
+                    </span>
                   </div>
                 </div>
               ) : (
@@ -325,7 +328,7 @@ const AllPlaylists = () => {
                   {/* User Playlists Grid */}
                   {playlists && playlists.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {playlists.map((playlist) => (
+                      {myPlaylists.map((playlist) => (
                         <UserPlaylistCard
                           key={playlist.id}
                           playlist={playlist}
@@ -346,6 +349,7 @@ const AllPlaylists = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreatePlaylist}
+        isAdmin={isAdmin}
       />
     </div>
   );

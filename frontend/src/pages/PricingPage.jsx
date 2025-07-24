@@ -9,11 +9,16 @@ import {
   Users,
   TrendingUp,
   StarsIcon,
+  CheckCircle,
 } from "lucide-react";
 import Particles from "../templates/Particles";
 import Divider from "../templates/Divider";
+import { useAccess } from "../hooks/useAccess";
 
 const PricingPage = () => {
+  const { plan: userPlan } = useAccess();
+  const [cardsVisible, setCardsVisible] = useState(false);
+
   const plans = [
     {
       name: "Freemium",
@@ -27,15 +32,17 @@ const PricingPage = () => {
         "One All-Rounder DSA Playlist",
         "Limited NeetBot requests per day",
       ],
-      buttonText: "Current Plan",
-      buttonStyle:
-        "border-2 border-neet-neutral/30 bg-neet-neutral/60 text-neet-primary cursor-not-allowed",
+      buttonText: "Get Started",
+      buttonStyle: (isCurrent) => 
+        isCurrent 
+          ? "bg-neet-success/20 border-2 border-neet-success/50 text-neet-success cursor-not-allowed"
+          : "bg-white/10 border-2 border-neet-neutral/30 hover:border-neet-primary/50 text-neet-neutral hover:bg-neet-primary/10",
       cardStyle: "border-2 border-neet-success/20 bg-white/20 backdrop-blur-sm",
       badge: "Free",
       badgeStyle: "bg-neet-success text-white",
       icon: Target,
       popular: false,
-      isCurrent: true,
+      planKey: "FREE",
     },
     {
       name: "Pro",
@@ -50,16 +57,16 @@ const PricingPage = () => {
         "Full access to NeetBot for AI guidance",
       ],
       buttonText: "Upgrade to Pro",
-      buttonStyle:
-        "bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-primary-focus hover:to-neet-secondary-focus hover:text-neet-neutral text-white shadow-lg hover:shadow-xl transition-colors duration-300 ease-in-out",
-      cardStyle:
-        "border-2 border-neet-primary/30 bg-white shadow-2xl shadow-neet-primary/10 backdrop-blur-sm transform transition-transform duration-500 ease-in-out hover:scale-105",
+      buttonStyle: (isCurrent) => 
+        isCurrent
+          ? "bg-neet-primary/20 border-2 border-neet-primary/50 text-neet-primary cursor-not-allowed"
+          : "bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-primary-focus hover:to-neet-secondary-focus text-white shadow-lg hover:shadow-xl",
+      cardStyle: "border-2 border-neet-primary/30 bg-white shadow-2xl shadow-neet-primary/10 backdrop-blur-sm transform transition-transform duration-500 ease-in-out hover:scale-[1.02]",
       badge: "Most Popular",
-      badgeStyle:
-        "bg-gradient-to-r from-neet-primary to-neet-secondary text-white",
+      badgeStyle: "bg-gradient-to-r from-neet-primary to-neet-secondary text-white",
       icon: Zap,
       popular: true,
-      isCurrent: false,
+      planKey: "PRO",
     },
     {
       name: "Advanced",
@@ -75,25 +82,41 @@ const PricingPage = () => {
         "1-on-1 Resume Feedback",
       ],
       buttonText: "Go Advanced",
-      buttonStyle:
-        "border-2 border-neet-neutral/30 bg-white hover:bg-neet-primary/80 text-neet-neutral",
+      buttonStyle: (isCurrent) => 
+        isCurrent
+          ? "bg-neet-secondary/20 border-2 border-neet-secondary/50 text-neet-secondary cursor-not-allowed"
+          : "border-2 border-neet-neutral/30 bg-white hover:bg-neet-primary/80 text-neet-neutral hover:text-white",
       cardStyle: "border-2 border-neet-neutral/20 bg-white/20 backdrop-blur-sm",
       badge: "Enterprise",
       badgeStyle: "bg-neet-neutral text-neet-accent",
       icon: Crown,
       popular: false,
-      isCurrent: false,
+      planKey: "ADVANCED",
     },
   ];
 
-  // Animation state for fade-in and scale-up
-  const [cardsVisible, setCardsVisible] = useState(false);
-
   useEffect(() => {
-    // Trigger the animation after mount
     const timeout = setTimeout(() => setCardsVisible(true), 50);
     return () => clearTimeout(timeout);
   }, []);
+
+  const getButtonContent = (plan) => {
+    const isCurrent = userPlan === plan.planKey;
+    
+    if (isCurrent) {
+      return (
+        <div className="flex items-center justify-center gap-2">
+          <CheckCircle className="w-5 h-5" />
+          <span>Current Plan</span>
+        </div>
+      );
+    }
+    return plan.buttonText;
+  };
+
+  const isButtonDisabled = (plan) => {
+    return userPlan === plan.planKey;
+  };
 
   return (
     <div className="relative min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral flex flex-col overflow-hidden">
@@ -110,6 +133,7 @@ const PricingPage = () => {
           disableRotation={false}
         />
       </div>
+
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 flex flex-col">
         {/* Header Section */}
@@ -135,14 +159,15 @@ const PricingPage = () => {
         <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
             const IconComponent = plan.icon;
-            // For staggered animation, add a delay per card
+            const isCurrentPlan = userPlan === plan.planKey;
             const transitionDelay = `${100 + index * 100}ms`;
+            
             return (
               <div
                 key={index}
                 className={`
                   relative rounded-2xl p-8 transition-all duration-700 ease-out
-                  hover:shadow-2xl hover:scale-[1.02] transform flex flex-col
+                  flex flex-col
                   ${plan.cardStyle}
                   ${plan.popular ? "lg:-mt-4 lg:mb-4" : ""}
                   ${
@@ -160,10 +185,10 @@ const PricingPage = () => {
                 {plan.badge && (
                   <div
                     className={`
-                    absolute -top-3 left-1/2 transform -translate-x-1/2
-                    px-4 py-1 rounded-full text-sm font-semibold
-                    ${plan.badgeStyle}
-                  `}
+                      absolute -top-3 left-1/2 transform -translate-x-1/2
+                      px-4 py-1 rounded-full text-sm font-semibold
+                      ${plan.badgeStyle}
+                    `}
                   >
                     {plan.badge}
                   </div>
@@ -198,7 +223,7 @@ const PricingPage = () => {
                   </p>
                 </div>
 
-                <div className="w-full mx-auto mb-8  border-t-2 border-neet-neutral/30"></div>
+                <div className="w-full mx-auto mb-8 border-t-2 border-neet-neutral/30"></div>
 
                 {/* Features */}
                 <div className="space-y-4 mb-8 flex-1">
@@ -215,26 +240,16 @@ const PricingPage = () => {
                 </div>
 
                 {/* CTA Button */}
-                {plan.isCurrent ? (
-                  <button
-                    className={`
-                      w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200
-                      ${plan.buttonStyle}
-                    `}
-                    disabled
-                  >
-                    {plan.buttonText}
-                  </button>
-                ) : (
-                  <button
-                    className={`
-                      w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200
-                      ${plan.buttonStyle}
-                    `}
-                  >
-                    {plan.buttonText}
-                  </button>
-                )}
+                <button
+                  className={`
+                    w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200
+                    ${plan.buttonStyle(isCurrentPlan)}
+                    ${isCurrentPlan ? "" : "hover:scale-105 active:scale-95"}
+                  `}
+                  disabled={isButtonDisabled(plan)}
+                >
+                  {getButtonContent(plan)}
+                </button>
               </div>
             );
           })}

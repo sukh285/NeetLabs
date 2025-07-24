@@ -197,6 +197,7 @@ exports.Prisma.PlaylistScalarFieldEnum = {
   name: 'name',
   description: 'description',
   userId: 'userId',
+  accessLevel: 'accessLevel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -255,6 +256,13 @@ exports.Difficulty = exports.$Enums.Difficulty = {
   EASY: 'EASY',
   MEDIUM: 'MEDIUM',
   HARD: 'HARD'
+};
+
+exports.PlaylistAccess = exports.$Enums.PlaylistAccess = {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  ADVANCED: 'ADVANCED',
+  CUSTOM: 'CUSTOM'
 };
 
 exports.Prisma.ModelName = {

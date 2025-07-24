@@ -83,6 +83,16 @@ export const UserPlan: {
 
 export type UserPlan = (typeof UserPlan)[keyof typeof UserPlan]
 
+
+export const PlaylistAccess: {
+  FREE: 'FREE',
+  PRO: 'PRO',
+  ADVANCED: 'ADVANCED',
+  CUSTOM: 'CUSTOM'
+};
+
+export type PlaylistAccess = (typeof PlaylistAccess)[keyof typeof PlaylistAccess]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -96,6 +106,10 @@ export const Difficulty: typeof $Enums.Difficulty
 export type UserPlan = $Enums.UserPlan
 
 export const UserPlan: typeof $Enums.UserPlan
+
+export type PlaylistAccess = $Enums.PlaylistAccess
+
+export const PlaylistAccess: typeof $Enums.PlaylistAccess
 
 /**
  * ##  Prisma Client ʲˢ
@@ -7709,6 +7723,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     userId: string | null
+    accessLevel: $Enums.PlaylistAccess | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7718,6 +7733,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     userId: string | null
+    accessLevel: $Enums.PlaylistAccess | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7727,6 +7743,7 @@ export namespace Prisma {
     name: number
     description: number
     userId: number
+    accessLevel: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7738,6 +7755,7 @@ export namespace Prisma {
     name?: true
     description?: true
     userId?: true
+    accessLevel?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7747,6 +7765,7 @@ export namespace Prisma {
     name?: true
     description?: true
     userId?: true
+    accessLevel?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7756,6 +7775,7 @@ export namespace Prisma {
     name?: true
     description?: true
     userId?: true
+    accessLevel?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7838,6 +7858,7 @@ export namespace Prisma {
     name: string
     description: string | null
     userId: string
+    accessLevel: $Enums.PlaylistAccess
     createdAt: Date
     updatedAt: Date
     _count: PlaylistCountAggregateOutputType | null
@@ -7864,6 +7885,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     userId?: boolean
+    accessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7876,6 +7898,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     userId?: boolean
+    accessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7886,6 +7909,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     userId?: boolean
+    accessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7896,11 +7920,12 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     userId?: boolean
+    accessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PlaylistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["playlist"]>
+  export type PlaylistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "userId" | "accessLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["playlist"]>
   export type PlaylistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     problems?: boolean | Playlist$problemsArgs<ExtArgs>
@@ -7924,6 +7949,7 @@ export namespace Prisma {
       name: string
       description: string | null
       userId: string
+      accessLevel: $Enums.PlaylistAccess
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["playlist"]>
@@ -8355,6 +8381,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Playlist", 'String'>
     readonly description: FieldRef<"Playlist", 'String'>
     readonly userId: FieldRef<"Playlist", 'String'>
+    readonly accessLevel: FieldRef<"Playlist", 'PlaylistAccess'>
     readonly createdAt: FieldRef<"Playlist", 'DateTime'>
     readonly updatedAt: FieldRef<"Playlist", 'DateTime'>
   }
@@ -11046,6 +11073,7 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     userId: 'userId',
+    accessLevel: 'accessLevel',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11221,6 +11249,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'PlaylistAccess'
+   */
+  export type EnumPlaylistAccessFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlaylistAccess'>
+    
+
+
+  /**
+   * Reference to a field of type 'PlaylistAccess[]'
+   */
+  export type ListEnumPlaylistAccessFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlaylistAccess[]'>
     
 
 
@@ -11717,6 +11759,7 @@ export namespace Prisma {
     name?: StringFilter<"Playlist"> | string
     description?: StringNullableFilter<"Playlist"> | string | null
     userId?: StringFilter<"Playlist"> | string
+    accessLevel?: EnumPlaylistAccessFilter<"Playlist"> | $Enums.PlaylistAccess
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11728,6 +11771,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     userId?: SortOrder
+    accessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -11743,6 +11787,7 @@ export namespace Prisma {
     name?: StringFilter<"Playlist"> | string
     description?: StringNullableFilter<"Playlist"> | string | null
     userId?: StringFilter<"Playlist"> | string
+    accessLevel?: EnumPlaylistAccessFilter<"Playlist"> | $Enums.PlaylistAccess
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11754,6 +11799,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     userId?: SortOrder
+    accessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PlaylistCountOrderByAggregateInput
@@ -11769,6 +11815,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Playlist"> | string
     description?: StringNullableWithAggregatesFilter<"Playlist"> | string | null
     userId?: StringWithAggregatesFilter<"Playlist"> | string
+    accessLevel?: EnumPlaylistAccessWithAggregatesFilter<"Playlist"> | $Enums.PlaylistAccess
     createdAt?: DateTimeWithAggregatesFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Playlist"> | Date | string
   }
@@ -12423,6 +12470,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutPlaylistsInput
@@ -12434,6 +12482,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     userId: string
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemInPlaylistUncheckedCreateNestedManyWithoutPlaylistInput
@@ -12443,6 +12492,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlaylistsNestedInput
@@ -12454,6 +12504,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemInPlaylistUncheckedUpdateManyWithoutPlaylistNestedInput
@@ -12464,6 +12515,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     userId: string
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12472,6 +12524,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12481,6 +12534,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13131,6 +13185,13 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumPlaylistAccessFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlaylistAccess | EnumPlaylistAccessFieldRefInput<$PrismaModel>
+    in?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    not?: NestedEnumPlaylistAccessFilter<$PrismaModel> | $Enums.PlaylistAccess
+  }
+
   export type PlaylistNameUserIdCompoundUniqueInput = {
     name: string
     userId: string
@@ -13141,6 +13202,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    accessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13150,6 +13212,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    accessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13159,8 +13222,19 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    accessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumPlaylistAccessWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlaylistAccess | EnumPlaylistAccessFieldRefInput<$PrismaModel>
+    in?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    not?: NestedEnumPlaylistAccessWithAggregatesFilter<$PrismaModel> | $Enums.PlaylistAccess
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPlaylistAccessFilter<$PrismaModel>
+    _max?: NestedEnumPlaylistAccessFilter<$PrismaModel>
   }
 
   export type PlaylistScalarRelationFilter = {
@@ -13767,6 +13841,10 @@ export namespace Prisma {
     connect?: ProblemInPlaylistWhereUniqueInput | ProblemInPlaylistWhereUniqueInput[]
   }
 
+  export type EnumPlaylistAccessFieldUpdateOperationsInput = {
+    set?: $Enums.PlaylistAccess
+  }
+
   export type UserUpdateOneRequiredWithoutPlaylistsNestedInput = {
     create?: XOR<UserCreateWithoutPlaylistsInput, UserUncheckedCreateWithoutPlaylistsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPlaylistsInput
@@ -14068,6 +14146,23 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumPlaylistAccessFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlaylistAccess | EnumPlaylistAccessFieldRefInput<$PrismaModel>
+    in?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    not?: NestedEnumPlaylistAccessFilter<$PrismaModel> | $Enums.PlaylistAccess
+  }
+
+  export type NestedEnumPlaylistAccessWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlaylistAccess | EnumPlaylistAccessFieldRefInput<$PrismaModel>
+    in?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PlaylistAccess[] | ListEnumPlaylistAccessFieldRefInput<$PrismaModel>
+    not?: NestedEnumPlaylistAccessWithAggregatesFilter<$PrismaModel> | $Enums.PlaylistAccess
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPlaylistAccessFilter<$PrismaModel>
+    _max?: NestedEnumPlaylistAccessFilter<$PrismaModel>
+  }
+
   export type AiUsageCreateWithoutUserInput = {
     id?: string
     count?: number
@@ -14094,6 +14189,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemInPlaylistCreateNestedManyWithoutPlaylistInput
@@ -14103,6 +14199,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
     problems?: ProblemInPlaylistUncheckedCreateNestedManyWithoutPlaylistInput
@@ -14288,6 +14385,7 @@ export namespace Prisma {
     name?: StringFilter<"Playlist"> | string
     description?: StringNullableFilter<"Playlist"> | string | null
     userId?: StringFilter<"Playlist"> | string
+    accessLevel?: EnumPlaylistAccessFilter<"Playlist"> | $Enums.PlaylistAccess
     createdAt?: DateTimeFilter<"Playlist"> | Date | string
     updatedAt?: DateTimeFilter<"Playlist"> | Date | string
   }
@@ -15267,6 +15365,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutPlaylistsInput
@@ -15277,6 +15376,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     userId: string
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15348,6 +15448,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPlaylistsNestedInput
@@ -15358,6 +15459,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15505,6 +15607,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    accessLevel?: $Enums.PlaylistAccess
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15572,6 +15675,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemInPlaylistUpdateManyWithoutPlaylistNestedInput
@@ -15581,6 +15685,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     problems?: ProblemInPlaylistUncheckedUpdateManyWithoutPlaylistNestedInput
@@ -15590,6 +15695,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    accessLevel?: EnumPlaylistAccessFieldUpdateOperationsInput | $Enums.PlaylistAccess
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

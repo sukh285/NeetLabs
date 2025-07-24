@@ -1,22 +1,48 @@
-import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Loader2, ListMusic, ArrowLeft, ListCheckIcon } from "lucide-react";
-
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Loader2, ListMusic, ArrowLeft, ListCheckIcon, Trash2, MoreVertical } from "lucide-react";
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import PlaylistTable from "../components/PlaylistTable";
 import ProgressBar from "../templates/ProgressBar";
 import { useAuthStore } from "../store/useAuthStore";
 import Divider from "../templates/Divider";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 const PlaylistPage = () => {
   const { playlistId } = useParams();
-  const { getPlaylistDetails, currentPlaylist, isLoading } = usePlaylistStore();
+  const { getPlaylistDetails, currentPlaylist, isLoading, deletePlaylist } = usePlaylistStore();
   const { authUser } = useAuthStore();
+  const navigate = useNavigate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     if (playlistId) getPlaylistDetails(playlistId);
     // eslint-disable-next-line
   }, [playlistId]);
+
+  const handleDeletePlaylist = async () => {
+    try {
+      await deletePlaylist(playlistId);
+      navigate("/playlists");
+    } catch (error) {
+      console.error("Error deleting playlist:", error);
+    } finally {
+      setShowDeleteModal(false);
+    }
+  };
+
+  const canDeletePlaylist = () => {
+    if (!authUser || !currentPlaylist) return false;
+    
+    // Admins can delete any playlist
+    if (authUser.role === "ADMIN") return true;
+    
+    // Non-admins can only delete their own custom playlists
+    return (
+      currentPlaylist.accessLevel === "CUSTOM" && 
+      currentPlaylist.createdBy?.id === authUser.id
+    );
+  };
 
   if (isLoading || !currentPlaylist) {
     return (
@@ -36,8 +62,6 @@ const PlaylistPage = () => {
   }
 
   const { name, description, createdBy, problems = [] } = currentPlaylist || {};
-
-  // ✅ Filter problems that are solved by the current user
   const solvedCount = problems.filter((problem) =>
     problem.solvedProblems?.some((entry) => entry.userId === authUser.id)
   ).length;
@@ -47,6 +71,15 @@ const PlaylistPage = () => {
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeletePlaylist}
+        title="Delete Playlist?"
+        message="Are you sure you want to delete this playlist? This action cannot be undone."
+      />
+
       {/* Fixed Back Button - positioned absolutely at top */}
       <div className="fixed mt-20 pl-5 top-10 left-4 z-50 sm:top-10 sm:left-6">
         <Link
@@ -63,10 +96,24 @@ const PlaylistPage = () => {
         <div className="relative pt-20 pb-4 text-center sm:pt-24">
           <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
           <div className="relative">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
-              <ListCheckIcon className="w-5 h-5 text-neet-primary" />
-              <span className="text-neet-accent/80 font-medium">{name}</span>
+            <div className="flex items-center justify-center gap-4">
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
+                <ListCheckIcon className="w-5 h-5 text-neet-primary" />
+                <span className="text-neet-accent/80 font-medium">{name}</span>
+              </div>
+              
+              {/* Delete Button (conditionally rendered) */}
+              {canDeletePlaylist() && (
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="group flex items-center gap-2 px-4 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 hover:border-red-500/30 hover:bg-red-500/10 transition-all duration-300 mb-6"
+                  title="Delete playlist"
+                >
+                  <Trash2 className="w-5 h-5 text-neet-accent/80 group-hover:text-red-500 transition-colors" />
+                </button>
+              )}
             </div>
+            
             <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto leading-relaxed mb-2">
               {description || "No description provided."}
             </p>

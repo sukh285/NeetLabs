@@ -19,6 +19,8 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Always create as USER and FREE plan
     const newUser = await db.user.create({
       data: {
         email,
@@ -57,6 +59,7 @@ export const register = async (req, res) => {
         name: newUser.name,
         role: newUser.role,
         image: newUser.image,
+        plan: newUser.plan,
       },
     });
   } catch (error) {
@@ -91,6 +94,16 @@ export const login = async (req, res) => {
       });
     }
 
+    // If user is admin, ensure plan is ADVANCED
+    let updatedUser = user;
+    if (user.role === UserRole.ADMIN && user.plan !== UserPlan.ADVANCED) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { plan: UserPlan.ADVANCED },
+      });
+      updatedUser = { ...user, plan: UserPlan.ADVANCED };
+    }
+
     const token = jwt.sign(
       {
         id: user.id,
@@ -114,11 +127,12 @@ export const login = async (req, res) => {
       success: true,
       message: "User logged in successfully",
       user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        image: user.image,
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        role: updatedUser.role,
+        image: updatedUser.image,
+        plan: updatedUser.plan,
       },
     });
   } catch (error) {
@@ -153,10 +167,27 @@ export const logout = async (req, res) => {
 
 export const check = async (req, res) => {
   try {
+    let user = req.user;
+    // Always fetch fresh from DB to ensure up-to-date role/plan
+    if (user && user.id) {
+      const dbUser = await db.user.findUnique({ where: { id: user.id } });
+      if (dbUser) {
+        // If user is admin, ensure plan is ADVANCED
+        if (dbUser.role === UserRole.ADMIN && dbUser.plan !== UserPlan.ADVANCED) {
+          await db.user.update({
+            where: { id: dbUser.id },
+            data: { plan: UserPlan.ADVANCED },
+          });
+          user = { ...dbUser, plan: UserPlan.ADVANCED };
+        } else {
+          user = dbUser;
+        }
+      }
+    }
     res.status(200).json({
       success: true,
       message: "User authenticated successfully",
-      user: req.user,
+      user: user,
     });
   } catch (error) {
     console.error("Error checking user", error);
@@ -221,6 +252,15 @@ export const getProfile = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // If user is admin, ensure plan is ADVANCED
+    if (userProfile.role === UserRole.ADMIN && userProfile.plan !== UserPlan.ADVANCED) {
+      await db.user.update({
+        where: { id: userProfile.id },
+        data: { plan: UserPlan.ADVANCED },
+      });
+      userProfile.plan = UserPlan.ADVANCED;
+    }
+
     const { problemSolved, submission, _count, ...user } = userProfile;
 
     // Extract difficulties for solved problems
@@ -258,7 +298,7 @@ export const getProfile = async (req, res) => {
         : null;
 
     res.status(200).json({
-      user,
+      user: { ...user, plan: userProfile.plan },
       stats: {
         problemsSolved: _count.problemSolved,
         totalSubmissions,

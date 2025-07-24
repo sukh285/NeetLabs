@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 
-const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
+const CreatePlaylistModal = ({ isOpen, onClose, onSubmit, isAdmin }) => {
   const {
     register,
     handleSubmit,
@@ -74,6 +74,34 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
               {...register("description")}
             />
           </div>
+
+          {/* Access Level - only for admins */}
+          {isAdmin && (
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium text-neet-accent/80">
+                  Access Level
+                </span>
+              </label>
+              <select
+                className="select select-bordered w-full bg-neet-primary/20 border-neet-base-100/10 text-neet-accent focus:border-neet-primary focus:outline-none transition"
+                {...register("accessLevel", { required: "Access level is required" })}
+                defaultValue="FREE"
+              >
+                <option value="FREE" className="text-neet-neutral">Free</option>
+                <option value="PRO" className="text-neet-neutral">Pro</option>
+                <option value="ADVANCED" className="text-neet-neutral">Advanced</option>
+                <option value="CUSTOM" className="text-neet-neutral">Custom (User Playlist)</option>
+              </select>
+              {errors.accessLevel && (
+                <label className="label">
+                  <span className="label-text-alt text-neet-error text-sm">
+                    {errors.accessLevel.message}
+                  </span>
+                </label>
+              )}
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4">
