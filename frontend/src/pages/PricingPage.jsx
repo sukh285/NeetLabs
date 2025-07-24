@@ -12,12 +12,14 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Particles from "../templates/Particles";
-import Divider from "../templates/Divider";
 import { useAccess } from "../hooks/useAccess";
+import useHandlePayment from "../store/usePaymentStore";
 
 const PricingPage = () => {
   const { plan: userPlan } = useAccess();
   const [cardsVisible, setCardsVisible] = useState(false);
+
+  const handlePayment = useHandlePayment()
 
   const plans = [
     {
@@ -247,6 +249,7 @@ const PricingPage = () => {
                     ${isCurrentPlan ? "" : "hover:scale-105 active:scale-95"}
                   `}
                   disabled={isButtonDisabled(plan)}
+                  onClick={() => handlePayment(plan.planKey)}
                 >
                   {getButtonContent(plan)}
                 </button>

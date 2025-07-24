@@ -13,6 +13,7 @@ import aiRoutes from "./routes/ai.routes.js";
 import session from "express-session";
 import passport from "passport";
 import "./config/passport.js";
+import paymentRoutes from "./routes/payment.routes.js";
 
 dotenv.config();
 const port = process.env.PORT;
@@ -58,6 +59,7 @@ app.use("/api/v1/execute-code", executionRoutes);
 app.use("/api/v1/submission", submissionRoutes);
 app.use("/api/v1/playlist", playlistRoutes);
 app.use("/api/v1/ai", aiRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
