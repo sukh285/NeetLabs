@@ -27,6 +27,7 @@ import {
   EyeOff,
   Bot,
   CheckCircle,
+  Share,
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -36,6 +37,7 @@ import { useSubmissionStore } from "../store/useSubmissionStore";
 import SubmissionResults from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
 import AiTab from "../components/AiTab";
+import toast from "react-hot-toast";
 
 const ProblemPage = () => {
   const location = useLocation();
@@ -392,7 +394,7 @@ const ProblemPage = () => {
               <Link
                 to={toPath}
                 className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
-                state={fromPlaylistId ? { fromPlaylistId } : undefined} // preserve state if needed
+                state={fromPlaylistId ? { fromPlaylistId } : undefined}
               >
                 <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
               </Link>
@@ -430,9 +432,8 @@ const ProblemPage = () => {
               </div>
             </div>
 
-            {/* Right Section - Timer */}
-            <div className="flex items-center gap-4">
-              {/* Timer Component */}
+            {/* Center Section - Timer */}
+            <div className="absolute left-1/2 -translate-x-1/2">
               <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 shadow-lg">
                 <Timer className="w-4 h-4 text-neet-primary" />
                 <span className="text-neet-base-100 font-mono text-sm font-medium min-w-[50px]">
@@ -442,8 +443,8 @@ const ProblemPage = () => {
                   {!isRunning && !isPaused && (
                     <button
                       onClick={startTimer}
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                       title="Start"
+                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                     >
                       <Play className="w-3 h-3 text-green-400" />
                     </button>
@@ -451,8 +452,8 @@ const ProblemPage = () => {
                   {isRunning && (
                     <button
                       onClick={pauseTimer}
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                       title="Pause"
+                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                     >
                       <Pause className="w-3 h-3 text-yellow-400" />
                     </button>
@@ -460,8 +461,8 @@ const ProblemPage = () => {
                   {(isRunning || isPaused) && (
                     <button
                       onClick={stopTimer}
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                       title="Stop"
+                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                     >
                       <Square className="w-3 h-3 text-red-400" />
                     </button>
@@ -469,21 +470,42 @@ const ProblemPage = () => {
                   {isPaused && (
                     <button
                       onClick={startTimer}
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                       title="Resume"
+                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                     >
                       <Play className="w-3 h-3 text-green-400" />
                     </button>
                   )}
                   <button
                     onClick={resetTimer}
-                    className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                     title="Reset"
+                    className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
                   >
                     <RotateCcw className="w-3 h-3 text-neet-accent/60" />
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Right Section - Share & Upgrade */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success("Link copied!");
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl text-neet-primary"
+              >
+                <Share className="w-3 h-3" />
+                <span className="text-xs font-normal">Share</span>
+              </button>
+
+              <Link
+                to="/pricing"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-neet-primary to-neet-secondary text-neet-primary-content font-semibold text-sm shadow-lg hover:scale-105 transition-transform duration-300"
+              >
+                Upgrade to Pro
+              </Link>
             </div>
           </div>
         </div>
