@@ -20,15 +20,20 @@ import {
   googleAuthFail,
   googleAuthSuccess,
 } from "../controllers/oauth.controllers.js";
+import { createRateLimiter } from "../middleware/rateLimiter.js";
 
 const authRoutes = express.Router();
 
-authRoutes.post("/register", register);
+const loginLimiter = createRateLimiter({ windowMs: 5 * 60 * 1000, max: 5 }); // 5 reqs in 5 mins
+const resendLimiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 3 }); // 3 reqs in 10 mins
+const forgotLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 3 });
+
+authRoutes.post("/register", resendLimiter, register);
 authRoutes.get("/verify-email", verifyEmail);
-authRoutes.post("/resend-verification-token", resendVerificationToken);
-authRoutes.post("/forgot-password", forgotPassword);
+authRoutes.post("/resend-verification-token", resendLimiter, resendVerificationToken);
+authRoutes.post("/forgot-password", forgotLimiter, forgotPassword);
 authRoutes.post("/reset-password", resetPassword);
-authRoutes.post("/login", login);
+authRoutes.post("/login", loginLimiter, login);
 authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.get("/check", authMiddleware, check);
 
