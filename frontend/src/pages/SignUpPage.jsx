@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z as zod } from "zod";
 import { Code, Eye, EyeOff, Loader, Lock, Mail } from "lucide-react";
 
 import Particles from "../templates/Particles";
 import { useAuthStore } from "../store/useAuthStore";
+import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 
 const SignUpSchema = zod.object({
   email: zod.string().email("Enter valid email"),
@@ -17,8 +19,13 @@ const SignUpSchema = zod.object({
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
 
   const { signup, isSigningUp } = useAuthStore();
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -37,10 +44,32 @@ const SignUpPage = () => {
   const onSubmit = async (data) => {
     console.log("Signup form submitted -->", data);
     try {
-      await signup(data);
-      console.log("Signup data -->", data);
+      const success = await signup(data);
+      if (success) {
+        setShowVerifyModal(true); // 👈 show popup
+      }
     } catch (error) {
       console.log("Signup failed -->", error);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!resendEmail) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    setResending(true);
+    try {
+      const res = await axiosInstance.post("/auth/resend-verification-token", {
+        email: resendEmail,
+      });
+      toast.success("Verification email resent!");
+    } catch (err) {
+      const msg = err?.response?.data?.error || "Resend failed";
+      toast.error(msg);
+    } finally {
+      setResending(false);
     }
   };
 
@@ -59,6 +88,46 @@ const SignUpPage = () => {
           disableRotation={false}
         />
       </div>
+
+      {showVerifyModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
+          <div className="bg-white text-black rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4 relative">
+            <h2 className="text-xl font-bold text-neet-primary">
+              Verify your email
+            </h2>
+            <p className="text-sm text-gray-600">
+              A verification link has been sent to your email.
+            </p>
+
+            <p className="text-sm text-gray-600 mt-2">
+              Didn’t receive it? Enter your email below to resend:
+            </p>
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="input placeholder-white text-white w-full px-4 py-2 border rounded-lg text-sm"
+              value={resendEmail}
+              onChange={(e) => setResendEmail(e.target.value)}
+            />
+
+            <button
+              onClick={handleResend}
+              disabled={resending}
+              className="btn bg-neet-primary text-white w-full rounded-lg hover:scale-105 active:scale-95 transition"
+            >
+              {resending ? "Resending..." : "Resend Verification Email"}
+            </button>
+
+            <button
+              className="btn bg-gray-200 text-gray-800 w-full rounded-lg mt-2 hover:scale-105 active:scale-95 transition"
+              onClick={() => setShowVerifyModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Centered Form Container */}
       <div className="relative z-1 flex items-center justify-center h-screen px-4">
@@ -207,7 +276,6 @@ const SignUpPage = () => {
                 </span>
                 <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
               </div>
-
 
               <div className="form-control pt-1 flex flex-row gap-3 w-full">
                 <a

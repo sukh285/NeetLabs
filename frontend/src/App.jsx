@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { HashLoader } from "react-spinners";
 import AOS from "aos";
@@ -21,20 +21,37 @@ import UpdateProblem from "./pages/UpdateProblem";
 import PricingPage from "./pages/PricingPage";
 import FeedbackPage from "./pages/FeedbackPage";
 import FallBackPage from "./pages/FallBackPage";
+import { set } from "zod";
+import VerifyEmailPage from "./pages/VerifyEmail";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     AOS.init({
-      duration:1500,
+      duration: 1500,
       once: true,
-    })
+    });
   });
 
+  const location = useLocation();
+
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    const skipAuthCheck = [
+      "/verify-email",
+      "/login",
+      "/signup",
+      "/forgot-password",
+      "/reset-password",
+    ];
+    if (!skipAuthCheck.includes(location.pathname)) {
+      checkAuth();
+    } else {
+      useAuthStore.setState({ isCheckingAuth: false });
+    }
+  }, [location.pathname]);
 
   if (isCheckingAuth) {
     return (
@@ -59,6 +76,11 @@ const App = () => {
             path="/login"
             element={!authUser ? <LoginPage /> : <Navigate to="/" />}
           />
+
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
           <Route index element={<HomePage />} />
           <Route
             path="problems"
@@ -88,10 +110,7 @@ const App = () => {
 
           <Route path="/pricing" element={<PricingPage />} />
 
-          <Route
-            path="/feedback"
-            element= {<FeedbackPage />}
-          />
+          <Route path="/feedback" element={<FeedbackPage />} />
 
           <Route
             path="/fallback"

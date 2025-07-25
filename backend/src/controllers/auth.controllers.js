@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { db } from "../libs/db.js";
 import { UserPlan, UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
+import { emailVerificationMailGenContent, forgotPasswordMailGenContent, sendMail } from "../utils/mail.js";
 
 export const register = async (req, res) => {
   // console.log(req.body);
@@ -19,51 +20,189 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
     const newUser = await db.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
+        verificationToken,
+        emailVerified: false,
         role: UserRole.USER,
         plan: UserPlan.FREE,
       },
     });
 
-    const token = jwt.sign(
-      {
-        id: newUser.id,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.JWT_EXPIRY,
-      }
-    );
+    // Send Verification Email
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    await sendMail({
+      email,
+      subject: "Verify your email",
+      mailGenContent: emailVerificationMailGenContent(name, verificationUrl),
+    });
 
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
+    res.status(201).json({
+      success: true,
+      message:
+        "Account created. Please check your email to verify before logging in.",
     });
 
     console.log("User created successfully:", newUser);
 
-    res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        role: newUser.role,
-        image: newUser.image,
-      },
-    });
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({
       error: "Error creating user",
     });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  const { token } = req.query;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await db.user.findUnique({
+      where: { email: decoded.email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ error: "Email is already verified" });
+    }
+
+    await db.user.update({
+      where: { email: decoded.email },
+      data: {
+        emailVerified: true,
+        verificationToken: null,
+      },
+    });
+
+    res.status(200).json({ message: "Email verified successfully" });
+  } catch (err) {
+    console.error("Verification failed:", err);
+    res.status(400).json({ error: "Invalid or expired token" });
+  }
+};
+
+export const resendVerificationToken = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ error: "Email is already verified" });
+    }
+
+    const newVerificationToken = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    await db.user.update({
+      where: { email },
+      data: {
+        verificationToken: newVerificationToken,
+      },
+    });
+
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${newVerificationToken}`;
+
+    await sendMail({
+      email,
+      subject: "Verify your email",
+      mailGenContent: emailVerificationMailGenContent(
+        user.name,
+        verificationUrl
+      ),
+    });
+
+    return res.status(200).json({
+      message: "Verification email resent",
+    });
+  } catch (err) {
+    console.error("Resend verification token error:", err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await db.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "15m", // short expiry for security
+    });
+
+    await db.user.update({
+      where: { email },
+      data: { resetToken },
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    await sendMail({
+      email,
+      subject: "Reset your password",
+      mailGenContent: forgotPasswordMailGenContent(user.name, resetUrl),
+    });
+
+    return res.status(200).json({ message: "Reset link sent to email" });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await db.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user || user.resetToken !== token) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+      },
+    });
+
+    return res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    return res.status(400).json({ error: "Invalid or expired token" });
   }
 };
 
@@ -80,6 +219,12 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         error: "User not found",
+      });
+    }
+
+    if (!user.emailVerified) {
+      return res.status(403).json({
+        error: "Please verify your email before logging in",
       });
     }
 

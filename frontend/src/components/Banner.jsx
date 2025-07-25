@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { X } from "lucide-react";
 
 const Banner = () => {
   const [visible, setVisible] = useState(true);
@@ -8,11 +8,15 @@ const Banner = () => {
   if (!visible) return null;
 
   return (
-    <div className="fixed top-18 left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-4 text-xs flex items-center justify-center font-inter">
+    <div
+      data-aos="fade-down"
+      data-aos-duration="8000"
+      className="fixed top-18 left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-4 text-xs flex items-center justify-center font-inter"
+    >
       <div className="flex items-center justify-center gap-2">
         <span className="font-semibold">NeetLabs is in beta!</span>
         <span>
-          We'd love your feedback via the{' '}
+          We'd love your feedback via the{" "}
           <Link
             to="/feedback"
             className="underline text-neet-neutral font-bold hover:text-neet-neutral/30"

@@ -4,10 +4,14 @@ import passport from "passport";
 import {
   check,
   deleteProfile,
+  forgotPassword,
   getProfile,
   login,
   logout,
   register,
+  resendVerificationToken,
+  resetPassword,
+  verifyEmail,
 } from "../controllers/auth.controllers.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import {
@@ -20,6 +24,10 @@ import {
 const authRoutes = express.Router();
 
 authRoutes.post("/register", register);
+authRoutes.get("/verify-email", verifyEmail);
+authRoutes.post("/resend-verification-token", resendVerificationToken);
+authRoutes.post("/forgot-password", forgotPassword);
+authRoutes.post("/reset-password", resetPassword);
 authRoutes.post("/login", login);
 authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.get("/check", authMiddleware, check);

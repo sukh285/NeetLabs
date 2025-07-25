@@ -7,6 +7,8 @@ import { Code, Eye, EyeOff, Loader, Lock, Mail } from "lucide-react";
 
 import Particles from "../templates/Particles";
 import { useAuthStore } from "../store/useAuthStore";
+import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 
 const LoginSchema = zod.object({
   email: zod.string().email("Enter valid email"),
@@ -15,7 +17,11 @@ const LoginSchema = zod.object({
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
+
+  const [loginError, setLoginError] = useState("");
+  const [showResend, setShowResend] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [isResending, setIsResending] = useState(false);
 
   const { login, isLoggingIn } = useAuthStore();
   const navigate = useNavigate();
@@ -28,22 +34,42 @@ const LoginPage = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = async (data) => {
-    console.log("Login form submitted -->", data);
+  const resendVerification = async () => {
     try {
-      await login(data);
-      // Redirect to /allproblems after successful login
-      navigate("/problems");
+      setIsResending(true);
+      const res = await axiosInstance.post("/auth/resend-verification-token", {
+        email: loginEmail,
+      });
+      toast.success("Verification link resent!");
     } catch (error) {
-      console.log("Login failed -->", error);
+      toast.error("Failed to resend verification");
+    } finally {
+      setIsResending(false);
     }
   };
 
-  useEffect(() => {
-    // Fade in the form after a short delay for a subtle effect
-    const timeout = setTimeout(() => setFormVisible(true), 20);
-    return () => clearTimeout(timeout);
-  }, []);
+  const onSubmit = async (data) => {
+    console.log("Login form submitted -->", data);
+    setLoginError(""); // Reset error
+    setShowResend(false); // Reset resend
+
+    try {
+      await login(data);
+      navigate("/problems");
+    } catch (error) {
+      console.log("Login failed -->", error);
+      const status = error?.response?.status;
+      const errorMsg = error?.response?.data?.error || "Login failed";
+
+      setLoginError(errorMsg);
+
+      if (status === 403) {
+        // Only show resend if it's a 403
+        setLoginEmail(data.email);
+        setShowResend(true);
+      }
+    }
+  };
 
   return (
     <div className="relative pb-5 w-full h-screen overflow-hidden bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral font-inter">
@@ -63,11 +89,7 @@ const LoginPage = () => {
 
       {/* Centered Form */}
       <div className="relative z-10 flex items-center justify-center h-screen px-4">
-        <div
-          className={`w-full max-w-sm space-y-8 transition-opacity duration-300 ${
-            formVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
+        <div className="w-full max-w-sm space-y-8 transition-opacity duration-300">
           {/* Logo */}
           <div className="text-center mb-6">
             <div className="flex flex-col items-center gap-3 group">
@@ -155,6 +177,15 @@ const LoginPage = () => {
                 )}
               </div>
 
+              <div className="text-right text-sm">
+                <Link
+                  to="/forgot-password"
+                  className="text-neet-accent hover:underline hover:text-neet-secondary transition"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               {/* Submit Button */}
               <div className="form-control pt-1">
                 <button
@@ -171,6 +202,25 @@ const LoginPage = () => {
                     "Login"
                   )}
                 </button>
+                {loginError && (
+                  <div className="mt-3 text-center text-xs text-neet-base-100">
+                    {loginError}
+                  </div>
+                )}
+
+                {showResend && (
+                  <div className="mt-3 text-center">
+                    <button
+                      onClick={resendVerification}
+                      disabled={isResending}
+                      className="text-neet-neutral bg-neet-success px-2 py-1 rounded-lg hover:underline hover:text-neet-neutral/50 transition text-sm font-medium"
+                    >
+                      {isResending
+                        ? "Resending..."
+                        : "Resend verification email"}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
