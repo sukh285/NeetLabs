@@ -69,7 +69,7 @@ const Third = () => {
           <div
             data-aos="fade-left"
             data-aos-duration="1000"
-            className="flex flex-col justify-center h-full space-y-6"
+            className="flex flex-col justify-center items-end h-full space-y-6"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-limelight font-bold leading-tight text-neet-neutral">
               Learn Your Way <br />
@@ -78,7 +78,7 @@ const Third = () => {
               </span>
             </h2>
 
-            <p className="text-xs sm:text-xs md:text-sm text-neet-neutral/80 leading-relaxed max-w-xl font-light">
+            <p className="text-xs sm:text-xs md:text-sm text-neet-neutral/80 leading-relaxed max-w-xl text-end font-light">
               Unlock structured learning with playlists tailored to your goals—
               be it mastering recursion, nailing system design, or cracking FAANG.
             </p>

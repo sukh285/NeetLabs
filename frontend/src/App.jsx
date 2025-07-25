@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { Loader } from "lucide-react";
 import { HashLoader } from "react-spinners";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -47,7 +46,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <Toaster />
+      <Toaster position="bottom-right" />
       <Routes>
         {/* Protected Routes with Layout */}
 
