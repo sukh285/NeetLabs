@@ -21,6 +21,7 @@ import PlaylistPage from "./pages/PlaylistPage";
 import UpdateProblem from "./pages/UpdateProblem";
 import PricingPage from "./pages/PricingPage";
 import FeedbackPage from "./pages/FeedbackPage";
+import FallBackPage from "./pages/FallBackPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -90,7 +91,12 @@ const App = () => {
 
           <Route
             path="/feedback"
-            element={authUser ? <FeedbackPage /> : <Navigate to="/login" />}
+            element= {<FeedbackPage />}
+          />
+
+          <Route
+            path="/fallback"
+            element={authUser ? <FallBackPage /> : <Navigate to="/login" />}
           />
           {/* Playlist by ID route */}
           <Route
@@ -105,7 +111,7 @@ const App = () => {
         />
 
         {/* Fallback Route */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/fallback" />} />
       </Routes>
     </div>
   );

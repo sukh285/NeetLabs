@@ -8,7 +8,7 @@ const Banner = () => {
   if (!visible) return null;
 
   return (
-    <div className="fixed top-20 left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-2 text-xs flex items-center justify-center font-inter">
+    <div className="fixed top-18 left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-4 text-xs flex items-center justify-center font-inter">
       <div className="flex items-center justify-center gap-2">
         <span className="font-semibold">NeetLabs is in beta!</span>
         <span>
