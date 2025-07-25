@@ -11,16 +11,16 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar font-inter fixed top-0 left-0 z-50 bg-neet-neutral border-b border-neet-primary/20 px-4 lg:px-8 shadow-lg w-full max-w-full py-2 backdrop-blur-sm">
+      <nav className="navbar font-inter fixed top-0 left-0 z-999 bg-neet-neutral border-b border-neet-primary/20 px-4 lg:px-8 shadow-lg w-full max-w-full py-2 backdrop-blur-sm">
         <div className="navbar-start py-2 w-full">
           <div className="flex items-center justify-between w-full lg:grid lg:grid-cols-3 lg:gap-4 font-inter">
             {/* Left section - Logo */}
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-2 group">
                 <img
-                  src="/logo.png"
+                  src="/logo2.png"
                   alt="NeetLabs Logo"
-                  className="w-10 h-10 rounded-2xl object-contain"
+                  className="w-10 h-10 rounded-xl bg-neet-base-100 object-contain"
                 />
                 <span className="text-2xl leading-none font-limelight font-bold text-neet-base hidden sm:block">
                   NeetLabs

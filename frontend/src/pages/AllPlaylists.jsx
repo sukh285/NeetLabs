@@ -23,6 +23,7 @@ import Divider from "../templates/Divider";
 import { HashLoader } from "react-spinners";
 
 const AllPlaylists = () => {
+  const [startingLoading, setStartingLoading] = useState(true);
   const [isPlaylistsLoading, setIsPlaylistsLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -32,16 +33,28 @@ const AllPlaylists = () => {
 
   // Fetch user playlists
   useEffect(() => {
+    let isMounted = true;
     const fetchPlaylists = async () => {
       setIsPlaylistsLoading(true);
       try {
         await getAllPlaylists();
       } finally {
-        setIsPlaylistsLoading(false);
+        if (isMounted) setIsPlaylistsLoading(false);
       }
     };
     fetchPlaylists();
+    return () => {
+      isMounted = false;
+    };
   }, [getAllPlaylists]);
+
+  // Implement starting loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setStartingLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // All premium playlists
   const premiumPlaylists = playlists.filter((p) => p.accessLevel !== "CUSTOM");
@@ -233,6 +246,23 @@ const AllPlaylists = () => {
     await createPlaylist(data);
     getAllPlaylists();
   };
+
+
+  if (startingLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
+        <HashLoader color="#FF9800" />
+        <div className="mt-6 text-center">
+          <h3 className="text-xl font-semibold text-neet-base-100 mb-2">
+            Loading Playlists
+          </h3>
+          <p className="text-neet-accent/60">
+            Fetching curated learning paths...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">

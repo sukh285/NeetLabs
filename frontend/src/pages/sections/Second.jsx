@@ -1,59 +1,86 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Target } from "lucide-react";
-import BotModelLoader from "../../templates/BotModelLoader";
+import {
+  ChevronRight,
+  GitFork,
+  Building,
+  Bot,
+  Code,
+} from "lucide-react";
 
 const Second = () => {
+  const features = [
+    {
+      icon: <GitFork className="w-6 h-6 text-neet-primary" />,
+      title: "Problem Patterns",
+      description: "Master 50+ algorithmic patterns with curated challenges",
+    },
+    {
+      icon: <Building className="w-6 h-6 text-neet-primary" />,
+      title: "Company Tags",
+      description: "Practice problems tagged by FAANG and top tech companies",
+    },
+    {
+      icon: <Bot className="w-6 h-6 text-neet-primary" />,
+      title: "NeetBot Help",
+      description: "AI-powered guidance to unblock your coding challenges",
+    },
+    {
+      icon: <Code className="w-6 h-6 text-neet-primary" />,
+      title: "Customizable Editor",
+      description: "Personalize your coding environment with themes and shortcuts",
+    },
+  ];
+
   return (
-    <section id="problems" className="w-full py-20 bg-neet-base-200">
+    <section id="features" className="w-full py-24 my-[15vh] bg-gradient-to-b from-neet-base-100 via-white to-neet-base-100">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Text */}
-          <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-limelight font-bold leading-tight tracking-tight text-neet-neutral">
-              Challenging Problems
+          {/* Left: Centered Text Content */}
+          <div data-aos="fade-right"
+            data-aos-duration="1000" className="flex flex-col justify-center h-full space-y-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-limelight font-bold leading-tight text-neet-neutral">
+              Elevate Your <br />
+              <span className="text-neet-neutral bg-neet-primary rounded-xl px-2 py-2">
+                Coding Journey
+              </span>
             </h2>
-            <p className="text-md sm:text-lg text-neet-neutral/80 leading-relaxed max-w-xl font-light">
-              Practice with our collection of carefully curated coding
-              challenges, designed for all levels.
+
+            <p className="text-xs sm:text-xs md:text-sm text-neet-neutral/80 leading-relaxed max-w-xl font-light">
+              Access problems that accelerate your problem-solving skills and interview preparation.
             </p>
-            <div className="grid grid-cols-3 gap-4 max-w-md pt-2">
-              {[
-                { value: "150+", label: "Beginner", color: "bg-success" },
-                { value: "250+", label: "Intermediate", color: "bg-warning" },
-                { value: "120+", label: "Advanced", color: "bg-error" },
-              ].map((stat, idx) => (
-                <div
-                  key={idx}
-                  className={`flex flex-col items-center bg-neet-neutral/80 p-4 rounded-xl border border-neet-base-300 shadow-sm`}
-                >
-                  <div
-                    className={`w-8 h-8 rounded-full ${stat.color} flex items-center justify-center mb-2`}
-                  >
-                    <span className="text-white font-bold text-base">
-                      {stat.value}
-                    </span>
-                  </div>
-                  <div className="text-xs text-neet-neutral-content uppercase tracking-wider font-medium">
-                    {stat.label}
+
+            {/* Button placed just below subheading */}
+            <Link
+              to="/problems"
+              className="btn-circle py-2 px-4 border flex items-center bg-neet-primary/80 border-neet-primary/30 text-neet-neutral hover:bg-white/10 hover:border-neet-primary backdrop-blur-md shadow-lg transition w-fit text-sm"
+            >
+              <span className="font-medium">Explore Problems</span>
+              <ChevronRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          {/* Right: Features Grid instead */}
+          <div data-aos="fade-up"
+            data-aos-duration="1500" className="grid grid-cols-2 gap-5">
+            {features.map((feature, idx) => (
+              <div
+                key={idx}
+                className="bg-neet-neutral/90 backdrop-blur-sm p-5 rounded-2xl border border-neet-base-300 shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <div className="mb-3">
+                  <div className="w-12 h-12 rounded-xl bg-neet-primary/10 flex items-center justify-center">
+                    {feature.icon}
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="pt-4">
-              <Link
-                to="/problems"
-                className="btn btn-md bg-neet-primary text-white hover:bg-neet-primary-focus transition-all shadow-md hover:shadow-lg"
-              >
-                Explore Problems
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Link>
-            </div>
-          </div>
-          {/* Right: Illustration */}
-          <div className="w-full h-[70vh] bg-neet-100 relative">
-            <BotModelLoader />
-            <div className="absolute bottom-0 right-0 w-[40%] md:w-[45%] lg:w-[45%] h-[12%] xl:w-[30%] 2xl:w-[26%] bg-neet-base-200 z-10"></div>
+                <h3 className="text-base sm:text-lg font-semibold text-neet-base-100 mb-1">
+                  {feature.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-neet-base-300">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

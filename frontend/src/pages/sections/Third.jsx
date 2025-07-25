@@ -1,81 +1,96 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Code } from "lucide-react";
+import {
+  ListPlus,
+  Crown,
+  Briefcase,
+  TrendingUp,
+  ChevronRight,
+} from "lucide-react";
 
 const Third = () => {
+  const playlistFeatures = [
+    {
+      icon: <ListPlus className="w-6 h-6 text-neet-primary" />,
+      title: "Create Custom Playlists",
+      description: "Organize problems your way to focus on key concepts.",
+    },
+    {
+      icon: <Crown className="w-6 h-6 text-neet-primary" />,
+      title: "Premium Playlists",
+      description: "Access curated tracks by experts for accelerated growth.",
+    },
+    {
+      icon: <Briefcase className="w-6 h-6 text-neet-primary" />,
+      title: "Company-based Playlists",
+      description: "Solve handpicked problems asked by top tech firms.",
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6 text-neet-primary" />,
+      title: "Track Your Progress",
+      description: "Grow at your own pace and monitor your mastery.",
+    },
+  ];
+
   return (
-    <section id="playlists" className="w-full py-20 bg-neet-base-100">
+    <section
+      id="playlists"
+      className="w-full py-24 my-[15vh] bg-gradient-to-b from-neet-base-100 via-white to-neet-base-100"
+    >
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Illustration */}
-          <div className="relative flex justify-center order-2 lg:order-1">
-            <div className="absolute -top-10 -left-10 w-64 h-64 bg-neet-secondary/10 rounded-full blur-3xl opacity-70 animate-blob animation-delay-2000" />
-            <div className="relative border border-neet-base-300 rounded-2xl shadow-lg overflow-hidden bg-gradient-to-br from-neet-base-200 to-neet-base-100 w-full max-w-md mx-auto">
-              <div className="p-8 flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  <Code className="w-8 h-8 text-neet-primary" />
-                  <span className="text-xl font-bold text-neet-neutral">
-                    Curated Playlists
-                  </span>
-                </div>
-                <ul className="list-disc list-inside text-neet-neutral/80 text-sm pl-2">
-                  <li>Topic-based learning paths</li>
-                  <li>Progress tracking</li>
-                  <li>Hand-picked problems</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          {/* Right: Text */}
-          <div className="space-y-6 order-1 lg:order-2">
-            <h2 className="text-3xl sm:text-4xl font-limelight font-bold leading-tight tracking-tight text-neet-neutral">
-              Structured Playlists
-            </h2>
-            <p className="text-md sm:text-lg text-neet-neutral/80 leading-relaxed max-w-xl font-light">
-              Learn systematically with our topic-based playlists, designed to
-              help you master every concept.
-            </p>
-            <div className="grid grid-cols-2 gap-4 max-w-lg pt-2">
-              {[
-                {
-                  title: "Algorithm Mastery",
-                  topics: "Sorting, Searching, DP",
-                },
-                {
-                  title: "Data Structure Deep Dive",
-                  topics: "Trees, Graphs, Heaps",
-                },
-                {
-                  title: "System Design Patterns",
-                  topics: "OOD, Scalability, APIs",
-                },
-                {
-                  title: "Competitive Programming",
-                  topics: "Contest Strategies, Optimization",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="bg-neet-neutral/80 border border-neet-base-300 rounded-xl p-4 flex flex-col gap-1 shadow-sm"
-                >
-                  <div className="text-base font-bold text-neet-primary">
-                    {item.title}
-                  </div>
-                  <div className="text-xs text-neet-neutral-content">
-                    Topics: {item.topics}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="pt-4">
-              <Link
-                to="/playlists"
-                className="btn btn-md bg-neet-primary text-white hover:bg-neet-primary-focus transition-all shadow-md hover:shadow-lg"
+          {/* Left: Feature Cards */}
+          <div
+            data-aos="fade-up"
+            data-aos-duration="1500"
+            className="grid grid-cols-2 gap-5"
+          >
+            {playlistFeatures.map((feature, idx) => (
+              <div
+                key={idx}
+                className="bg-neet-neutral/90 backdrop-blur-sm p-5 rounded-2xl border border-neet-base-300 shadow-sm hover:shadow-md transition-all duration-300"
               >
-                Browse Playlists
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Link>
-            </div>
+                <div className="mb-3">
+                  <div className="w-12 h-12 rounded-xl bg-neet-primary/10 flex items-center justify-center">
+                    {feature.icon}
+                  </div>
+                </div>
+                <h3 className="text-base sm:text-lg font-semibold text-neet-base-100 mb-1">
+                  {feature.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-neet-base-300">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: Text Content */}
+          <div
+            data-aos="fade-left"
+            data-aos-duration="1000"
+            className="flex flex-col justify-center h-full space-y-6"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-limelight font-bold leading-tight text-neet-neutral">
+              Learn Your Way <br />
+              <span className="text-neet-neutral bg-neet-primary rounded-xl px-2 py-2">
+                With Playlists
+              </span>
+            </h2>
+
+            <p className="text-xs sm:text-xs md:text-sm text-neet-neutral/80 leading-relaxed max-w-xl font-light">
+              Unlock structured learning with playlists tailored to your goals—
+              be it mastering recursion, nailing system design, or cracking FAANG.
+            </p>
+
+            {/* CTA Button */}
+            <Link
+              to="/playlists"
+              className="btn-circle py-2 px-4 border flex items-center bg-neet-primary/80 border-neet-primary/30 text-neet-neutral hover:bg-white/10 hover:border-neet-primary backdrop-blur-md shadow-lg transition w-fit text-sm"
+            >
+              <span className="font-medium">Explore Playlists</span>
+              <ChevronRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </div>
