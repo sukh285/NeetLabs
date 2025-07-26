@@ -334,6 +334,7 @@ export const getProfile = async (req, res) => {
             problem: {
               select: {
                 difficulty: true,
+                tags: true,
               },
             },
           },
@@ -341,7 +342,7 @@ export const getProfile = async (req, res) => {
 
         submission: {
           orderBy: { createdAt: "desc" },
-          take: 3,
+          take: 5,
           select: {
             id: true,
             status: true,
@@ -384,6 +385,25 @@ export const getProfile = async (req, res) => {
         difficultyCount[problem.difficulty]++;
       }
     });
+
+    // Tag frequency counter
+    const tagCountMap = {};
+
+    problemSolved.forEach(({ problem }) => {
+      if (problem?.tags && Array.isArray(problem.tags)) {
+        problem.tags.forEach((tag) => {
+          tagCountMap[tag] = (tagCountMap[tag] || 0) + 1;
+        });
+      }
+    });
+
+    // Convert to array and sort by count desc
+    const sortedTags = Object.entries(tagCountMap)
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Optionally slice top 5 only if you want to limit it early
+    const solvedTags = sortedTags.slice(0, 5);
 
     // Total submissions
     const totalSubmissions = _count.submission;
@@ -446,6 +466,7 @@ export const getProfile = async (req, res) => {
         accuracyRate,
         solvedDifficulty: difficultyCount,
         submissionTrends,
+        solvedTags,
       },
     });
   } catch (error) {

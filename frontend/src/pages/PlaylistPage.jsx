@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Loader2, ListMusic, ArrowLeft, ListCheckIcon, Trash2, MoreVertical } from "lucide-react";
+import {
+  Loader2,
+  ListMusic,
+  ArrowLeft,
+  ListCheckIcon,
+  Trash2,
+  MoreVertical,
+  Share2Icon,
+} from "lucide-react";
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import PlaylistTable from "../components/PlaylistTable";
 import ProgressBar from "../templates/ProgressBar";
 import { useAuthStore } from "../store/useAuthStore";
 import Divider from "../templates/Divider";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import toast from "react-hot-toast";
 
 const PlaylistPage = () => {
   const { playlistId } = useParams();
-  const { getPlaylistDetails, currentPlaylist, isLoading, deletePlaylist } = usePlaylistStore();
+  const { getPlaylistDetails, currentPlaylist, isLoading, deletePlaylist } =
+    usePlaylistStore();
   const { authUser } = useAuthStore();
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,13 +43,13 @@ const PlaylistPage = () => {
 
   const canDeletePlaylist = () => {
     if (!authUser || !currentPlaylist) return false;
-    
+
     // Admins can delete any playlist
     if (authUser.role === "ADMIN") return true;
-    
+
     // Non-admins can only delete their own custom playlists
     return (
-      currentPlaylist.accessLevel === "CUSTOM" && 
+      currentPlaylist.accessLevel === "CUSTOM" &&
       currentPlaylist.createdBy?.id === authUser.id
     );
   };
@@ -80,58 +90,85 @@ const PlaylistPage = () => {
         message="Are you sure you want to delete this playlist? This action cannot be undone."
       />
 
-      {/* Fixed Back Button - positioned absolutely at top */}
-      <div className="fixed mt-20 pl-5 top-10 left-4 z-50 sm:top-10 sm:left-6">
-        <Link
-          to="/playlists"
-          className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/80 backdrop-blur-md border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
-        >
-          <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
-          <span className="text-neet-base-100 font-medium">Back to Playlists</span>
-        </Link>
-      </div>
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section - added top padding to account for fixed back button */}
-        <div className="relative pt-20 pb-4 text-center sm:pt-24">
-          <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-3xl"></div>
-          <div className="relative">
-            <div className="flex items-center justify-center gap-4">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 mb-6">
-                <ListCheckIcon className="w-5 h-5 text-neet-primary" />
-                <span className="text-neet-accent/80 font-medium">{name}</span>
-              </div>
-              
-              {/* Delete Button (conditionally rendered) */}
-              {canDeletePlaylist() && (
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="group flex items-center gap-2 px-4 py-3 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 hover:border-red-500/30 hover:bg-red-500/10 transition-all duration-300 mb-6"
-                  title="Delete playlist"
+        {/* Sticky Top Playlist Header */}
+        <div className="relative top-8 rounded-2xl z-40 bg-neet-neutral/95 backdrop-blur-lg border-b border-neet-accent/10">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              {/* Left - Back Button */}
+              <div className="flex items-center gap-6">
+                <Link
+                  to="/playlists"
+                  className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  <Trash2 className="w-5 h-5 text-neet-accent/80 group-hover:text-red-500 transition-colors" />
+                  <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
+                </Link>
+
+                {/* Playlist Name & Metadata */}
+                <div>
+                  <h1 className="text-xl font-inter tracking-wide font-bold text-neet-base-100">
+                    {name}
+                  </h1>
+                  <div className="flex items-center gap-4 text-xs text-neet-accent/60 mt-1">
+                    <span>
+                      Created by:{" "}
+                      <span className="text-neet-base-100">
+                        {createdBy?.username || "Unknown"}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right - Share + Optional Delete */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("Playlist link copied!");
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl text-neet-primary"
+                >
+                  <Share2Icon className="w-4 h-4" />
+                  <span className="text-xs font-normal">Share</span>
                 </button>
-              )}
-            </div>
-            
-            <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto leading-relaxed mb-2">
-              {description || "No description provided."}
-            </p>
-            <div className="text-xs text-neet-accent/60 mb-2">
-              Created by:{" "}
-              <span className="font-semibold text-neet-base-100">
-                {createdBy?.username || "Unknown"}
-              </span>
+
+                {canDeletePlaylist() && (
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="group flex items-center gap-2 px-3 py-2 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20 hover:border-red-500/30 hover:bg-red-500/10 transition-all duration-300"
+                    title="Delete playlist"
+                  >
+                    <Trash2 className="w-5 h-5 text-neet-accent/80 group-hover:text-red-500 transition-colors" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Playlist Description */}
+        <div className="text-sm text-neet-accent/70 max-w-2xl mx-auto mt-5 pt-10 text-center leading-relaxed">
+          {description || "No description provided."}
+        </div>
+
         {/* Progress Bar */}
         <div className="mb-6">
-          <ProgressBar label={`Solved Problems: ${solvedCount} of ${totalCount}`} percentage={progressPercent} />
+          <ProgressBar
+            label={`Solved Problems: ${solvedCount} of ${totalCount}`}
+            percentage={progressPercent}
+          />
         </div>
 
         <Divider />
+
+        <Link
+          to={`/playlist/${playlistId}/add-problem`}
+          className="btn-circle py-2 px-4 border flex items-center bg-neet-primary/80 border-neet-primary/30 text-neet-neutral hover:bg-neet-primary hover:border-neet-primary backdrop-blur-md shadow-lg transition w-fit text-sm ml-4"
+        >
+          <span className="font-medium">Add Problems</span>
+        </Link>
 
         {/* Problems Table Section */}
         <div className="pb-16">

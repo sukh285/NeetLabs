@@ -25,6 +25,7 @@ import { set } from "zod";
 import VerifyEmailPage from "./pages/VerifyEmail";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import AddProblemsToPlaylist from "./pages/AddProblemsToPlaylist";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -106,6 +107,11 @@ const App = () => {
           <Route
             path="playlists"
             element={authUser ? <AllPlaylists /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/playlist/:playlistId/add-problem"
+            element= {authUser ? <AddProblemsToPlaylist /> : <Navigate to="/login" />}
           />
 
           <Route path="/pricing" element={<PricingPage />} />

@@ -34,10 +34,11 @@ const PricingPage = () => {
       period: "One-time purchase",
       description: "Perfect for getting started",
       features: [
-        "Access to 100 curated problems",
+        "Access to all problems",
         "Create custom playlists",
-        "One All-Rounder DSA Playlist",
+        "Access free Playlists",
         "Limited NeetBot requests per day",
+        "Progress Tracking Dashboard"
       ],
       buttonText: "Get Started",
       buttonStyle: (isCurrent) =>
@@ -58,10 +59,10 @@ const PricingPage = () => {
       period: "One-time purchase",
       description: "Best for serious learners",
       features: [
-        "Access to 500 problems",
-        "Company Tags (Amazon, Google, etc.)",
-        "Premium Playlists and Roadmaps",
-        "Full access to NeetBot for AI guidance",
+        "Access problem explanations & hints",
+        "Playlists with Company Tags (Amazon, Google, etc.)",
+        "Access Pro Playlists",
+        "More NeetBot Requests for AI guidance",
       ],
       buttonText: "Upgrade to Pro",
       buttonStyle: (isCurrent) =>
@@ -85,8 +86,8 @@ const PricingPage = () => {
       description: "For interview preparation",
       features: [
         "All Pro features",
-        "Interview Warmup Problems",
-        "Topic-wise Analytics Dashboard",
+        "Interview Prep Playlists",
+        "Unlimited NeetBot Access",
         "Early Access to new features",
         "1-on-1 Resume Feedback",
       ],

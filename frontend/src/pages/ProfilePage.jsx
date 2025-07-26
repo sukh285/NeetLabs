@@ -9,7 +9,6 @@ import {
   Timer,
   User,
   Calendar,
-  Award,
   TrendingUp,
 } from "lucide-react";
 import moment from "moment";
@@ -18,6 +17,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import SubmissionLineChart from "../components/SubmissionLineChart";
 import DifficultyPieChart from "../components/DifficultyPieChart";
 import SubmissionHeatmap from "../components/Heatmap";
+import SolvedTagsRadarChart from "../components/SolvedTagsRadarChart";
 
 const AVATAR_PLACEHOLDER = "https://avatar.iran.liara.run/public/boy";
 
@@ -217,148 +217,121 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Difficulty Breakdown */}
-        <div className="mb-4">
-          <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
-            <div className="flex items-center gap-2 mb-3">
-              <Award className="w-4 h-4 text-neet-secondary" />
-              <h2 className="text-lg font-bold text-neet-base-100">
-                Solved by Difficulty
+        {/* --- New Section: Recent Submissions + Placeholder Side by Side --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-20 gap-4 mb-6">
+          {/* Radar Chart for Top Tags */}
+          <div className="col-span-1 lg:col-span-7">
+            <div className="h-full bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl flex flex-col justify-start">
+              <h2 className="text-lg font-bold text-neet-base-100 mb-4">
+                Top Solved Tags
               </h2>
+              <SolvedTagsRadarChart solvedTags={stats.solvedTags} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                {
-                  label: "Easy",
-                  value: stats.solvedDifficulty?.EASY || 0,
-                  color: "from-neet-success/20 to-neet-success/5",
-                  textColor: "text-neet-success",
-                  borderColor: "border-neet-success/30",
-                },
-                {
-                  label: "Medium",
-                  value: stats.solvedDifficulty?.MEDIUM || 0,
-                  color: "from-neet-warning/20 to-neet-warning/5",
-                  textColor: "text-neet-warning",
-                  borderColor: "border-neet-warning/30",
-                },
-                {
-                  label: "Hard",
-                  value: stats.solvedDifficulty?.HARD || 0,
-                  color: "from-neet-error/20 to-neet-error/5",
-                  textColor: "text-neet-error",
-                  borderColor: "border-neet-error/30",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className={`bg-gradient-to-br ${item.color} backdrop-blur-xl rounded-xl border ${item.borderColor} p-4 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
-                >
-                  <div
-                    className={`text-2xl font-extrabold ${item.textColor} mb-1`}
-                  >
-                    {item.value}
+          </div>
+
+          {/* Recent Submissions (right, 13/20 width = 65%) */}
+          <div className="col-span-1 lg:col-span-13">
+            <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl h-full flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-4 h-4 text-neet-secondary" />
+                <h2 className="text-lg font-bold text-neet-base-100">
+                  Recent Submissions
+                </h2>
+              </div>
+
+              {stats.recentSubmissions.length === 0 ? (
+                <div className="text-center py-6 flex-1 flex flex-col justify-center">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-neet-neutral/40 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-neet-accent/40" />
                   </div>
-                  <div className="text-neet-base-100 font-semibold text-base">
-                    {item.label}
+                  <p className="text-neet-accent/60 text-base">
+                    No recent submissions found.
+                  </p>
+                  <p className="text-neet-accent/40 text-xs mt-1">
+                    Start solving problems to see your progress here!
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-neet-neutral/40 rounded-xl border border-neet-accent/10 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-neet-neutral/60 border-b border-neet-accent/10">
+                          <th className="text-left px-4 py-4 text-neet-base-100 font-semibold">
+                            Problem
+                          </th>
+                          <th className="text-left px-4 py-4 text-neet-base-100 font-semibold">
+                            Difficulty
+                          </th>
+                          <th className="text-left px-4 py-4 text-neet-base-100 font-semibold">
+                            Status
+                          </th>
+                          <th className="text-left px-4 py-4 text-neet-base-100 font-semibold">
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {stats.recentSubmissions.map((submission, idx) => (
+                          <tr
+                            key={submission.id}
+                            className={`border-b border-neet-accent/5 ${
+                              idx % 2 === 0
+                                ? "bg-neet-neutral/20"
+                                : "bg-transparent"
+                            } hover:bg-neet-accent/5 transition-colors`}
+                          >
+                            <td className="px-4 py-4 text-neet-base-100 font-medium">
+                              {submission.problem?.title}
+                            </td>
+                            <td className="px-4 py-4">
+                              <span
+                                className={`px-2 py-1 rounded-full text-[10px] font-semibold ${
+                                  submission.problem?.difficulty === "EASY"
+                                    ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
+                                    : submission.problem?.difficulty ===
+                                      "MEDIUM"
+                                    ? "bg-neet-warning/20 text-neet-warning border border-neet-warning/30"
+                                    : "bg-neet-error/20 text-neet-error border border-neet-error/30"
+                                }`}
+                              >
+                                {submission.problem?.difficulty}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`px-2 py-1 rounded-full text-[10px] font-semibold ${
+                                  submission.status === "Accepted"
+                                    ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
+                                    : "bg-neet-error/20 text-neet-error border border-neet-error/30"
+                                }`}
+                              >
+                                {submission.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-neet-accent/70">
+                              {moment(submission.createdAt).fromNow()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
+        {/* --- End New Section --- */}
 
-        {/* Recent Submissions */}
-        <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-neet-secondary" />
-            <h2 className="text-lg font-bold text-neet-base-100">
-              Recent Submissions
+        {/* Submission Heatmap Section - moved below submissions */}
+        <div className="mt-4 mb-4">
+          <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 px-4 pt-4 py-1 shadow-2xl">
+            <h2 className="text-lg font-bold text-neet-base-100 mb-2">
+              Submission Heatmap
             </h2>
+            <SubmissionHeatmap data={stats.submissionTrends} />
           </div>
-
-          {stats.recentSubmissions.length === 0 ? (
-            <div className="text-center py-6">
-              <div className="w-10 h-10 mx-auto mb-2 bg-neet-neutral/40 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-neet-accent/40" />
-              </div>
-              <p className="text-neet-accent/60 text-base">
-                No recent submissions found.
-              </p>
-              <p className="text-neet-accent/40 text-xs mt-1">
-                Start solving problems to see your progress here!
-              </p>
-            </div>
-          ) : (
-            <div className="bg-neet-neutral/40 rounded-xl border border-neet-accent/10 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neet-neutral/60 border-b border-neet-accent/10">
-                      <th className="text-left p-2 text-neet-base-100 font-semibold">
-                        Problem
-                      </th>
-                      <th className="text-left p-2 text-neet-base-100 font-semibold">
-                        Difficulty
-                      </th>
-                      <th className="text-left p-2 text-neet-base-100 font-semibold">
-                        Status
-                      </th>
-                      <th className="text-left p-2 text-neet-base-100 font-semibold">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {stats.recentSubmissions.map((submission, idx) => (
-                      <tr
-                        key={submission.id}
-                        className={`border-b border-neet-accent/5 ${
-                          idx % 2 === 0
-                            ? "bg-neet-neutral/20"
-                            : "bg-transparent"
-                        } hover:bg-neet-accent/5 transition-colors`}
-                      >
-                        <td className="p-2 text-neet-base-100 font-medium">
-                          {submission.problem?.title}
-                        </td>
-                        <td className="p-2">
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                              submission.problem?.difficulty === "EASY"
-                                ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
-                                : submission.problem?.difficulty === "MEDIUM"
-                                ? "bg-neet-warning/20 text-neet-warning border border-neet-warning/30"
-                                : "bg-neet-error/20 text-neet-error border border-neet-error/30"
-                            }`}
-                          >
-                            {submission.problem?.difficulty}
-                          </span>
-                        </td>
-                        <td className="p-2">
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                              submission.status === "Accepted"
-                                ? "bg-neet-success/20 text-neet-success border border-neet-success/30"
-                                : "bg-neet-error/20 text-neet-error border border-neet-error/30"
-                            }`}
-                          >
-                            {submission.status}
-                          </span>
-                        </td>
-                        <td className="p-2 text-neet-accent/70">
-                          {moment(submission.createdAt).fromNow()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Submission Heatmap Section */}
-          <SubmissionHeatmap data={stats.submissionTrends} />
         </div>
 
         {/* Delete Profile Button */}

@@ -154,21 +154,31 @@ const CreateProblemForm = () => {
         editorial: value.editorial?.trim() || undefined,
       };
 
+      // Prepare the request body: stringify input if it's an object
+      const prepared = {
+        ...cleanedValue,
+        testcases: cleanedValue.testcases.map(tc => ({
+          ...tc,
+          input: typeof tc.input === "object" ? JSON.stringify(tc.input) : tc.input,
+          output: tc.output,
+        })),
+      };
+
       // Ensure we have at least one test case
-      if (cleanedValue.testcases.length === 0) {
+      if (prepared.testcases.length === 0) {
         toast.error("At least one test case is required");
         return;
       }
 
       // Ensure we have at least one tag
-      if (cleanedValue.tags.length === 0) {
+      if (prepared.tags.length === 0) {
         toast.error("At least one tag is required");
         return;
       }
 
       const res = await axiosInstance.post(
         "/problem/create-problem",
-        cleanedValue
+        prepared
       );
       toast.success(res.data.message || "Problem created successfully");
       navigation("/problems");
@@ -188,11 +198,21 @@ const CreateProblemForm = () => {
   };
 
   const handleLoadJson = (json) => {
-    // Try to load the JSON into the form, similar to loadSampleData
-    if (json.tags) replaceTags(json.tags.map((tag) => tag));
-    if (json.testcases) replacetestcases(json.testcases.map((tc) => tc));
-    reset(json);
+    // Serialize testcases' input/output fields if they are objects
+    const sanitized = {
+      ...json,
+      testcases: (json.testcases || []).map((tc) => ({
+        input: typeof tc.input === "object" ? JSON.stringify(tc.input) : tc.input,
+        output:
+          typeof tc.output === "object" ? JSON.stringify(tc.output) : tc.output,
+      })),
+    };
+  
+    if (sanitized.tags) replaceTags(sanitized.tags.map((tag) => tag));
+    if (sanitized.testcases) replacetestcases(sanitized.testcases);
+    reset({ ...json, testcases: sanitized.testcases });
   };
+  
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
@@ -493,10 +513,34 @@ const CreateProblemForm = () => {
                       <label className="block text-sm font-medium text-neet-accent/80 mb-2">
                         Input
                       </label>
-                      <textarea
-                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
-                        {...register(`testcases.${index}.input`)}
-                        placeholder="Test case input"
+                      <Controller
+                        name={`testcases.${index}.input`}
+                        control={control}
+                        render={({ field }) => (
+                          <div className="border rounded text-black">
+                            <Editor
+                              height="150px"
+                              defaultLanguage="json"
+                              theme="vs-dark"
+                              value={
+                                typeof field.value === "string"
+                                  ? field.value
+                                  : JSON.stringify(field.value, null, 2)
+                              }
+                              onChange={(val) => {
+                                try {
+                                  field.onChange(JSON.parse(val || "{}"));
+                                } catch {
+                                  field.onChange(val); // fallback if not valid JSON yet
+                                }
+                              }}
+                              options={{
+                                minimap: { enabled: false },
+                                fontSize: 14,
+                              }}
+                            />
+                          </div>
+                        )}
                       />
                       {errors.testcases?.[index]?.input && (
                         <p className="mt-1 text-sm text-neet-error">
@@ -508,10 +552,34 @@ const CreateProblemForm = () => {
                       <label className="block text-sm font-medium text-neet-accent/80 mb-2">
                         Expected Output
                       </label>
-                      <textarea
-                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
-                        {...register(`testcases.${index}.output`)}
-                        placeholder="Expected output"
+                      <Controller
+                        name={`testcases.${index}.output`}
+                        control={control}
+                        render={({ field }) => (
+                          <div className="border rounded text-black">
+                            <Editor
+                              height="150px"
+                              defaultLanguage="json"
+                              theme="vs-dark"
+                              value={
+                                typeof field.value === "string"
+                                  ? field.value
+                                  : JSON.stringify(field.value, null, 2)
+                              }
+                              onChange={(val) => {
+                                try {
+                                  field.onChange(JSON.parse(val || "{}"));
+                                } catch {
+                                  field.onChange(val); // fallback if not valid JSON yet
+                                }
+                              }}
+                              options={{
+                                minimap: { enabled: false },
+                                fontSize: 14,
+                              }}
+                            />
+                          </div>
+                        )}
                       />
                       {errors.testcases?.[index]?.output && (
                         <p className="mt-1 text-sm text-neet-error">

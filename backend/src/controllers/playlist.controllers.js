@@ -7,11 +7,15 @@ export const createPlaylist = async (req, res) => {
 
     const allowedAccessLevels = ["FREE", "PRO", "ADVANCED", "CUSTOM"];
 
-    // If user is not admin, force accessLevel to CUSTOM
+    // Use a new variable instead of reassigning a const
+    let finalAccessLevel;
+
     if (req.user.role !== "ADMIN") {
-      accessLevel = "CUSTOM";
+      finalAccessLevel = "CUSTOM";
     } else if (!allowedAccessLevels.includes(accessLevel)) {
       return res.status(400).json({ error: "Invalid access level" });
+    } else {
+      finalAccessLevel = accessLevel;
     }
 
     const playlist = await db.playlist.create({
@@ -19,7 +23,7 @@ export const createPlaylist = async (req, res) => {
         name,
         description,
         userId,
-        accessLevel,
+        accessLevel: finalAccessLevel,
       },
     });
 

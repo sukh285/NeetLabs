@@ -31,22 +31,14 @@ const Navbar = () => {
             {/* Center section - Navigation Links */}
             <div className="hidden lg:flex justify-center">
               <ul className="flex flex-row items-center gap-6 px-0 text-xs font-medium min-h-0 h-10">
-                <li
-                  data-aos="fade-down"
-                  data-aos-duration="500"
-                  className="flex items-center h-10"
-                >
+                <li className="flex items-center h-10">
                   <Link to={"/problems"} className="flex items-center h-full">
                     <span className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300 px-3 py-1">
                       Problems
                     </span>
                   </Link>
                 </li>
-                <li
-                  data-aos="fade-down"
-                  data-aos-duration="1000"
-                  className="flex items-center h-10"
-                >
+                <li className="flex items-center h-10">
                   <Link
                     to={"/playlists"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300 px-3 py-1 flex items-center h-full"
@@ -54,8 +46,7 @@ const Navbar = () => {
                     Playlists
                   </Link>
                 </li>
-                <li data-aos="fade-down"
-                  data-aos-duration="1500" className="flex items-center h-10">
+                <li className="flex items-center h-10">
                   <Link
                     to={"/resources"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300 px-3 py-1 flex items-center h-full"
@@ -63,8 +54,7 @@ const Navbar = () => {
                     Resources
                   </Link>
                 </li>
-                <li data-aos="fade-down"
-                  data-aos-duration="2000" className="flex items-center h-10">
+                <li className="flex items-center h-10">
                   <Link
                     to={"/pricing"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300 px-3 py-1 flex items-center h-full"
@@ -72,8 +62,7 @@ const Navbar = () => {
                     Pricing
                   </Link>
                 </li>
-                <li data-aos="fade-down"
-                  data-aos-duration="2500" className="flex items-center h-10">
+                <li className="flex items-center h-10">
                   <Link
                     to={"/feedback"}
                     className="text-neet-accent/80 hover:text-neet-primary transition-colors duration-300 px-3 py-1 flex items-center h-full"

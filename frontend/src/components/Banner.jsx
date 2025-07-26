@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { X } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
+
+const BANNER_DISMISSED_KEY = "neetlabs_banner_dismissed";
 
 const Banner = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(() => {
+    // Only show if not dismissed before
+    return !localStorage.getItem(BANNER_DISMISSED_KEY);
+  });
+  const { authUser } = useAuthStore();
+
+  useEffect(() => {
+    // If banner is not visible, ensure it's marked as dismissed
+    if (!visible) {
+      localStorage.setItem(BANNER_DISMISSED_KEY, "1");
+    }
+  }, [visible]);
 
   if (!visible) return null;
 
@@ -11,7 +25,9 @@ const Banner = () => {
     <div
       data-aos="fade-down"
       data-aos-duration="8000"
-      className="fixed top-18 left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-4 text-xs flex items-center justify-center font-inter"
+      className={`fixed ${
+        authUser ? "top-20" : "top-18"
+      } left-0 w-full z-[99] bg-neet-primary/80 text-neet-neutral border-b px-4 py-4 text-xs flex items-center justify-center font-inter`}
     >
       <div className="flex items-center justify-center gap-2">
         <span className="font-semibold">NeetLabs is in beta!</span>

@@ -13,6 +13,7 @@ import {
   Calendar,
   ListFilter,
   PenIcon,
+  Lock,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -58,6 +59,15 @@ const AllPlaylists = () => {
 
   // All premium playlists
   const premiumPlaylists = playlists.filter((p) => p.accessLevel !== "CUSTOM");
+  const accessOrder = {
+    FREE: 1,
+    PRO: 2,
+    ADVANCED: 3,
+  };
+
+  const sortedPremiumPlaylists = [...premiumPlaylists].sort(
+    (a, b) => accessOrder[a.accessLevel] - accessOrder[b.accessLevel]
+  );
 
   // For users, filter premium playlists by access level
   const canUserAccess = (accessLevel) => {
@@ -77,11 +87,22 @@ const AllPlaylists = () => {
     const accessLabel =
       playlist.accessLevel === "FREE" ? "Free" : playlist.accessLevel;
 
+    // Extract companyTags from problems, flatten, count frequency, sort and pick top 3
+    const companyTagCounts = {};
+    playlist.problems?.forEach((problemInPlaylist) => {
+      const problem = problemInPlaylist.problem;
+      problem?.companyTags?.forEach((tag) => {
+        companyTagCounts[tag] = (companyTagCounts[tag] || 0) + 1;
+      });
+    });
+    const sortedCompanyTags = Object.entries(companyTagCounts)
+      .sort((a, b) => b[1] - a[1]) // Descending count
+      .slice(0, 3)
+      .map(([tag]) => tag);
+
     const CardContent = (
       <div
-        className={`group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full ${
-          !canAccess ? "opacity-80" : ""
-        }`}
+        className={`group relative bg-neet-neutral/40 backdrop-blur-xl rounded-2xl border border-neet-accent/10 hover:border-neet-primary/30 transition-all duration-300 overflow-hidden h-full`}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-neet-primary/5 via-transparent to-neet-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -95,11 +116,8 @@ const AllPlaylists = () => {
         <div className="relative p-6 h-full flex flex-col">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-start gap-4 flex-1">
-              <div className="w-12 h-12 bg-gradient-to-br from-neet-primary/20 to-neet-secondary/20 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
-                📘
-              </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold font-limelight text-neet-base-100 group-hover:text-neet-primary transition-colors leading-tight mb-2">
+                <h3 className="text-lg font-semibold font-inter tracking-wide text-neet-base-100 group-hover:text-neet-primary transition-colors leading-tight mb-2">
                   {playlist.name}
                 </h3>
                 <div className="flex items-center gap-2">
@@ -112,9 +130,34 @@ const AllPlaylists = () => {
             <ChevronRight className="w-5 h-5 text-neet-accent/40 group-hover:text-neet-primary group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
           </div>
 
-          <p className="text-sm text-neet-accent/70 mb-6 line-clamp-2 leading-relaxed flex-grow">
+          <p className="text-xs text-neet-accent/70 mb-2 line-clamp-2 leading-relaxed flex-grow">
             {playlist.description}
           </p>
+
+          {/* Company Tags badges */}
+          {/* Company Tags Block */}
+          {playlist.accessLevel === "FREE" && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              <span className="bg-neet-neutral/50 text-neet-accent/50 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 border border-neet-accent/20">
+                <Lock className="w-3 h-3" />
+                Upgrade to Pro for Company Tags
+              </span>
+            </div>
+          )}
+
+          {["PRO", "ADVANCED"].includes(playlist.accessLevel) && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {sortedCompanyTags.length > 0 &&
+                sortedCompanyTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-neet-neutral text-neet-primary text-xs font-semibold px-4 py-2 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+            </div>
+          )}
 
           <div className="grid grid-cols-3 gap-6 pt-6 border-t border-neet-accent/10 mt-auto">
             <div className="text-center">
@@ -125,18 +168,18 @@ const AllPlaylists = () => {
               <p className="text-xs text-neet-accent/60">Problems</p>
             </div>
             <div className="text-center">
-              <Users className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
+              <Clock className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
               <p className="text-sm font-semibold text-neet-base-100">
-                {playlist.user?.name || "Admin"}
+                Intermediate {/* Hardcoded difficulty */}
               </p>
-              <p className="text-xs text-neet-accent/60">Created By</p>
+              <p className="text-xs text-neet-accent/60">Difficulty</p>
             </div>
             <div className="text-center">
-              <Calendar className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
+              <Clock className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
               <p className="text-sm font-semibold text-neet-base-100">
-                {new Date(playlist.createdAt).toLocaleDateString()}
+                2-3 weeks {/* Hardcoded time */}
               </p>
-              <p className="text-xs text-neet-accent/60">Created</p>
+              <p className="text-xs text-neet-accent/60">Est. Time</p>
             </div>
           </div>
         </div>
@@ -247,7 +290,6 @@ const AllPlaylists = () => {
     getAllPlaylists();
   };
 
-
   if (startingLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
@@ -307,7 +349,7 @@ const AllPlaylists = () => {
                 <EmptyPremiumPlaylists />
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {premiumPlaylists.map((playlist) => (
+                  {sortedPremiumPlaylists.map((playlist) => (
                     <PremiumPlaylistCard
                       key={playlist.id}
                       playlist={playlist}
