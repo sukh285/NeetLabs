@@ -62,7 +62,7 @@ const AddToPlaylist = ({ isOpen, onClose, problemId }) => {
                 .filter(
                   (playlist) =>
                     playlist.accessLevel === "CUSTOM" &&
-                    playlist.createdBy?.id === authUser.id
+                    playlist.user?.id === authUser.id
                 )
                 .map((playlist) => (
                   <option

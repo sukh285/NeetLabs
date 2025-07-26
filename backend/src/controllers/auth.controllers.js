@@ -2,7 +2,12 @@ import bcrypt from "bcryptjs";
 import { db } from "../libs/db.js";
 import { UserPlan, UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
-import { emailVerificationMailGenContent, forgotPasswordMailGenContent, sendMail } from "../utils/mail.js";
+import {
+  emailVerificationMailGenContent,
+  forgotPasswordMailGenContent,
+  sendMail,
+} from "../utils/mail.js";
+import moment from "moment";
 
 export const register = async (req, res) => {
   // console.log(req.body);
@@ -52,7 +57,6 @@ export const register = async (req, res) => {
     });
 
     console.log("User created successfully:", newUser);
-
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({
@@ -402,6 +406,35 @@ export const getProfile = async (req, res) => {
         ? ((acceptedSubmissions / totalSubmissions) * 100).toFixed(2) + "%"
         : null;
 
+    const last14Days = moment().subtract(30, "days").toDate();
+
+    const recentSubs = await prisma.submission.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: last14Days,
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    const grouped = {};
+
+    recentSubs.forEach(({ createdAt }) => {
+      const date = moment(createdAt).format("YYYY-MM-DD");
+      grouped[date] = (grouped[date] || 0) + 1;
+    });
+
+    const submissionTrends = Object.entries(grouped).map(([date, count]) => ({
+      date: moment(date).format("MMM D"),
+      submissions: count,
+    }));
+
     res.status(200).json({
       user,
       stats: {
@@ -412,6 +445,7 @@ export const getProfile = async (req, res) => {
         recentSubmissions: submission,
         accuracyRate,
         solvedDifficulty: difficultyCount,
+        submissionTrends,
       },
     });
   } catch (error) {

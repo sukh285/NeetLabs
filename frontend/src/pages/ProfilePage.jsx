@@ -15,6 +15,9 @@ import {
 import moment from "moment";
 
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import SubmissionLineChart from "../components/SubmissionLineChart";
+import DifficultyPieChart from "../components/DifficultyPieChart";
+import SubmissionHeatmap from "../components/Heatmap";
 
 const AVATAR_PLACEHOLDER = "https://avatar.iran.liara.run/public/boy";
 
@@ -50,22 +53,9 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
-      <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
-        {/* Hero Section */}
-        <div className="relative py-6 text-center">
-          <div className="absolute inset-0 bg-gradient-to-r from-neet-primary/5 via-neet-secondary/5 to-neet-accent/5 rounded-3xl blur-2xl"></div>
-          <div className="relative">
-            <div className="inline-flex items-center gap-2 px-5 py-3.5 bg-neet-neutral/40 backdrop-blur-xl rounded-full border border-neet-accent/20">
-              <User className="w-4 h-4 text-neet-primary" />
-              <span className="text-neet-accent/80 font-medium text-sm">
-                Profile Dashboard
-              </span>
-            </div>
-          </div>
-        </div>
-
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-20">
         {/* User Info Card */}
-        <div className="mb-4">
+        <div className="mb-4 pointer-events-none">
           <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
             <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6">
               {/* Avatar */}
@@ -200,6 +190,31 @@ const ProfilePage = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          {/* Line Chart (2 cols) */}
+          <div className="lg:col-span-2 bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
+            <h2 className="text-lg font-bold text-neet-base-100 mb-4">
+              Submission Trend
+            </h2>
+            {stats.submissionTrends.length > 0 ? (
+              <SubmissionLineChart data={stats.submissionTrends} />
+            ) : (
+              <p className="text-neet-accent/60 text-sm">
+                No submission data available yet.
+              </p>
+            )}
+          </div>
+
+          {/* Pie Chart or Difficulty Distribution */}
+          <div className="bg-neet-neutral/60 backdrop-blur-xl rounded-2xl border border-neet-accent/10 p-4 shadow-2xl">
+            <h2 className="text-lg font-bold text-neet-base-100 mb-4">
+              Difficulty Breakdown
+            </h2>
+            <DifficultyPieChart stats={stats.solvedDifficulty} />
+          </div>
         </div>
 
         {/* Difficulty Breakdown */}
@@ -341,6 +356,9 @@ const ProfilePage = () => {
               </div>
             </div>
           )}
+
+          {/* Submission Heatmap Section */}
+          <SubmissionHeatmap data={stats.submissionTrends} />
         </div>
 
         {/* Delete Profile Button */}
