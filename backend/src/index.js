@@ -49,6 +49,22 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const url = "https://neetlabs.onrender.com";
+const interval = 3000;
+
+function reloadWebsite() {
+  axios
+    .get(url)
+    .then((response) => {
+      console.log("Website load");
+    })
+    .catch((err) => {
+      console.error(`Error: ${err.message}`);
+    });
+}
+
+setInterval(reloadWebsite, interval);
+
 app.get("/", (req, res) => {
   res.send("Welcome to leetlab");
 });
