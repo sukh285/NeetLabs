@@ -17,12 +17,12 @@ export const googleAuthSuccess = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV !== "development",
+      sameSite: "none",
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
-    res.redirect("http://localhost:5173/problems"); // or wherever your frontend redirects
+    res.redirect(`${process.env.FRONTEND_URL}/problems`); // or wherever your frontend redirects
   } catch (error) {
     console.error("OAuth success handler error:", error);
     res.status(500).json({ error: "OAuth login failed" });
@@ -48,12 +48,12 @@ export const githubAuthSuccess = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV !== "development",
+      sameSite: "none",
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    res.redirect("http://localhost:5173/problems"); // or your frontend success route
+    res.redirect(`${process.env.FRONTEND_URL}/problems`); // or your frontend success route
   } catch (error) {
     console.error("GitHub OAuth handler error:", error);
     res.status(500).json({ error: "GitHub login failed" });
