@@ -318,7 +318,7 @@ export const getProfile = async (req, res) => {
     const userId = req.user.id;
 
     // Fetch all relevant data in a single composite query
-    const userProfile = await prisma.user.findUnique({
+    const userProfile = await db.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -409,8 +409,7 @@ export const getProfile = async (req, res) => {
     const totalSubmissions = _count.submission;
 
     // Count accepted submissions from the recent list only (for optimization)
-    // Optionally, fetch full submission list if you want full accuracy
-    const acceptedSubmissions = await prisma.submission.count({
+    const acceptedSubmissions = await db.submission.count({
       where: {
         userId,
         status: "Accepted",
@@ -428,7 +427,7 @@ export const getProfile = async (req, res) => {
 
     const last14Days = moment().subtract(30, "days").toDate();
 
-    const recentSubs = await prisma.submission.findMany({
+    const recentSubs = await db.submission.findMany({
       where: {
         userId,
         createdAt: {
