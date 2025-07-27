@@ -7,6 +7,7 @@ import Hero from "./sections/Hero";
 import Second from "./sections/Second";
 import Third from "./sections/Third";
 import FullPageLoader from "../templates/FullPageLoader";
+import Grid from "./sections/Grid";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,8 @@ const HomePage = () => {
       >
         {/* Hero Section */}
         <Hero />
+        {/* Grid */}
+        {/* <Grid /> */}
         {/* Problems Section */}
         <Second />
         {/* Playlists Section */}

@@ -108,14 +108,14 @@ const AllPlaylists = () => {
 
         {/* Lock or Access Label */}
         {!canAccess && (
-          <div className="absolute top-4 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-semibold px-3 py-1 shadow-lg z-10">
+          <div className="absolute rounded-l-md top-8 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-semibold px-3 py-1 shadow-lg z-10">
             Locked
           </div>
         )}
 
-        <div className="relative p-6 h-full flex flex-col">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-4 flex-1">
+        <div className="relative py-6 h-full flex flex-col">
+          <div className="flex bg-gradient-to-r px-4 py-2 rounded-md from-neet-primary/20 via-neet-primary/60 to-neet-neutral/80 items-start justify-between mb-6">
+            <div className="flex items-end gap-4 flex-1">
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-semibold font-inter tracking-wide text-neet-base-100 group-hover:text-neet-primary transition-colors leading-tight mb-2">
                   {playlist.name}
@@ -130,36 +130,37 @@ const AllPlaylists = () => {
             <ChevronRight className="w-5 h-5 text-neet-accent/40 group-hover:text-neet-primary group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
           </div>
 
-          <p className="text-xs text-neet-accent/70 mb-2 line-clamp-2 leading-relaxed flex-grow">
+          <p className="text-xs px-6 text-neet-accent/70 mb-2 line-clamp-2 leading-relaxed flex-grow">
             {playlist.description}
           </p>
 
           {/* Company Tags badges */}
-          {/* Company Tags Block */}
-          {playlist.accessLevel === "FREE" && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              <span className="bg-neet-neutral/50 text-neet-accent/50 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 border border-neet-accent/20">
-                <Lock className="w-3 h-3" />
-                Upgrade to Pro for Company Tags
-              </span>
-            </div>
-          )}
+          <div className="px-4">
+            {playlist.accessLevel === "FREE" && plan === "FREE" ? (
+              <div className="mb-4 flex flex-wrap gap-2">
+                <span className="bg-neet-neutral/50 text-neet-accent/50 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 border border-neet-accent/20">
+                  <Lock className="w-3 h-3" />
+                  Upgrade to Pro for Company Tags
+                </span>
+              </div>
+            ) : (
+              playlist.accessLevel && (
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {sortedCompanyTags.length > 0 &&
+                    sortedCompanyTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="bg-neet-neutral text-neet-primary text-xs font-semibold px-4 py-2 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                </div>
+              )
+            )}
+          </div>
 
-          {["PRO", "ADVANCED"].includes(playlist.accessLevel) && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {sortedCompanyTags.length > 0 &&
-                sortedCompanyTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-neet-neutral text-neet-primary text-xs font-semibold px-4 py-2 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-            </div>
-          )}
-
-          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-neet-accent/10 mt-auto">
+          <div className="grid px-4 grid-cols-3 gap-6 pt-6 border-t border-neet-accent/10 mt-auto">
             <div className="text-center">
               <BookOpen className="w-4 h-4 text-neet-accent/60 mb-1 mx-auto" />
               <p className="text-sm font-semibold text-neet-base-100">

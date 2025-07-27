@@ -18,7 +18,6 @@ const SignUpSchema = zod.object({
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [resendEmail, setResendEmail] = useState("");
   const [resending, setResending] = useState(false);
@@ -35,11 +34,6 @@ const SignUpPage = () => {
     resolver: zodResolver(SignUpSchema),
   });
 
-  useEffect(() => {
-    // Fade in the form after a short delay for a subtle effect
-    const timeout = setTimeout(() => setFormVisible(true), 20);
-    return () => clearTimeout(timeout);
-  }, []);
 
   const onSubmit = async (data) => {
     console.log("Signup form submitted -->", data);
@@ -130,11 +124,10 @@ const SignUpPage = () => {
       )}
 
       {/* Centered Form Container */}
-      <div className="relative z-1 flex items-center justify-center h-screen px-4">
+      <div data-aos="fade-up"
+            data-aos-duration="1000" className="relative z-1 flex items-center justify-center h-screen px-4">
         <div
-          className={`w-full max-w-sm space-y-8 transition-opacity duration-300 ${
-            formVisible ? "opacity-100" : "opacity-0"
-          }`}
+          className={`w-full max-w-sm space-y-8 transition-opacity duration-300`}
         >
           {/* Logo */}
           <div className="text-center mb-6">

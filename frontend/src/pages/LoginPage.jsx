@@ -88,7 +88,8 @@ const LoginPage = () => {
       </div>
 
       {/* Centered Form */}
-      <div className="relative z-10 flex items-center justify-center h-screen px-4">
+      <div data-aos="fade-up"
+            data-aos-duration="1000" className="relative z-10 flex items-center justify-center h-screen px-4">
         <div className="w-full max-w-sm space-y-8 transition-opacity duration-300">
           {/* Logo */}
           <div className="text-center mb-6">

@@ -50,7 +50,7 @@ const PlaylistPage = () => {
     // Non-admins can only delete their own custom playlists
     return (
       currentPlaylist.accessLevel === "CUSTOM" &&
-      currentPlaylist.createdBy?.id === authUser.id
+      currentPlaylist.user?.id === authUser.id
     );
   };
 
@@ -79,6 +79,9 @@ const PlaylistPage = () => {
   const totalCount = problems.length;
   const progressPercent = Math.floor((solvedCount / totalCount) * 100 || 0);
 
+  // Only show "Add Problems" if the current user is the creator of the playlist
+  const canAddProblems = authUser && currentPlaylist.user?.id === authUser.id;
+
   return (
     <div className="min-h-screen font-inter bg-gradient-to-br from-neet-neutral via-neet-neutral-focus to-neet-neutral">
       {/* Delete Confirmation Modal */}
@@ -90,10 +93,13 @@ const PlaylistPage = () => {
         message="Are you sure you want to delete this playlist? This action cannot be undone."
       />
 
-
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Sticky Top Playlist Header */}
-        <div className="relative top-8 rounded-2xl z-40 bg-neet-neutral/95 backdrop-blur-lg border-b border-neet-accent/10">
+        <div
+          data-aos="fade-down"
+          data-aos-duration="1000"
+          className="relative top-8 rounded-2xl z-40 bg-neet-neutral/95 backdrop-blur-lg border-b border-neet-accent/10"
+        >
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               {/* Left - Back Button */}
@@ -149,12 +155,16 @@ const PlaylistPage = () => {
         </div>
 
         {/* Playlist Description */}
-        <div className="text-sm text-neet-accent/70 max-w-2xl mx-auto mt-5 pt-10 text-center leading-relaxed">
+        <div
+          data-aos="fade-up"
+          data-aos-duration="1500"
+          className="text-sm text-neet-accent/70 max-w-2xl mx-auto mt-5 pt-10 text-center leading-relaxed"
+        >
           {description || "No description provided."}
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-6">
+        <div data-aos="fade-up" data-aos-duration="1500" className="mb-6">
           <ProgressBar
             label={`Solved Problems: ${solvedCount} of ${totalCount}`}
             percentage={progressPercent}
@@ -163,15 +173,17 @@ const PlaylistPage = () => {
 
         <Divider />
 
-        <Link
-          to={`/playlist/${playlistId}/add-problem`}
-          className="btn-circle py-2 px-4 border flex items-center bg-neet-primary/80 border-neet-primary/30 text-neet-neutral hover:bg-neet-primary hover:border-neet-primary backdrop-blur-md shadow-lg transition w-fit text-sm ml-4"
-        >
-          <span className="font-medium">Add Problems</span>
-        </Link>
+        {canAddProblems && (
+          <Link
+            to={`/playlist/${playlistId}/add-problem`}
+            className="btn-circle py-2 px-4 border flex items-center bg-neet-primary/80 border-neet-primary/30 text-neet-neutral hover:bg-neet-primary hover:border-neet-primary backdrop-blur-md shadow-lg transition w-fit text-sm ml-4"
+          >
+            <span className="font-medium">Add Problems</span>
+          </Link>
+        )}
 
         {/* Problems Table Section */}
-        <div className="pb-16">
+        <div data-aos="fade-up" data-aos-duration="3000" className="pb-16">
           <PlaylistTable problems={problems} playlistId={playlistId} />
         </div>
       </div>

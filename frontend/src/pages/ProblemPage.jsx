@@ -28,6 +28,7 @@ import {
   Bot,
   CheckCircle,
   Share,
+  Share2,
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore";
@@ -432,60 +433,6 @@ const ProblemPage = () => {
               </div>
             </div>
 
-            {/* Center Section - Timer */}
-            <div className="absolute left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 shadow-lg">
-                <Timer className="w-4 h-4 text-neet-primary" />
-                <span className="text-neet-base-100 font-mono text-sm font-medium min-w-[50px]">
-                  {formatTime(time)}
-                </span>
-                <div className="flex items-center gap-1">
-                  {!isRunning && !isPaused && (
-                    <button
-                      onClick={startTimer}
-                      title="Start"
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
-                    >
-                      <Play className="w-3 h-3 text-green-400" />
-                    </button>
-                  )}
-                  {isRunning && (
-                    <button
-                      onClick={pauseTimer}
-                      title="Pause"
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
-                    >
-                      <Pause className="w-3 h-3 text-yellow-400" />
-                    </button>
-                  )}
-                  {(isRunning || isPaused) && (
-                    <button
-                      onClick={stopTimer}
-                      title="Stop"
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
-                    >
-                      <Square className="w-3 h-3 text-red-400" />
-                    </button>
-                  )}
-                  {isPaused && (
-                    <button
-                      onClick={startTimer}
-                      title="Resume"
-                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
-                    >
-                      <Play className="w-3 h-3 text-green-400" />
-                    </button>
-                  )}
-                  <button
-                    onClick={resetTimer}
-                    title="Reset"
-                    className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
-                  >
-                    <RotateCcw className="w-3 h-3 text-neet-accent/60" />
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {/* Right Section - Share & Upgrade */}
             <div className="flex items-center gap-3">
@@ -496,8 +443,7 @@ const ProblemPage = () => {
                 }}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl text-neet-primary"
               >
-                <Share className="w-3 h-3" />
-                <span className="text-xs font-normal">Share</span>
+                <Share2 className="w-3 h-3" />
               </button>
 
               <Link
@@ -582,12 +528,60 @@ const ProblemPage = () => {
           {/* Code editor and run/submit buttons */}
           <div className="rounded-2xl bg-neet-neutral/40 shadow-2xl border border-neet-accent/10">
             <div className="card-body p-0 flex flex-col h-full">
-              {/* Code Editor Tab Row with Language Dropdown on the right */}
+              {/* Stopwatch Row with Language Dropdown on the right */}
               <div className="flex items-center justify-between border-b border-neet-accent/10 px-6 py-4">
-                <button className="tab tab-active gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-gradient-to-r from-neet-primary to-neet-secondary text-neet-primary-content shadow-lg">
-                  <Terminal className="w-4 h-4" />
-                  Code Editor
-                </button>
+                {/* Stopwatch moved here */}
+                <div className="flex px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 items-center gap-3">
+                  <Timer className="w-4 h-4 text-neet-primary" />
+                  <span className="text-neet-base-100 font-mono text-sm font-medium min-w-[50px]">
+                    {formatTime(time)}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {!isRunning && !isPaused && (
+                      <button
+                        onClick={startTimer}
+                        title="Start"
+                        className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
+                      >
+                        <Play className="w-3 h-3 text-green-400" />
+                      </button>
+                    )}
+                    {isRunning && (
+                      <button
+                        onClick={pauseTimer}
+                        title="Pause"
+                        className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
+                      >
+                        <Pause className="w-3 h-3 text-yellow-400" />
+                      </button>
+                    )}
+                    {(isRunning || isPaused) && (
+                      <button
+                        onClick={stopTimer}
+                        title="Stop"
+                        className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
+                      >
+                        <Square className="w-3 h-3 text-red-400" />
+                      </button>
+                    )}
+                    {isPaused && (
+                      <button
+                        onClick={startTimer}
+                        title="Resume"
+                        className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
+                      >
+                        <Play className="w-3 h-3 text-green-400" />
+                      </button>
+                    )}
+                    <button
+                      onClick={resetTimer}
+                      title="Reset"
+                      className="p-1 rounded-md hover:bg-neet-primary/20 transition-colors"
+                    >
+                      <RotateCcw className="w-3 h-3 text-neet-accent/60" />
+                    </button>
+                  </div>
+                </div>
                 {/* Language Dropdown moved here */}
                 <div className="relative">
                   <button
