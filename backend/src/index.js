@@ -31,7 +31,7 @@ app.use(
     origin: [
       process.env.FRONTEND_URL,
       "https://neet-labs.vercel.app",
-      "https://281fb4c9fd1b.ngrok-free.app",
+      "http://localhost:5173",
     ],
     credentials: true,
   })

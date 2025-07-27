@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { HashLoader } from "react-spinners";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import dotenv from "dotenv";
 
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
