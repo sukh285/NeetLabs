@@ -234,7 +234,7 @@ const LoginPage = () => {
               {/* OAuth Buttons Row */}
               <div className="form-control pt-1 flex flex-row gap-3 w-full">
                 <a
-                  href="http://localhost:8080/api/v1/auth/google"
+                  href="https://neetlabs.onrender.com/api/v1/auth/google"
                   className="flex-1 btn py-3 bg-white text-neet-neutral border border-neet-base-200 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 font-semibold"
                   style={{ willChange: "transform" }}
                 >
@@ -247,7 +247,7 @@ const LoginPage = () => {
                 </a>
 
                 <a
-                  href="http://localhost:8080/api/v1/auth/github"
+                  href="https://neetlabs.onrender.com/api/v1/auth/github"
                   className="flex-1 btn py-3 bg-[#18181b] text-white border border-[#fff]/20 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 active:scale-95 font-semibold"
                   style={{ willChange: "transform" }}
                 >
