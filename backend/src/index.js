@@ -28,7 +28,11 @@ app.use(
 );
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL,"https://neet-labs.vercel.app", "https://281fb4c9fd1b.ngrok-free.app"],
+    origin: [
+      process.env.FRONTEND_URL,
+      "https://neet-labs.vercel.app",
+      "https://281fb4c9fd1b.ngrok-free.app",
+    ],
     credentials: true,
   })
 );
@@ -41,7 +45,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development", // true in production
+      sameSite: "none",
+      secure: true, // true in production
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
