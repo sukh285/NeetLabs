@@ -28,7 +28,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://281fb4c9fd1b.ngrok-free.app"],
+    origin: [process.env.FRONTEND_URL,"https://neet-labs.vercel.app", "https://281fb4c9fd1b.ngrok-free.app"],
     credentials: true,
   })
 );
