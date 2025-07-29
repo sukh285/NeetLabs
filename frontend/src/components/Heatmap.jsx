@@ -66,9 +66,7 @@ const SubmissionHeatmap = ({ data }) => {
             <Tooltip
               key={props.key}
               placement="top"
-              content={`${item.count || 0} submission${
-                item.count === 1 ? "" : "s"
-              }`}
+              content={`${item.count || 0} submission${item.count === 1 ? "" : "s"} on ${item.date}`}
             >
               <rect {...props} rx={4} ry={4} />
             </Tooltip>
