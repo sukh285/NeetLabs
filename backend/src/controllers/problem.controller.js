@@ -198,7 +198,7 @@ export const updateProblemById = async (req, res) => {
       codeSnippet,
       referenceSolution,
     } = req.body;
-    
+
     if (req.user.role !== "ADMIN") {
       return res.status(403).json({
         error: "You are not allowed to update the problem",
@@ -207,35 +207,43 @@ export const updateProblemById = async (req, res) => {
 
     for (const [language, solutionCode] of Object.entries(referenceSolution)) {
       const languageId = getJudge0LanguageId(language);
-      
-    
+
       if (!languageId) {
         return res.status(400).json({
           error: `Language ${language} is not supported`,
         });
       }
-    
+
       const submissions = testcases.map(({ input, output }) => ({
         source_code: solutionCode,
         language_id: languageId,
         stdin: input,
         expected_output: output,
       }));
-    
+
+      console.log("Submitting Java solution:", {
+        language,
+        solutionCode,
+        isString: typeof solutionCode === 'string',
+        preview: solutionCode.slice(0, 100),
+      });
+      
+
       const submissionResults = await submitBatch(submissions);
-    
+
       const tokens = submissionResults.map((res) => res.token);
-    
+
       const results = await pollBatchResults(tokens);
 
-    
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
-      
+
         if (result.status.id !== 3) {
-          console.error(`❌ Judge0 Failure for ${language}, Testcase #${i + 1}`);
+          console.error(
+            `❌ Judge0 Failure for ${language}, Testcase #${i + 1}`
+          );
           console.error("🔎 Full result:", JSON.stringify(result, null, 2));
-          
+
           return res.status(400).json({
             error: `Testcase ${i + 1} failed for language ${language}`,
             details: {
@@ -249,7 +257,6 @@ export const updateProblemById = async (req, res) => {
           });
         }
       }
-      
     }
 
     //Update problem
@@ -270,14 +277,12 @@ export const updateProblemById = async (req, res) => {
     });
 
     console.log("Problem Updated -->", updatedProblem.title);
-    
 
     return res.status(200).json({
       success: true,
       message: "Problem updated successfully",
       problem: updatedProblem,
     });
-
   } catch (error) {
     console.error("Error updating problem:", error);
     return res.status(500).json({
@@ -285,7 +290,6 @@ export const updateProblemById = async (req, res) => {
     });
   }
 };
-
 
 export const deleteProblemById = async (req, res) => {
   try {

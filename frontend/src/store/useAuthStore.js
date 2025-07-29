@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 
-
 export const useAuthStore = create((set, get) => ({
   //4 utility methods for 4 routes in auth that we have put
   authUser: null,
@@ -22,8 +21,11 @@ export const useAuthStore = create((set, get) => ({
     } catch (error) {
       console.log("Error checking auth:", error);
       set({ authUser: null });
-      // Only show error toast if it's not a 401 (unauthorized)
-      if (error.response?.status !== 401) {
+
+      const isExpectedLogout = error.response?.status === 401;
+      const wasLoggedIn = !!get().authUser;
+
+      if (!isExpectedLogout && wasLoggedIn) {
         toast.error("Authentication check failed");
       }
     } finally {
@@ -59,7 +61,6 @@ export const useAuthStore = create((set, get) => ({
       set({ isSigningUp: false });
     }
   },
-  
 
   login: async (data) => {
     set({ isLoggingIn: true });
@@ -77,7 +78,6 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoggingIn: false });
     }
   },
-  
 
   logout: async () => {
     try {

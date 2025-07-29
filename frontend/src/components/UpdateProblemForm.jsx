@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Plus,
@@ -100,6 +99,24 @@ const UpdateProblemForm = () => {
   // Populate form when problem data is loaded
   useEffect(() => {
     if (problem && !dataLoaded) {
+      // Sanitize testcases: ensure input/output are strings, stringify objects
+      const sanitizedTestcases = (
+        problem.testcases || [{ input: "", output: "" }]
+      ).map((tc) => ({
+        input:
+          typeof tc.input === "object" && tc.input !== null
+            ? JSON.stringify(tc.input)
+            : typeof tc.input === "string"
+            ? tc.input
+            : "",
+        output:
+          typeof tc.output === "object" && tc.output !== null
+            ? JSON.stringify(tc.output)
+            : typeof tc.output === "string"
+            ? tc.output
+            : "",
+      }));
+
       const formData = {
         title: problem.title || "",
         description: problem.description || "",
@@ -109,7 +126,7 @@ const UpdateProblemForm = () => {
         editorial: problem.editorial || "",
         tags: problem.tags || [""],
         companyTags: problem.companyTags || [""],
-        testcases: problem.testcases || [{ input: "", output: "" }],
+        testcases: sanitizedTestcases,
         examples: problem.examples || {
           JAVASCRIPT: { input: "", output: "", explanation: "" },
           PYTHON: { input: "", output: "", explanation: "" },
@@ -129,24 +146,116 @@ const UpdateProblemForm = () => {
 
       // Reset form with loaded data
       reset(formData);
-      
+
       // Replace field arrays with loaded data
-      replaceTags(problem.tags || [""]);
-      replaceCompanyTags(problem.companyTags || [""]);
-      replaceTestcases(problem.testcases || [{ input: "", output: "" }]);
-      
+      replaceTags(formData.tags);
+      replaceCompanyTags(formData.companyTags);
+      replaceTestcases(formData.testcases);
+
       setDataLoaded(true);
     }
-  }, [problem, reset, replaceTags, replaceCompanyTags, replaceTestcases, dataLoaded]);
+  }, [
+    problem,
+    reset,
+    replaceTags,
+    replaceCompanyTags,
+    replaceTestcases,
+    dataLoaded,
+  ]);
 
-  const onSubmit = async (formData) => {
+  // Sanitization logic for update (mirroring CreateProblemForm)
+  const onSubmit = async (value) => {
+    console.log("🚀 onSubmit called");
     try {
       setIsLoading(true);
-      const res = await axiosInstance.put(`/problem/update-problem/${problemId}`, formData);
+
+      // Clean and validate the data before sending
+      const cleanedValue = {
+        ...value,
+        // Clean test cases - preserve empty strings but trim whitespace-only strings to empty
+        testcases: value.testcases.map((tc) => ({
+          input:
+            typeof tc.input === "string"
+              ? tc.input.trim() === ""
+                ? ""
+                : tc.input.trim()
+              : "",
+          output:
+            typeof tc.output === "string"
+              ? tc.output.trim() === ""
+                ? ""
+                : tc.output.trim()
+              : "",
+        })),
+
+        // Clean tags - trim and filter out empty ones
+        tags: value.tags
+          .map((tag) => tag?.trim())
+          .filter((tag) => tag && tag.length > 0),
+
+        // Clean company tags - trim and filter out empty ones
+        companyTags: value.companyTags
+          .map((tag) => tag?.trim())
+          .filter((tag) => tag && tag.length > 0),
+
+        // Clean examples for each language
+        examples: {
+          JAVASCRIPT: {
+            input: value.examples.JAVASCRIPT.input?.trim() || "",
+            output: value.examples.JAVASCRIPT.output?.trim() || "",
+            explanation: value.examples.JAVASCRIPT.explanation?.trim() || "",
+          },
+          PYTHON: {
+            input: value.examples.PYTHON.input?.trim() || "",
+            output: value.examples.PYTHON.output?.trim() || "",
+            explanation: value.examples.PYTHON.explanation?.trim() || "",
+          },
+          JAVA: {
+            input: value.examples.JAVA.input?.trim() || "",
+            output: value.examples.JAVA.output?.trim() || "",
+            explanation: value.examples.JAVA.explanation?.trim() || "",
+          },
+        },
+
+        // Clean other text fields
+        title: value.title?.trim(),
+        description: value.description?.trim(),
+        constraints: value.constraints?.trim() || undefined,
+        hints: value.hints?.trim() || undefined,
+        editorial: value.editorial?.trim() || undefined,
+      };
+
+      // Prepare the request body: stringify input if it's an object
+      const prepared = {
+        ...cleanedValue,
+        testcases: cleanedValue.testcases.map((tc) => ({
+          ...tc,
+          input:
+            typeof tc.input === "object" ? JSON.stringify(tc.input) : tc.input,
+          output: tc.output,
+        })),
+      };
+
+      // Ensure we have at least one test case
+      if (prepared.testcases.length === 0) {
+        toast.error("At least one test case is required");
+        return;
+      }
+
+      // Ensure we have at least one tag
+      if (prepared.tags.length === 0) {
+        toast.error("At least one tag is required");
+        return;
+      }
+
+      const res = await axiosInstance.put(
+        `/problem/update-problem/${problemId}`,
+        prepared
+      );
       toast.success(res.data.message || "Problem updated successfully");
       navigate("/problems");
     } catch (error) {
-      toast.error("Error updating problem");
+      toast.error(error.response?.data?.message || "Error updating problem");
     } finally {
       setIsLoading(false);
     }
@@ -180,7 +289,9 @@ const UpdateProblemForm = () => {
             className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-neet-neutral/40 border border-neet-accent/20 hover:bg-neet-primary/10 hover:border-neet-primary/30 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <ArrowLeft className="w-5 h-5 text-neet-primary group-hover:text-neet-primary/80 transition-colors" />
-            <span className="text-neet-base-100 font-medium">Back to Problems</span>
+            <span className="text-neet-base-100 font-medium">
+              Back to Problems
+            </span>
           </button>
         </div>
 
@@ -195,10 +306,17 @@ const UpdateProblemForm = () => {
               </span>
             </div>
             <p className="text-sm text-neet-accent/70 max-w-2xl mx-auto">
-              Editing: <span className="font-semibold text-neet-base-100">{problem?.title}</span>
+              Editing:{" "}
+              <span className="font-semibold text-neet-base-100">
+                {problem?.title}
+              </span>
             </p>
           </div>
         </div>
+
+        {Object.keys(errors).length > 0 && (
+          <pre className="text-red-500">{JSON.stringify(errors, null, 2)}</pre>
+        )}
 
         {/* Main Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pb-16">
@@ -413,10 +531,11 @@ const UpdateProblemForm = () => {
                       <label className="block text-sm font-medium text-neet-accent/80 mb-2">
                         Input
                       </label>
-                      <textarea
-                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
                         {...register(`testcases.${index}.input`)}
-                        placeholder="Test case input"
+                        placeholder="Enter input as a string"
                       />
                       {errors.testcases?.[index]?.input && (
                         <p className="mt-1 text-sm text-neet-error">
@@ -428,10 +547,11 @@ const UpdateProblemForm = () => {
                       <label className="block text-sm font-medium text-neet-accent/80 mb-2">
                         Expected Output
                       </label>
-                      <textarea
-                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200 min-h-20 resize-y"
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-neet-neutral/30 border border-neet-accent/20 rounded-xl text-neet-base-100 placeholder-neet-accent/40 focus:border-neet-primary focus:outline-none focus:ring-2 focus:ring-neet-primary/20 transition-all duration-200"
                         {...register(`testcases.${index}.output`)}
-                        placeholder="Expected output"
+                        placeholder="Enter expected output as a string"
                       />
                       {errors.testcases?.[index]?.output && (
                         <p className="mt-1 text-sm text-neet-error">

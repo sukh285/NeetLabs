@@ -8,6 +8,8 @@ import { Bot2 } from "../../templates/Bot2";
 const Hero = () => {
   const { authUser } = useAuthStore();
 
+  
+
   return (
     <section className="relative w-full min-h-[90vh] flex items-center justify-center bg-[#FDFEFD]">
       {/* Bot Model */}

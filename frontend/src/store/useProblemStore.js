@@ -26,7 +26,7 @@ export const useProblemStore = create((set) => ({
 
   getProblemById: async (id) => {
     try {
-      set({ isProblemsLoading: true });
+      set({ isProblemLoading: true, problem: null });
 
       const res = await axiosInstance.get(`/problem/get-problem/${id}`);
       set({ problem: res.data.problem });
