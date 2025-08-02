@@ -13,15 +13,6 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthStore();
 
-  useEffect(() => {
-    // Simulate loading or wait for assets/data
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Adjust time if needed
-
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <>
       {/* {loading && <FullPageLoader />} */}
@@ -33,6 +24,7 @@ const HomePage = () => {
         <Hero />
         {/* Grid */}
         {/* <Grid /> */}
+        
         {/* Problems Section */}
         <Second />
         {/* Playlists Section */}
