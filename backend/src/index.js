@@ -30,7 +30,7 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
-      "https://neet-labs.vercel.app",
+      "https://www.neetlabs.in",
       "http://localhost:5173",
     ],
     credentials: true,
