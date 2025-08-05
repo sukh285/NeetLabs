@@ -35,25 +35,24 @@ export const register = async (req, res) => {
         email,
         password: hashedPassword,
         name,
-        verificationToken,
-        emailVerified: false,
+        // verificationToken,
+        emailVerified: true,
         role: UserRole.USER,
         plan: UserPlan.FREE,
       },
     });
 
     // Send Verification Email
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-    await sendMail({
-      email,
-      subject: "Verify your email",
-      mailGenContent: emailVerificationMailGenContent(name, verificationUrl),
-    });
+    // const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    // await sendMail({
+    //   email,
+    //   subject: "Verify your email",
+    //   mailGenContent: emailVerificationMailGenContent(name, verificationUrl),
+    // });
 
     res.status(201).json({
       success: true,
-      message:
-        "Account created. Please check your email to verify before logging in.",
+      message: "Account created successfully. You can now log in.",
     });
 
     console.log("User created successfully:", newUser);
@@ -226,11 +225,11 @@ export const login = async (req, res) => {
       });
     }
 
-    if (!user.emailVerified) {
-      return res.status(403).json({
-        error: "Please verify your email before logging in",
-      });
-    }
+    // if (!user.emailVerified) {
+    //   return res.status(403).json({
+    //     error: "Please verify your email before logging in",
+    //   });
+    // }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 

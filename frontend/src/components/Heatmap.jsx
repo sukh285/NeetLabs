@@ -4,7 +4,7 @@ import Tooltip from "@uiw/react-tooltip";
 import moment from "moment";
 
 const SubmissionHeatmap = ({ data }) => {
-  console.log(data);
+  // console.log(data);
 
   if (!data || data.length === 0) {
     return <p className="text-sm text-gray-500">No submission activity yet.</p>;

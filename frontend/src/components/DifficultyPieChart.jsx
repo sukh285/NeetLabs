@@ -2,7 +2,7 @@ import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 
 const DifficultyPieChart = ({ stats }) => {
-  console.log(stats);
+  // console.log(stats);
   
   const data = [
     { id: 0, value: stats?.EASY || 0, label: "Easy", color: "#05df72" },     // neet-success

@@ -18,9 +18,9 @@ const SignUpSchema = zod.object({
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [resendEmail, setResendEmail] = useState("");
-  const [resending, setResending] = useState(false);
+  // const [showVerifyModal, setShowVerifyModal] = useState(false);
+  // const [resendEmail, setResendEmail] = useState("");
+  // const [resending, setResending] = useState(false);
 
   const { signup, isSigningUp } = useAuthStore();
 
@@ -34,38 +34,42 @@ const SignUpPage = () => {
     resolver: zodResolver(SignUpSchema),
   });
 
-
   const onSubmit = async (data) => {
-    console.log("Signup form submitted -->", data);
+    // console.log("Signup form submitted -->", data);
     try {
       const success = await signup(data);
+      // if (success) {
+      //   setShowVerifyModal(true); // 👈 show popup
+      // }
       if (success) {
-        setShowVerifyModal(true); // 👈 show popup
+        toast.success("Account created successfully. You can now log in.");
+        navigate("/problems"); // Optionally redirect user to login page
       }
     } catch (error) {
       console.log("Signup failed -->", error);
+      toast.error("Signup failed. Please try again.");
     }
   };
 
-  const handleResend = async () => {
-    if (!resendEmail) {
-      toast.error("Please enter your email");
-      return;
-    }
+  // const handleResend = async () => {
+  //   if (!resendEmail) {
+  //     toast.error("Please enter your email");
+  //     return;
+  //   }
 
-    setResending(true);
-    try {
-      const res = await axiosInstance.post("/auth/resend-verification-token", {
-        email: resendEmail,
-      });
-      toast.success("Verification email resent!");
-    } catch (err) {
-      const msg = err?.response?.data?.error || "Resend failed";
-      toast.error(msg);
-    } finally {
-      setResending(false);
-    }
-  };
+  //   setResending(true);
+  //   try {
+  //     const res = await axiosInstance.post("/auth/resend-verification-token", {
+  //       email: resendEmail,
+  //     });
+  //     toast.success("Verification email resent!");
+  //   } catch (err) {
+  //     const msg = err?.response?.data?.error || "Resend failed";
+  //     toast.error(msg);
+  //   } finally {
+  //     setResending(false);
+  //   }
+  // };
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-bl from-neet-neutral via-neet-primary to-neet-neutral font-inter">
@@ -83,7 +87,7 @@ const SignUpPage = () => {
         />
       </div>
 
-      {showVerifyModal && (
+      {/* {showVerifyModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
           <div className="bg-white text-black rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4 relative">
             <h2 className="text-xl font-bold text-neet-primary">
@@ -121,11 +125,14 @@ const SignUpPage = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Centered Form Container */}
-      <div data-aos="fade-up"
-            data-aos-duration="1000" className="relative z-1 flex items-center justify-center h-screen px-4">
+      <div
+        data-aos="fade-up"
+        data-aos-duration="1000"
+        className="relative z-1 flex items-center justify-center h-screen px-4"
+      >
         <div
           className={`w-full max-w-sm space-y-8 transition-opacity duration-300`}
         >

@@ -49,7 +49,7 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("Login form submitted -->", data);
+    // console.log("Login form submitted -->", data);
     setLoginError(""); // Reset error
     setShowResend(false); // Reset resend
 
@@ -178,14 +178,14 @@ const LoginPage = () => {
                 )}
               </div>
 
-              <div className="text-right text-sm">
+              {/* <div className="text-right text-sm">
                 <Link
                   to="/forgot-password"
                   className="text-neet-accent hover:underline hover:text-neet-secondary transition"
                 >
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <div className="form-control pt-1">
