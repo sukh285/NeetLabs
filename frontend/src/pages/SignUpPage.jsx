@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,7 +23,6 @@ const SignUpPage = () => {
   const [resending, setResending] = useState(false);
 
   const { signup, isSigningUp } = useAuthStore();
-
   const navigate = useNavigate();
 
   const {
@@ -35,14 +34,12 @@ const SignUpPage = () => {
   });
 
   const onSubmit = async (data) => {
-    // console.log("Signup form submitted -->", data);
     try {
       const success = await signup(data);
       if (success) {
-        setShowVerifyModal(true); // 👈 show popup
+        setShowVerifyModal(true);
       }
     } catch (error) {
-      console.log("Signup failed -->", error);
       toast.error("Signup failed. Please try again.");
     }
   };
@@ -52,10 +49,9 @@ const SignUpPage = () => {
       toast.error("Please enter your email");
       return;
     }
-
     setResending(true);
     try {
-      const res = await axiosInstance.post("/auth/resend-verification-token", {
+      await axiosInstance.post("/auth/resend-verification-token", {
         email: resendEmail,
       });
       toast.success("Verification email resent!");
@@ -83,46 +79,7 @@ const SignUpPage = () => {
         />
       </div>
 
-      {/* {showVerifyModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-          <div className="bg-white text-black rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4 relative">
-            <h2 className="text-xl font-bold text-neet-primary">
-              Verify your email
-            </h2>
-            <p className="text-sm text-gray-600">
-              A verification link has been sent to your email.
-            </p>
-
-            <p className="text-sm text-gray-600 mt-2">
-              Didn’t receive it? Enter your email below to resend:
-            </p>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="input placeholder-white text-white w-full px-4 py-2 border rounded-lg text-sm"
-              value={resendEmail}
-              onChange={(e) => setResendEmail(e.target.value)}
-            />
-
-            <button
-              onClick={handleResend}
-              disabled={resending}
-              className="btn bg-neet-primary text-white w-full rounded-lg hover:scale-105 active:scale-95 transition"
-            >
-              {resending ? "Resending..." : "Resend Verification Email"}
-            </button>
-
-            <button
-              className="btn bg-gray-200 text-gray-800 w-full rounded-lg mt-2 hover:scale-105 active:scale-95 transition"
-              onClick={() => setShowVerifyModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )} */}
-
+      {/* Email verification modal */}
       {showVerifyModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center text-center px-4">
           <div className="bg-white text-black rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4 relative">
@@ -150,16 +107,14 @@ const SignUpPage = () => {
         </div>
       )}
 
-      {/* Centered Form Container */}
+      {/* Centered SignUp Form and OAuth */}
       <div
         data-aos="fade-up"
         data-aos-duration="1000"
-        className="relative z-1 flex items-center justify-center min-h-screen px-4 overflow-y-auto py-5 mb-5"
+        className="relative z-10 flex flex-col sm:flex-row items-center justify-center min-h-screen px-4 overflow-y-auto py-5 mb-5 gap-10 transition-opacity duration-300 max-w-5xl mx-auto"
       >
-        <div
-          className={`w-full max-w-sm space-y-8 transition-opacity duration-300`}
-        >
-          {/* Logo */}
+        {/* Form */}
+        <div className="w-full sm:max-w-md">
           <div className="text-center mb-6">
             <div className="flex flex-col items-center gap-3 group">
               <div className="w-10 h-10 rounded-2xl bg-neet-base-100/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-neet-base-100/20 transition-all duration-300 shadow-lg border border-neet-base-100/20">
@@ -174,17 +129,14 @@ const SignUpPage = () => {
             </div>
           </div>
 
-          {/* Form Card */}
           <div className="bg-neet-neutral/30 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-neet-base-100/30 hover:shadow-neet-secondary/20 transition-all duration-300">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
               <div className="bg-yellow-50 text-yellow-800 text-xs pointer-events-none text-center px-4 py-2 rounded-md border border-yellow-300 mb-2">
                 Email/password signup is only supported for admin/testing
                 accounts. <br />
                 Please use <strong>Google</strong> or <strong>GitHub</strong> to
                 sign up.
               </div>
-
               {/* Name */}
               <div className="form-control">
                 <label htmlFor="name" className="label">
@@ -213,7 +165,6 @@ const SignUpPage = () => {
                   </p>
                 )}
               </div>
-
               {/* Email */}
               <div className="form-control">
                 <label htmlFor="email" className="label">
@@ -242,7 +193,6 @@ const SignUpPage = () => {
                   </p>
                 )}
               </div>
-
               {/* Password */}
               <div className="form-control">
                 <label htmlFor="password" className="label">
@@ -282,14 +232,12 @@ const SignUpPage = () => {
                   </p>
                 )}
               </div>
-
               {/* Submit Button */}
               <div className="form-control pt-1">
                 <button
                   type="submit"
                   className="btn w-full py-3 bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-secondary hover:to-neet-accent text-neet-primary-content font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed border-none"
-                  // disabled={isSigningUp}
-                  disabled
+                  disabled // signup disabled for users except admin/test
                 >
                   {isSigningUp ? (
                     <div className="flex items-center justify-center gap-2">
@@ -301,47 +249,7 @@ const SignUpPage = () => {
                   )}
                 </button>
               </div>
-              <div className="flex items-center my-4">
-                <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
-                <span className="mx-3 text-neet-accent/60 text-sm font-medium">
-                  or join via
-                </span>
-                <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
-              </div>
-
-              <div className="form-control pt-1 flex flex-row gap-3 w-full">
-                <Link
-                  to={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google`}
-                  className="flex-1 btn py-3 bg-white text-neet-neutral border border-neet-base-200 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 font-semibold"
-                  style={{ willChange: "transform" }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/google-logo.png"
-                    alt="Google"
-                    className="w-5 h-5"
-                  />
-                  <span className="ml-1">Google</span>
-                </Link>
-
-                <Link
-                  to={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/github`}
-                  className="flex-1 btn py-3 bg-[#18181b] text-white border border-[#fff]/20 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 active:scale-95 font-semibold"
-                  style={{ willChange: "transform" }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/github-logo.png"
-                    alt="GitHub"
-                    className="w-5 h-5"
-                  />
-                  <span className="ml-1">GitHub</span>
-                </Link>
-              </div>
             </form>
-
             {/* Redirect Link */}
             <div className="text-center mt-6 pt-4 border-t border-neet-base-200/50">
               <p className="text-neet-accent/50 text-sm">
@@ -354,6 +262,51 @@ const SignUpPage = () => {
                 </Link>
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Vertical Divider */}
+        <div className="hidden sm:block w-px bg-gradient-to-b from-transparent via-neet-base-200/50 to-transparent mx-10 self-stretch" />
+
+        {/* OAuth */}
+        <div className="w-full sm:max-w-xs bg-neet-neutral/30 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-neet-base-100/30 hover:shadow-neet-secondary/20 transition-all duration-300 flex flex-col">
+          <div className="flex mb-4 items-center">
+            <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />
+            <span className="mx-3 text-neet-accent/60 text-sm font-medium">
+              or join via
+            </span>
+            <div className="flex-grow h-px bg-gradient-to-l from-transparent via-neet-base-200/50 to-transparent" />
+          </div>
+          {/* OAuth Buttons Row */}
+          <div className="form-control pt-1 flex flex-col gap-3 w-full">
+            <Link
+              to={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google`}
+              className="btn py-3 bg-white text-neet-neutral border border-neet-base-200 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 font-semibold w-full"
+              style={{ willChange: "transform" }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/google-logo.png"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span className="ml-1">Google</span>
+            </Link>
+            <Link
+              to={`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/github`}
+              className="btn py-3 bg-[#18181b] text-white border border-[#fff]/20 hover:shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-102 active:scale-95 font-semibold w-full"
+              style={{ willChange: "transform" }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/github-logo.png"
+                alt="GitHub"
+                className="w-5 h-5"
+              />
+              <span className="ml-1">GitHub</span>
+            </Link>
           </div>
         </div>
       </div>
