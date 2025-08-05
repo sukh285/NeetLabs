@@ -20,6 +20,7 @@ dotenv.config();
 const port = process.env.PORT;
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(
   express.urlencoded({
