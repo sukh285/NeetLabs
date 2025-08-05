@@ -68,11 +68,17 @@ const LoginPage = () => {
         setLoginEmail(data.email);
         setShowResend(true);
       }
+
+      if (status === 403) {
+        setLoginError(
+          "Email/password login is only available for test/admin users. Please use Google or GitHub instead."
+        );
+      }
     }
   };
 
   return (
-    <div className="relative pb-5 w-full h-screen overflow-hidden bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral font-inter">
+    <div className="relative pb-5 w-full min-h-screen overflow-hidden bg-gradient-to-br from-neet-neutral via-neet-primary to-neet-neutral font-inter">
       {/* Background Particles */}
       <div className="absolute inset-0 z-0">
         <Particles
@@ -88,8 +94,11 @@ const LoginPage = () => {
       </div>
 
       {/* Centered Form */}
-      <div data-aos="fade-up"
-            data-aos-duration="1000" className="relative z-10 flex items-center justify-center h-screen px-4">
+      <div
+        data-aos="fade-up"
+        data-aos-duration="1000"
+        className="relative z-1 flex items-center justify-center min-h-screen px-4 overflow-y-auto py-5 mb-5"
+      >
         <div className="w-full max-w-sm space-y-8 transition-opacity duration-300">
           {/* Logo */}
           <div className="text-center mb-6">
@@ -109,6 +118,13 @@ const LoginPage = () => {
           {/* Form Card */}
           <div className="bg-neet-neutral/30 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-neet-base-100/30 hover:shadow-neet-secondary/20 transition-all duration-300">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="bg-yellow-50 text-yellow-800 text-xs pointer-events-none text-center px-4 py-2 rounded-md border border-yellow-300 mb-2">
+                Email/password login is only supported for admin/testing
+                accounts. <br />
+                Please use <strong>Google</strong> or <strong>GitHub</strong> to
+                login.
+              </div>
+
               {/* Email */}
               <div className="form-control">
                 <label htmlFor="email" className="label">
@@ -178,14 +194,21 @@ const LoginPage = () => {
                 )}
               </div>
 
-              {/* <div className="text-right text-sm">
-                <Link
+              <div className="text-right text-sm">
+                {/* <Link
                   to="/forgot-password"
                   className="text-neet-accent hover:underline hover:text-neet-secondary transition"
                 >
                   Forgot password?
+                </Link> */}
+                <Link
+                  to="#"
+                  onClick={(e) => e.preventDefault()} // prevent navigation
+                  className="pointer-events-none text-neet-accent/50 cursor-not-allowed no-underline"
+                >
+                  Forgot password?
                 </Link>
-              </div> */}
+              </div>
 
               {/* Submit Button */}
               <div className="form-control pt-1">
@@ -209,7 +232,7 @@ const LoginPage = () => {
                   </div>
                 )}
 
-                {showResend && (
+                {/* {showResend && (
                   <div className="mt-3 text-center">
                     <button
                       onClick={resendVerification}
@@ -221,7 +244,7 @@ const LoginPage = () => {
                         : "Resend verification email"}
                     </button>
                   </div>
-                )}
+                )} */}
               </div>
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gradient-to-r from-transparent via-neet-base-200/50 to-transparent" />

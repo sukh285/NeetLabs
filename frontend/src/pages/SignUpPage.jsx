@@ -18,9 +18,9 @@ const SignUpSchema = zod.object({
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  // const [showVerifyModal, setShowVerifyModal] = useState(false);
-  // const [resendEmail, setResendEmail] = useState("");
-  // const [resending, setResending] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
 
   const { signup, isSigningUp } = useAuthStore();
 
@@ -38,12 +38,8 @@ const SignUpPage = () => {
     // console.log("Signup form submitted -->", data);
     try {
       const success = await signup(data);
-      // if (success) {
-      //   setShowVerifyModal(true); // 👈 show popup
-      // }
       if (success) {
-        toast.success("Account created successfully. You can now log in.");
-        navigate("/problems"); // Optionally redirect user to login page
+        setShowVerifyModal(true); // 👈 show popup
       }
     } catch (error) {
       console.log("Signup failed -->", error);
@@ -51,28 +47,28 @@ const SignUpPage = () => {
     }
   };
 
-  // const handleResend = async () => {
-  //   if (!resendEmail) {
-  //     toast.error("Please enter your email");
-  //     return;
-  //   }
+  const handleResend = async () => {
+    if (!resendEmail) {
+      toast.error("Please enter your email");
+      return;
+    }
 
-  //   setResending(true);
-  //   try {
-  //     const res = await axiosInstance.post("/auth/resend-verification-token", {
-  //       email: resendEmail,
-  //     });
-  //     toast.success("Verification email resent!");
-  //   } catch (err) {
-  //     const msg = err?.response?.data?.error || "Resend failed";
-  //     toast.error(msg);
-  //   } finally {
-  //     setResending(false);
-  //   }
-  // };
+    setResending(true);
+    try {
+      const res = await axiosInstance.post("/auth/resend-verification-token", {
+        email: resendEmail,
+      });
+      toast.success("Verification email resent!");
+    } catch (err) {
+      const msg = err?.response?.data?.error || "Resend failed";
+      toast.error(msg);
+    } finally {
+      setResending(false);
+    }
+  };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-bl from-neet-neutral via-neet-primary to-neet-neutral font-inter">
+    <div className="relative w-full min-h-screen overflow-hidden bg-gradient-to-bl from-neet-neutral via-neet-primary to-neet-neutral font-inter">
       {/* Particles Background */}
       <div className="absolute inset-0 z-0">
         <Particles
@@ -127,11 +123,38 @@ const SignUpPage = () => {
         </div>
       )} */}
 
+      {showVerifyModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center text-center px-4">
+          <div className="bg-white text-black rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4 relative">
+            <h2 className="text-xl font-bold text-neet-primary">
+              Email Verification Notice
+            </h2>
+            <p className="text-sm text-gray-600">
+              Email verification is currently <strong>disabled</strong> for
+              general users.
+            </p>
+            <p className="text-sm text-gray-600">
+              Only testing or admin accounts will receive verification emails.
+            </p>
+            <p className="text-sm text-gray-600">
+              Please use <strong>Google</strong> or <strong>GitHub</strong> to
+              sign up or log in.
+            </p>
+            <button
+              className="btn bg-neet-primary text-white w-full rounded-lg mt-2 hover:scale-105 active:scale-95 transition"
+              onClick={() => setShowVerifyModal(false)}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Centered Form Container */}
       <div
         data-aos="fade-up"
         data-aos-duration="1000"
-        className="relative z-1 flex items-center justify-center h-screen px-4"
+        className="relative z-1 flex items-center justify-center min-h-screen px-4 overflow-y-auto py-5 mb-5"
       >
         <div
           className={`w-full max-w-sm space-y-8 transition-opacity duration-300`}
@@ -154,6 +177,14 @@ const SignUpPage = () => {
           {/* Form Card */}
           <div className="bg-neet-neutral/30 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-neet-base-100/30 hover:shadow-neet-secondary/20 transition-all duration-300">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+              <div className="bg-yellow-50 text-yellow-800 text-xs pointer-events-none text-center px-4 py-2 rounded-md border border-yellow-300 mb-2">
+                Email/password signup is only supported for admin/testing
+                accounts. <br />
+                Please use <strong>Google</strong> or <strong>GitHub</strong> to
+                sign up.
+              </div>
+
               {/* Name */}
               <div className="form-control">
                 <label htmlFor="name" className="label">
@@ -257,7 +288,8 @@ const SignUpPage = () => {
                 <button
                   type="submit"
                   className="btn w-full py-3 bg-gradient-to-r from-neet-primary to-neet-secondary hover:from-neet-secondary hover:to-neet-accent text-neet-primary-content font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed border-none"
-                  disabled={isSigningUp}
+                  // disabled={isSigningUp}
+                  disabled
                 >
                   {isSigningUp ? (
                     <div className="flex items-center justify-center gap-2">
@@ -286,7 +318,7 @@ const SignUpPage = () => {
                   rel="noopener noreferrer"
                 >
                   <img
-                    src="https://developers.google.com/identity/images/g-logo.png"
+                    src="/google-logo.png"
                     alt="Google"
                     className="w-5 h-5"
                   />
@@ -301,7 +333,7 @@ const SignUpPage = () => {
                   rel="noopener noreferrer"
                 >
                   <img
-                    src="@github-logo.png"
+                    src="/github-logo.png"
                     alt="GitHub"
                     className="w-5 h-5"
                   />
