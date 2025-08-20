@@ -136,8 +136,3 @@ This helps you see not just what you solved, but **where you’re improving**.
 
 👉 Check it out at **[neetlabs.in](https://neetlabs.in)**
 
----
-
-✅ This is now polished enough for GitHub: professional, descriptive, badge-heavy at the top, and reflective of your actual stack.
-
-Would you like me to also **add screenshots/gifs section** (like `## 📸 Screenshots`) so that when people scroll the repo, they instantly see what NeetLabs looks like?
