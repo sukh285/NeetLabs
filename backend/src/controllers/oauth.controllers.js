@@ -19,7 +19,7 @@ export const googleAuthSuccess = async (req, res) => {
     // Set cookie for subdomain
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "lax",           // changed from "none"
+      sameSite: "none",           // changed from "none"
       secure: true,              // required for HTTPS
       domain: ".neetlabs.in",    // share cookie across frontend + api subdomain
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
@@ -52,7 +52,7 @@ export const githubAuthSuccess = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "lax",           // changed from "none"
+      sameSite: "none",           // changed from "none"
       secure: true,
       domain: ".neetlabs.in",
       maxAge: 1000 * 60 * 60 * 24 * 7,

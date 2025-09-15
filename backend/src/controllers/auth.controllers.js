@@ -251,7 +251,7 @@ export const login = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      sameSite: "lax", // changed from "none"
+      sameSite: "none", // changed from "none"
       secure: true, // required for HTTPS
       domain: ".neetlabs.in", // share cookie across frontend + api subdomain
       maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -282,7 +282,7 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("jwt", {
       httpOnly: true,
-      sameSite: "lax", // match what was used when setting cookie
+      sameSite: "none", // match what was used when setting cookie
       secure: true, // HTTPS
       domain: ".neetlabs.in", // important to clear cookie correctly
     });
@@ -502,7 +502,7 @@ export const deleteProfile = async (req, res) => {
     // Clear cookie to logout
     res.clearCookie("jwt", {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: true,
       domain: ".neetlabs.in",
     });

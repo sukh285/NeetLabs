@@ -46,7 +46,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",          // changed from "none"
+      sameSite: "none",          // changed from "none"
       secure: true,             // must be true for HTTPS
       domain: ".neetlabs.in",   // share cookie across frontend + api subdomain
       maxAge: 1000 * 60 * 60 * 24 * 7,
