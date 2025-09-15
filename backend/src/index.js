@@ -56,7 +56,7 @@ app.use(
 
 // Passport
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // Auto ping to keep site awake
 const url = "https://api.neetlabs.in"; // updated backend domain

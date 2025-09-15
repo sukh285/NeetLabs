@@ -4,7 +4,7 @@ export const axiosInstance = axios.create({
   baseURL:
     import.meta.env.MODE === "development"
       ? "http://localhost:8080/api/v1"
-      : "https://neetlabs.onrender.com/api/v1",
+      : "https://api.neetlabs.in/api/v1",
   withCredentials: true,
 });
 

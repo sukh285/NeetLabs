@@ -49,7 +49,7 @@ authRoutes.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/api/v1/auth/google/failure",
-    session: true,
+    session: false,
   }),
   googleAuthSuccess
 );
@@ -66,7 +66,7 @@ authRoutes.get(
   "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/api/v1/auth/github/failure",
-    session: true,
+    session: false,
   }),
   githubAuthSuccess
 );
